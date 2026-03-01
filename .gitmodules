@@ -4,3 +4,4 @@
 [submodule "ZmdDmg"]
 	path = ZmdDmg
 	url = https://github.com/NanoShiki/ZmdDmg.git
+	branch = main
