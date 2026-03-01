@@ -1,8 +1,6 @@
 [submodule "blog"]
 	path = blog
 	url = https://github.com/NanoShiki/Blog.git
-	branch = main
 [submodule "ZmdDmg"]
 	path = ZmdDmg
 	url = https://github.com/NanoShiki/ZmdDmg.git
-	branch = main
