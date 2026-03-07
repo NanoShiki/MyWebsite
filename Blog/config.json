@@ -1,0 +1,174 @@
+{
+  "site": {
+    "title": "如珩的博客",
+    "subtitle": "技术笔记与分享",
+    "author": "如珩"
+  },
+  "posts": [
+    {
+      "id": "课内_计算机图形学_计算机图形学_1",
+      "title": "计算机图形学_1",
+      "date": "2026-03-06",
+      "path": "/blog/archive/课内/计算机图形学/计算机图形学_1/",
+      "categories": [
+        "课内",
+        "计算机图形学"
+      ]
+    },
+    {
+      "id": "UE_Lyra(二) GameFeatureAction浅析",
+      "title": "Lyra(二) GameFeatureAction浅析",
+      "date": "2026-03-05",
+      "path": "/blog/archive/UE/Lyra(二) GameFeatureAction浅析/",
+      "categories": [
+        "UE"
+      ]
+    },
+    {
+      "id": "UE_Lyra(一) 地图切换 & Experience加载 & Loading界面",
+      "title": "Lyra(一) 地图切换 & Experience加载 & Loading界面",
+      "date": "2026-03-05",
+      "path": "/blog/archive/UE/Lyra(一) 地图切换 & Experience加载 & Loading界面/",
+      "categories": [
+        "UE"
+      ]
+    },
+    {
+      "id": "课内_人工交互技术_人工交互技术_1",
+      "title": "人工交互技术_1",
+      "date": "2026-03-05",
+      "path": "/blog/archive/课内/人工交互技术/人工交互技术_1/",
+      "categories": [
+        "课内",
+        "人工交互技术"
+      ]
+    },
+    {
+      "id": "课内_计算机组成与系统结构_计算机组成与系统结构_1",
+      "title": "计算机组成与系统结构_1",
+      "date": "2026-03-05",
+      "path": "/blog/archive/课内/计算机组成与系统结构/计算机组成与系统结构_1/",
+      "categories": [
+        "课内",
+        "计算机组成与系统结构"
+      ]
+    },
+    {
+      "id": "课内_机器学习_机器学习_1",
+      "title": "机器学习_1",
+      "date": "2026-03-05",
+      "path": "/blog/archive/课内/机器学习/机器学习_1/",
+      "categories": [
+        "课内",
+        "机器学习"
+      ]
+    }
+  ],
+  "categoryTree": {
+    "name": "root",
+    "type": "category",
+    "children": [
+      {
+        "name": "UE",
+        "type": "category",
+        "children": [],
+        "posts": [
+          {
+            "id": "UE_Lyra(二) GameFeatureAction浅析",
+            "title": "Lyra(二) GameFeatureAction浅析",
+            "date": "2026-03-05",
+            "path": "/blog/archive/UE/Lyra(二) GameFeatureAction浅析/",
+            "categories": [
+              "UE"
+            ]
+          },
+          {
+            "id": "UE_Lyra(一) 地图切换 & Experience加载 & Loading界面",
+            "title": "Lyra(一) 地图切换 & Experience加载 & Loading界面",
+            "date": "2026-03-05",
+            "path": "/blog/archive/UE/Lyra(一) 地图切换 & Experience加载 & Loading界面/",
+            "categories": [
+              "UE"
+            ]
+          }
+        ]
+      },
+      {
+        "name": "课内",
+        "type": "category",
+        "children": [
+          {
+            "name": "人工交互技术",
+            "type": "category",
+            "children": [],
+            "posts": [
+              {
+                "id": "课内_人工交互技术_人工交互技术_1",
+                "title": "人工交互技术_1",
+                "date": "2026-03-05",
+                "path": "/blog/archive/课内/人工交互技术/人工交互技术_1/",
+                "categories": [
+                  "课内",
+                  "人工交互技术"
+                ]
+              }
+            ]
+          },
+          {
+            "name": "机器学习",
+            "type": "category",
+            "children": [],
+            "posts": [
+              {
+                "id": "课内_机器学习_机器学习_1",
+                "title": "机器学习_1",
+                "date": "2026-03-05",
+                "path": "/blog/archive/课内/机器学习/机器学习_1/",
+                "categories": [
+                  "课内",
+                  "机器学习"
+                ]
+              }
+            ]
+          },
+          {
+            "name": "计算机图形学",
+            "type": "category",
+            "children": [],
+            "posts": [
+              {
+                "id": "课内_计算机图形学_计算机图形学_1",
+                "title": "计算机图形学_1",
+                "date": "2026-03-06",
+                "path": "/blog/archive/课内/计算机图形学/计算机图形学_1/",
+                "categories": [
+                  "课内",
+                  "计算机图形学"
+                ]
+              }
+            ]
+          },
+          {
+            "name": "计算机组成与系统结构",
+            "type": "category",
+            "children": [],
+            "posts": [
+              {
+                "id": "课内_计算机组成与系统结构_计算机组成与系统结构_1",
+                "title": "计算机组成与系统结构_1",
+                "date": "2026-03-05",
+                "path": "/blog/archive/课内/计算机组成与系统结构/计算机组成与系统结构_1/",
+                "categories": [
+                  "课内",
+                  "计算机组成与系统结构"
+                ]
+              }
+            ]
+          }
+        ],
+        "posts": []
+      }
+    ],
+    "posts": []
+  }
+}

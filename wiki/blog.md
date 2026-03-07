@@ -258,5 +258,5 @@ archive/
 
 ## 相关文档
 
-- [项目总览](./项目总览.md)
+- [readme](./readme.md)
 - [update_config.py 使用说明](../Blog/使用说明.md)

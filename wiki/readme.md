@@ -1,40 +1,35 @@
-# 项目总览
+# myWeb 项目
 
 ## 项目介绍
 
-myWeb 是一个个人项目集合仓库，包含了独立的博客子项目，使用 Git 子模块 (submodules) 进行管理。
+myWeb 是一个个人项目集合仓库，包含了独立的博客子项目。
 
 ## 目录结构
 
 ```
 myWeb/
 ├── .trae/              # Trae IDE 配置
-├── Blog/               # 个人博客 (Git Submodule)
+├── Blog/               # 个人博客
 │   ├── archive/        # 博客文章归档
 │   └── index.html      # 博客首页
-├── wiki/               # 技术文档 (本目录)
-├── .gitignore
-└── .gitmodules         # Git 子模块配置
+├── wiki/               # 技术文档
+│   ├── readme.md       # 本文件
+│   ├── blog.md         # Blog 项目文档
+│   ├── 部署指南.md     # 部署指南
+│   └── teach/          # 教学文档
+└── .gitignore
 ```
 
 ## 技术栈
 
 ### 整体
-- **版本控制**: Git + Git Submodules
+- **版本控制**: Git
 - **操作系统**: macOS
 
 ### Blog
 - **静态页面**: HTML
 - **配置文件**: JSON
 - **文章格式**: Markdown
-
-## Git 子模块
-
-项目使用 Git Submodules 管理子项目：
-
-| 子模块 | 路径 | 远程仓库 |
-|--------|------|----------|
-| Blog | Blog/ | https://github.com/NanoShiki/Blog.git |
 
 ## 子项目说明
 
