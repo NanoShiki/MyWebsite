@@ -66,7 +66,7 @@
         }
 
         .toc-wrapper {
-            width: 260px;
+            width: 390px;
             flex-shrink: 0;
         }
 
@@ -106,6 +106,33 @@
             display: flex;
             align-items: center;
             gap: 6px;
+            padding: 6px 10px;
+            border-radius: 6px;
+            transition: all 0.2s;
+            cursor: pointer;
+            border-left: 3px solid transparent;
+        }
+
+        .toc-item-header:hover {
+            background: #f0f0f0;
+        }
+
+        .toc-item-header:hover .toc-link {
+            color: #667eea;
+        }
+
+        .toc-item-header:hover .toc-toggle {
+            color: #667eea;
+        }
+
+        .toc-item-header.active {
+            background: #f0f0f0;
+            border-left-color: #667eea;
+        }
+
+        .toc-item-header.active .toc-link {
+            color: #667eea;
+            font-weight: 500;
         }
 
         .toc-toggle {
@@ -114,16 +141,11 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            cursor: pointer;
             font-size: 10px;
             color: #999;
-            transition: transform 0.2s;
+            transition: transform 0.2s, color 0.2s;
             flex-shrink: 0;
             user-select: none;
-        }
-
-        .toc-toggle:hover {
-            color: #667eea;
         }
 
         .toc-toggle.expanded {
@@ -134,28 +156,12 @@
             color: #666;
             text-decoration: none;
             font-size: 0.9rem;
-            display: block;
-            padding: 6px 10px;
-            border-radius: 6px;
-            transition: all 0.2s;
-            border-left: 3px solid transparent;
+            transition: color 0.2s;
             max-width: 85%;
             overflow: hidden;
             text-overflow: ellipsis;
             white-space: nowrap;
             flex: 1;
-        }
-
-        .toc-link:hover {
-            color: #667eea;
-            background: #f0f0f0;
-        }
-
-        .toc-link.active {
-            color: #667eea;
-            background: #f0f0f0;
-            font-weight: 500;
-            border-left-color: #667eea;
         }
 
         .toc-h1 .toc-link {
@@ -186,7 +192,6 @@
 
         .article-wrapper {
             flex: 1;
-            max-width: 80%;
             min-width: 0;
         }
 
@@ -532,6 +537,7 @@
                 
                 const header = document.createElement('div');
                 header.className = 'toc-item-header';
+                header.dataset.id = item.id;
                 
                 if (item.children.length > 0) {
                     const toggle = document.createElement('span');
@@ -548,15 +554,15 @@
                     header.appendChild(toggle);
                 }
                 
-                const a = document.createElement('a');
-                a.href = `#${item.id}`;
+                const a = document.createElement('span');
                 a.textContent = item.text;
                 a.className = 'toc-link';
-                a.addEventListener('click', (e) => {
+                header.appendChild(a);
+                
+                header.addEventListener('click', (e) => {
                     e.preventDefault();
                     document.getElementById(item.id).scrollIntoView({ behavior: 'smooth' });
                 });
-                header.appendChild(a);
                 
                 li.appendChild(header);
                 
@@ -608,20 +614,20 @@
 
         function scrollTOCToItem(targetId) {
             const tocContainer = document.querySelector('.toc-container');
-            const targetLink = document.querySelector(`.toc-list a[href="#${targetId}"]`);
+            const targetHeader = document.querySelector(`.toc-item-header[data-id="${targetId}"]`);
             
-            if (targetLink && tocContainer) {
+            if (targetHeader && tocContainer) {
                 const containerRect = tocContainer.getBoundingClientRect();
-                const linkRect = targetLink.getBoundingClientRect();
+                const headerRect = targetHeader.getBoundingClientRect();
                 
-                const linkTop = linkRect.top - containerRect.top + tocContainer.scrollTop;
-                const linkBottom = linkTop + linkRect.height;
+                const headerTop = headerRect.top - containerRect.top + tocContainer.scrollTop;
+                const headerBottom = headerTop + headerRect.height;
                 const containerHeight = tocContainer.clientHeight;
                 
-                if (linkTop < tocContainer.scrollTop) {
-                    tocContainer.scrollTop = linkTop - 20;
-                } else if (linkBottom > tocContainer.scrollTop + containerHeight) {
-                    tocContainer.scrollTop = linkBottom - containerHeight + 20;
+                if (headerTop < tocContainer.scrollTop) {
+                    tocContainer.scrollTop = headerTop - 20;
+                } else if (headerBottom > tocContainer.scrollTop + containerHeight) {
+                    tocContainer.scrollTop = headerBottom - containerHeight + 20;
                 }
             }
         }
@@ -642,10 +648,10 @@
                 if (currentHeading) {
                     const id = currentHeading.id;
                     
-                    document.querySelectorAll('.toc-list a').forEach(a => a.classList.remove('active'));
-                    const tocLink = document.querySelector(`.toc-list a[href="#${id}"]`);
-                    if (tocLink) {
-                        tocLink.classList.add('active');
+                    document.querySelectorAll('.toc-item-header').forEach(h => h.classList.remove('active'));
+                    const tocHeader = document.querySelector(`.toc-item-header[data-id="${id}"]`);
+                    if (tocHeader) {
+                        tocHeader.classList.add('active');
                     }
                     
                     expandPathToItem(id);
