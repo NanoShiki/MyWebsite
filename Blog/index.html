@@ -220,7 +220,7 @@
         let currentPath = [];
 
         function init() {
-            fetch('/blog/config.json')
+            fetch('/Blog/config.json')
                 .then(response => response.json())
                 .then(data => {
                     categoryTree = data.categoryTree;
@@ -337,7 +337,7 @@
                     }
 
                     card.innerHTML = `
-                        <a href="/blog/post.html?id=${encodeURIComponent(post.id)}">
+                        <a href="/Blog/post.html?id=${encodeURIComponent(post.id)}">
                             <h2 class="post-title">${post.title}</h2>
                             <div class="post-meta">
                                 ${categoriesHtml}

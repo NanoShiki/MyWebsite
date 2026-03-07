@@ -344,7 +344,7 @@
         </aside>
 
         <main class="article-wrapper">
-            <a href="/blog/" class="nav-back">← 返回博客</a>
+            <a href="/Blog/" class="nav-back">← 返回博客</a>
             <article class="article-content" id="articleContent">
                 <p>正在加载文章内容...</p>
             </article>
@@ -355,7 +355,7 @@
         const urlParams = new URLSearchParams(window.location.search);
         const postId = urlParams.get('id');
 
-        fetch('/blog/config.json')
+        fetch('/Blog/config.json')
             .then(response => response.json())
             .then(config => {
                 const post = config.posts.find(p => p.id === postId);
@@ -431,8 +431,8 @@
                     
                     let content = mainContent.innerHTML;
                     
-                    content = content.replace(/src="\//g, 'src="/blog/');
-                    content = content.replace(/href="\//g, 'href="/blog/');
+                    content = content.replace(/src="\//g, 'src="/Blog/');
+                    content = content.replace(/href="\//g, 'href="/Blog/');
                     
                     document.getElementById('articleContent').innerHTML = content;
                     
