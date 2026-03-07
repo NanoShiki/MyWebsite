@@ -94,11 +94,43 @@
             list-style: none;
         }
 
-        .toc-list li {
-            margin-bottom: 6px;
+        .toc-list ul {
+            list-style: none;
         }
 
-        .toc-list a {
+        .toc-item {
+            margin-bottom: 4px;
+        }
+
+        .toc-item-header {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .toc-toggle {
+            width: 18px;
+            height: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 10px;
+            color: #999;
+            transition: transform 0.2s;
+            flex-shrink: 0;
+            user-select: none;
+        }
+
+        .toc-toggle:hover {
+            color: #667eea;
+        }
+
+        .toc-toggle.expanded {
+            transform: rotate(90deg);
+        }
+
+        .toc-link {
             color: #666;
             text-decoration: none;
             font-size: 0.9rem;
@@ -111,35 +143,45 @@
             overflow: hidden;
             text-overflow: ellipsis;
             white-space: nowrap;
+            flex: 1;
         }
 
-        .toc-list a:hover {
+        .toc-link:hover {
             color: #667eea;
             background: #f0f0f0;
         }
 
-        .toc-list a.active {
+        .toc-link.active {
             color: #667eea;
             background: #f0f0f0;
             font-weight: 500;
             border-left-color: #667eea;
         }
 
-        .toc-list .toc-h1 {
+        .toc-h1 .toc-link {
             font-weight: 600;
             color: #333;
             padding-left: 0;
         }
 
-        .toc-list .toc-h2 {
+        .toc-h2 .toc-link {
             padding-left: 16px;
             font-size: 0.88rem;
         }
 
-        .toc-list .toc-h3 {
+        .toc-h3 .toc-link {
             padding-left: 32px;
             font-size: 0.82rem;
             color: #888;
+        }
+
+        .toc-children {
+            display: none;
+            padding-left: 0;
+        }
+
+        .toc-children.expanded {
+            display: block;
         }
 
         .article-wrapper {
@@ -354,6 +396,7 @@
     <script>
         const urlParams = new URLSearchParams(window.location.search);
         const postId = urlParams.get('id');
+        let tocTree = [];
 
         fetch('/Blog/config.json')
             .then(response => response.json())
@@ -452,45 +495,143 @@
             const tocList = document.getElementById('tocList');
             
             tocList.innerHTML = '';
+            tocTree = [];
             
+            let currentParent = { children: tocTree };
+            let currentLevel = 0;
+            const stack = [{ children: tocTree, level: 0 }];
+
             headings.forEach((heading, index) => {
                 const id = `heading-${index}`;
                 heading.id = id;
+                const level = parseInt(heading.tagName.substring(1));
                 
+                const item = {
+                    id: id,
+                    text: heading.textContent,
+                    level: level,
+                    children: []
+                };
+                
+                while (stack.length > 1 && stack[stack.length - 1].level >= level) {
+                    stack.pop();
+                }
+                
+                stack[stack.length - 1].children.push(item);
+                stack.push({ ...item, children: item.children, level: level });
+            });
+            
+            renderTOCTree(tocTree, tocList);
+        }
+
+        function renderTOCTree(tree, parentElement) {
+            tree.forEach(item => {
                 const li = document.createElement('li');
-                const a = document.createElement('a');
-                a.href = `#${id}`;
-                a.textContent = heading.textContent;
-                a.className = `toc-${heading.tagName.toLowerCase()}`;
+                li.className = `toc-item toc-h${item.level}`;
+                li.dataset.id = item.id;
                 
-                li.appendChild(a);
-                tocList.appendChild(li);
+                const header = document.createElement('div');
+                header.className = 'toc-item-header';
+                
+                if (item.children.length > 0) {
+                    const toggle = document.createElement('span');
+                    toggle.className = 'toc-toggle';
+                    toggle.textContent = '▶';
+                    toggle.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        const children = li.querySelector('.toc-children');
+                        if (children) {
+                            children.classList.toggle('expanded');
+                            toggle.classList.toggle('expanded');
+                        }
+                    });
+                    header.appendChild(toggle);
+                }
+                
+                const a = document.createElement('a');
+                a.href = `#${item.id}`;
+                a.textContent = item.text;
+                a.className = 'toc-link';
+                a.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    document.getElementById(item.id).scrollIntoView({ behavior: 'smooth' });
+                });
+                header.appendChild(a);
+                
+                li.appendChild(header);
+                
+                if (item.children.length > 0) {
+                    const ul = document.createElement('ul');
+                    ul.className = 'toc-children';
+                    renderTOCTree(item.children, ul);
+                    li.appendChild(ul);
+                }
+                
+                parentElement.appendChild(li);
             });
         }
 
-        function setupTOCHighlight() {
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        const id = entry.target.id;
-                        const tocLink = document.querySelector(`.toc-list a[href="#${id}"]`);
-                        
-                        if (tocLink) {
-                            document.querySelectorAll('.toc-list a').forEach(a => a.classList.remove('active'));
-                            tocLink.classList.add('active');
-                        }
-                    }
-                });
-            }, { 
-                rootMargin: '-10% 0px -70% 0px',
-                threshold: [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1]
+        function expandPathToItem(targetId) {
+            const tocList = document.getElementById('tocList');
+            const allItems = tocList.querySelectorAll('.toc-item');
+            
+            allItems.forEach(item => {
+                const children = item.querySelector('.toc-children');
+                const toggle = item.querySelector('.toc-toggle');
+                if (children && toggle) {
+                    children.classList.remove('expanded');
+                    toggle.classList.remove('expanded');
+                }
             });
+            
+            let targetItem = tocList.querySelector(`.toc-item[data-id="${targetId}"]`);
+            if (!targetItem) return;
+            
+            let pathItems = [];
+            let current = targetItem;
+            while (current && current !== tocList) {
+                if (current.classList && current.classList.contains('toc-item')) {
+                    pathItems.unshift(current);
+                }
+                current = current.parentElement;
+            }
+            
+            pathItems.forEach(item => {
+                const children = item.querySelector('.toc-children');
+                const toggle = item.querySelector('.toc-toggle');
+                if (children && toggle) {
+                    children.classList.add('expanded');
+                    toggle.classList.add('expanded');
+                }
+            });
+        }
 
+        function scrollTOCToItem(targetId) {
+            const tocContainer = document.querySelector('.toc-container');
+            const targetLink = document.querySelector(`.toc-list a[href="#${targetId}"]`);
+            
+            if (targetLink && tocContainer) {
+                const containerRect = tocContainer.getBoundingClientRect();
+                const linkRect = targetLink.getBoundingClientRect();
+                
+                const linkTop = linkRect.top - containerRect.top + tocContainer.scrollTop;
+                const linkBottom = linkTop + linkRect.height;
+                const containerHeight = tocContainer.clientHeight;
+                
+                if (linkTop < tocContainer.scrollTop) {
+                    tocContainer.scrollTop = linkTop - 20;
+                } else if (linkBottom > tocContainer.scrollTop + containerHeight) {
+                    tocContainer.scrollTop = linkBottom - containerHeight + 20;
+                }
+            }
+        }
+
+        function setupTOCHighlight() {
             const headings = document.querySelectorAll('#articleContent h1, #articleContent h2, #articleContent h3');
-            headings.forEach(heading => observer.observe(heading));
-
+            
             window.addEventListener('scroll', () => {
                 let currentHeading = null;
+                
                 headings.forEach(heading => {
                     const rect = heading.getBoundingClientRect();
                     if (rect.top <= 150) {
@@ -499,11 +640,16 @@
                 });
 
                 if (currentHeading) {
+                    const id = currentHeading.id;
+                    
                     document.querySelectorAll('.toc-list a').forEach(a => a.classList.remove('active'));
-                    const tocLink = document.querySelector(`.toc-list a[href="#${currentHeading.id}"]`);
+                    const tocLink = document.querySelector(`.toc-list a[href="#${id}"]`);
                     if (tocLink) {
                         tocLink.classList.add('active');
                     }
+                    
+                    expandPathToItem(id);
+                    scrollTOCToItem(id);
                 }
             }, { passive: true });
         }
