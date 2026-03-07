@@ -33,7 +33,7 @@ def scan_directory(root_dir, current_dir, categories=None):
                     "id": '_'.join(rel_path_parts),
                     "title": item,
                     "date": date_str,
-                    "path": f"/blog/archive/{rel_path}/",
+                    "path": f"/Blog/archive/{rel_path}/",
                     "categories": categories + [current_dir] if categories else [current_dir]
                 }
                 node['posts'].append(post)
@@ -115,7 +115,7 @@ def main():
                         "id": item,
                         "title": item,
                         "date": date_str,
-                        "path": f"/blog/archive/{item}/",
+                        "path": f"/Blog/archive/{item}/",
                         "categories": []
                     }
                     posts.append(post)
@@ -144,7 +144,7 @@ def main():
                                         "id": '_'.join(rel_path_parts),
                                         "title": item,
                                         "date": date_str,
-                                        "path": f"/blog/archive/{rel_path}/",
+                                        "path": f"/Blog/archive/{rel_path}/",
                                         "categories": categories + [current_dir] if categories else [current_dir]
                                     }
                                     found_posts.append(post)
