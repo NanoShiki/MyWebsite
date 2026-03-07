@@ -5,6 +5,38 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>文章 - 如珩的博客</title>
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@11.9.0/styles/github.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/highlight.js@11.9.0/lib/core.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/highlight.js@11.9.0/lib/languages/python.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/highlight.js@11.9.0/lib/languages/javascript.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/highlight.js@11.9.0/lib/languages/bash.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/highlight.js@11.9.0/lib/languages/json.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/highlight.js@11.9.0/lib/languages/css.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/highlight.js@11.9.0/lib/languages/html.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/highlight.js@11.9.0/lib/languages/cpp.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/highlight.js@11.9.0/lib/languages/c.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/highlight.js@11.9.0/lib/languages/csharp.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/highlight.js@11.9.0/lib/languages/go.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/highlight.js@11.9.0/lib/languages/rust.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/highlight.js@11.9.0/lib/languages/java.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/highlight.js@11.9.0/lib/languages/typescript.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/highlight.js@11.9.0/lib/languages/php.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/highlight.js@11.9.0/lib/languages/ruby.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/highlight.js@11.9.0/lib/languages/swift.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/highlight.js@11.9.0/lib/languages/kotlin.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/highlight.js@11.9.0/lib/languages/sql.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/highlight.js@11.9.0/lib/languages/yaml.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/highlight.js@11.9.0/lib/languages/xml.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/highlight.js@11.9.0/lib/languages/markdown.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/highlight.js@11.9.0/lib/languages/diff.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/highlight.js@11.9.0/lib/languages/powershell.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/highlight.js@11.9.0/lib/languages/perl.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/highlight.js@11.9.0/lib/languages/lua.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/highlight.js@11.9.0/lib/languages/r.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/highlight.js@11.9.0/lib/languages/scala.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/highlight.js@11.9.0/lib/languages/shell.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/highlight.js@11.9.0/lib/languages/ini.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/highlight.js@11.9.0/lib/languages/toml.min.js"></script>
     <style>
         * {
             margin: 0;
@@ -253,19 +285,51 @@
             display: none !important;
         }
 
+        .code-block-wrapper {
+            position: relative;
+            margin: 20px 0 !important;
+        }
+
+        .copy-btn {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            background: #f6f8fa;
+            border: 1px solid #d0d7de;
+            border-radius: 6px;
+            padding: 4px 8px;
+            font-size: 14px;
+            cursor: pointer;
+            color: #24292f;
+            transition: all 0.2s;
+            z-index: 10;
+            line-height: 1;
+        }
+
+        .copy-btn:hover {
+            background: #eaeef2;
+        }
+
+        .copy-btn.copied {
+            background: #22c55e;
+            color: white;
+            border-color: #22c55e;
+        }
+
         .article-content pre,
         .article-content figure pre {
-            background: #1e1e1e !important;
-            color: #d4d4d4 !important;
+            background: #f6f8fa !important;
+            color: #24292f !important;
             padding: 20px !important;
+            padding-top: 40px !important;
             overflow-x: auto !important;
             overflow-y: visible !important;
-            margin: 20px 0 !important;
+            margin: 0 !important;
             width: 100% !important;
             max-width: 100% !important;
             box-sizing: border-box !important;
-            border: none !important;
-            border-radius: 0 !important;
+            border: 1px solid #d0d7de !important;
+            border-radius: 6px !important;
             box-shadow: none !important;
         }
 
@@ -283,7 +347,7 @@
             background: transparent !important;
             padding: 0 !important;
             border: none !important;
-            color: #d4d4d4 !important;
+            color: inherit !important;
         }
 
         .article-content code {
@@ -299,6 +363,48 @@
             height: auto;
             border-radius: 8px;
             margin: 20px 0;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .article-content img:hover {
+            transform: scale(1.02);
+        }
+
+        .image-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            cursor: pointer;
+        }
+
+        .image-modal.active {
+            display: flex;
+        }
+
+        .image-modal img {
+            max-width: 90%;
+            max-height: 90%;
+            object-fit: contain;
+            border-radius: 8px;
+        }
+
+        .image-modal-close {
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            color: white;
+            font-size: 40px;
+            font-weight: 300;
+            cursor: pointer;
+            line-height: 1;
         }
 
         .article-content a {
@@ -359,8 +465,8 @@
                 display: none;
             }
 
-            .article-wrapper {
-                max-width: 100%;
+            .main-wrapper {
+                padding: 40px 20px;
             }
         }
 
@@ -371,6 +477,10 @@
 
             .header h1 {
                 font-size: 1.5rem;
+            }
+
+            .main-wrapper {
+                padding: 20px 15px;
             }
         }
     </style>
@@ -395,6 +505,11 @@
                 <p>正在加载文章内容...</p>
             </article>
         </main>
+    </div>
+
+    <div class="image-modal" id="imageModal" onclick="closeImageModal()">
+        <span class="image-modal-close" onclick="closeImageModal()">&times;</span>
+        <img id="modalImage" src="" alt="">
     </div>
 
     <script>
@@ -446,6 +561,8 @@
                     
                     document.getElementById('articleContent').innerHTML = html;
                     
+                    processCodeBlocks();
+                    processImages();
                     generateTOC();
                     setupTOCHighlight();
                 })
@@ -483,6 +600,8 @@
                     
                     document.getElementById('articleContent').innerHTML = content;
                     
+                    processCodeBlocks();
+                    processImages();
                     generateTOC();
                     setupTOCHighlight();
                 })
@@ -492,6 +611,92 @@
                     console.error('Error loading article:', error);
                 });
         }
+
+        function processCodeBlocks() {
+            const articleContent = document.getElementById('articleContent');
+            const pres = articleContent.querySelectorAll('pre');
+            
+            pres.forEach(pre => {
+                const wrapper = document.createElement('div');
+                wrapper.className = 'code-block-wrapper';
+                
+                const code = pre.querySelector('code');
+                let language = '';
+                
+                if (code && code.className) {
+                    const match = code.className.match(/language-(\w+)/);
+                    if (match) {
+                        language = match[1];
+                    }
+                }
+                
+                if (!wrapper.parentNode) {
+                    pre.parentNode.insertBefore(wrapper, pre);
+                }
+                wrapper.appendChild(pre);
+                
+                if (language && window.hljs) {
+                    if (window.hljs.getLanguage(language)) {
+                        code.classList.add(`language-${language}`);
+                        window.hljs.highlightElement(code);
+                    }
+                }
+                
+                const copyBtn = document.createElement('button');
+                copyBtn.className = 'copy-btn';
+                copyBtn.innerHTML = '📋';
+                copyBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    copyCode(code, copyBtn);
+                });
+                wrapper.appendChild(copyBtn);
+            });
+        }
+
+        function copyCode(codeElement, button) {
+            const text = codeElement.textContent;
+            navigator.clipboard.writeText(text).then(() => {
+                button.innerHTML = '✅';
+                button.classList.add('copied');
+                setTimeout(() => {
+                    button.innerHTML = '📋';
+                    button.classList.remove('copied');
+                }, 2000);
+            }).catch(err => {
+                console.error('复制失败:', err);
+                button.innerHTML = '❌';
+                setTimeout(() => {
+                    button.innerHTML = '📋';
+                }, 2000);
+            });
+        }
+
+        function processImages() {
+            const articleContent = document.getElementById('articleContent');
+            const images = articleContent.querySelectorAll('img');
+            
+            images.forEach(img => {
+                img.addEventListener('click', () => openImageModal(img.src));
+            });
+        }
+
+        function openImageModal(src) {
+            const modal = document.getElementById('imageModal');
+            const modalImage = document.getElementById('modalImage');
+            modalImage.src = src;
+            modal.classList.add('active');
+        }
+
+        function closeImageModal() {
+            const modal = document.getElementById('imageModal');
+            modal.classList.remove('active');
+        }
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                closeImageModal();
+            }
+        });
 
         function generateTOC() {
             const content = document.getElementById('articleContent');
