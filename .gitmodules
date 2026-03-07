@@ -1,6 +1,3 @@
-[submodule "blog"]
-	path = blog
+[submodule "Blog"]
+	path = Blog
 	url = https://github.com/NanoShiki/Blog.git
-[submodule "ZmdDmg"]
-	path = ZmdDmg
-	url = https://github.com/NanoShiki/ZmdDmg.git
