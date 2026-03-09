@@ -3,6 +3,18 @@ import os
 import json
 from datetime import datetime
 
+def extract_title_from_md(md_file_path):
+    """从 Markdown 文件中提取标题"""
+    try:
+        with open(md_file_path, 'r', encoding='utf-8') as f:
+            for line in f:
+                line = line.strip()
+                if line.startswith('# '):
+                    return line[2:].strip()
+    except Exception as e:
+        print(f"读取文件 {md_file_path} 失败: {e}")
+    return None
+
 def scan_directory(root_dir, current_dir, categories=None):
     if categories is None:
         categories = []
@@ -29,9 +41,13 @@ def scan_directory(root_dir, current_dir, categories=None):
                 rel_path_parts = categories + [current_dir, item] if categories else [current_dir, item]
                 rel_path = '/'.join(rel_path_parts)
                 
+                title = extract_title_from_md(md_file)
+                if title is None:
+                    title = item
+                
                 post = {
                     "id": '_'.join(rel_path_parts),
-                    "title": item,
+                    "title": title,
                     "date": date_str,
                     "path": f"/Blog/archive/{rel_path}/",
                     "categories": categories + [current_dir] if categories else [current_dir]
@@ -111,9 +127,13 @@ def main():
                     mtime = os.path.getmtime(item_path)
                     date_str = datetime.fromtimestamp(mtime).strftime('%Y-%m-%d')
                     
+                    title = extract_title_from_md(md_file)
+                    if title is None:
+                        title = item
+                    
                     post = {
                         "id": item,
-                        "title": item,
+                        "title": title,
                         "date": date_str,
                         "path": f"/Blog/archive/{item}/",
                         "categories": []
@@ -140,9 +160,13 @@ def main():
                                     rel_path_parts = categories + [current_dir, item] if categories else [current_dir, item]
                                     rel_path = '/'.join(rel_path_parts)
                                     
+                                    title = extract_title_from_md(md_file)
+                                    if title is None:
+                                        title = item
+                                    
                                     post = {
                                         "id": '_'.join(rel_path_parts),
-                                        "title": item,
+                                        "title": title,
                                         "date": date_str,
                                         "path": f"/Blog/archive/{rel_path}/",
                                         "categories": categories + [current_dir] if categories else [current_dir]
