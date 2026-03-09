@@ -108,3 +108,16 @@ myWeb/
 - Run `update_config.py` after any blog structure changes
 - Chinese content is expected and normal
 - No formal testing framework - manual verification required
+
+## 课堂笔记整理
+
+### 重要提示
+在整理课堂录音文本为笔记之前，**必须先查看** `/Users/nanoshiki/Desktop/myWeb/wiki/课堂笔记整理指南.md` 文件。
+
+### 笔记整理要求
+1. **字数控制**：1000字以内
+2. **内容完整**：涵盖所有核心知识点
+3. **易于理解**：使用教学性语言，适当补充解释
+
+### 完整提示词
+请使用 wiki/课堂笔记整理指南.md 中提供的提示词进行整理。
