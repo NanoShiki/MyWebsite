@@ -2,44 +2,56 @@
 
 ## 项目介绍
 
-Blog 是一个个人技术博客，采用静态 HTML + Markdown 文章的形式，配置化管理博客信息和文章列表，支持多级分类导航。
+`Blog/` 是当前站点的博客子项目，使用静态 HTML 页面展示由 Markdown 文章生成的内容。文章元数据由 `update_config.py` 从 `archive/` 目录扫描生成，再由前端页面读取 `config.json` 完成分类导航和文章展示。
 
 ## 技术栈
 
-- **前端**: HTML, CSS, JavaScript (原生)
-- **文章格式**: Markdown
-- **配置文件**: JSON
-- **工具脚本**: Python
+- **前端**：HTML、CSS、JavaScript（原生）
+- **文章格式**：Markdown
+- **配置文件**：JSON
+- **工具脚本**：Python 3
+- **第三方库**：`marked.js`、`highlight.js`、`KaTeX`
 
 ## 目录结构
 
-```
+```text
 Blog/
-├── index.html              # 博客首页（层级导航）
+├── index.html              # 博客首页（分类导航）
 ├── post.html               # 文章详情页
-├── config.json             # 博客配置文件
+├── config.json             # 博客配置文件（自动生成）
 ├── update_config.py        # 自动更新配置的 Python 脚本
-├── 使用说明.md             # 脚本使用说明
+├── 使用说明.md             # 配置脚本使用说明
 └── archive/                # 文章归档目录（支持多级分类）
-    ├── 分类1/
-    │   ├── 子分类1/
-    │   │   └── 文章标题1/
-    │   │       ├── 文章标题1.md
+    ├── 分类A/
+    │   ├── 子分类A/
+    │   │   └── 文章A/
+    │   │       ├── 文章A.md
     │   │       └── assets/
-    │   │           └── image1.png
-    │   └── 文章标题2/
-    │       ├── 文章标题2.md
+    │   └── 文章B/
+    │       ├── 文章B.md
     │       └── assets/
-    │           └── image2.png
-    └── 文章标题3/          # 无分类的文章
-        ├── 文章标题3.md
+    └── 文章C/
+        ├── 文章C.md
         └── assets/
-            └── image3.png
 ```
 
-## 配置文件 (config.json)
+## 数据流程
 
-### 结构说明
+1. 在 `Blog/archive/` 中按分类创建文章目录。
+2. 运行 `python3 Blog/update_config.py` 扫描文章。
+3. 脚本生成最新的 `Blog/config.json`。
+4. `Blog/index.html` 读取 `config.json` 展示分类与文章列表。
+5. `Blog/post.html` 根据文章路径加载 Markdown 并完成渲染。
+
+## 配置文件说明
+
+`config.json` 由三部分组成：
+
+- `site`：博客基础信息，如标题、副标题、作者。
+- `posts`：按日期倒序排列的文章列表。
+- `categoryTree`：分类树结构，用于首页层级导航与分类统计。
+
+示例结构如下：
 
 ```json
 {
@@ -50,63 +62,18 @@ Blog/
   },
   "posts": [
     {
-      "id": "分类1_子分类1_文章标题1",
-      "title": "文章标题1",
-      "date": "2026-02-28",
-      "path": "/Blog/archive/分类1/子分类1/文章标题1/",
-      "categories": ["分类1", "子分类1"]
-    },
-    {
-      "id": "文章标题3",
-      "title": "文章标题3",
-      "date": "2026-02-28",
-      "path": "/Blog/archive/文章标题3/",
-      "categories": []
+      "id": "分类A_子分类A_文章A",
+      "title": "文章A",
+      "date": "2026-03-09",
+      "path": "/Blog/archive/分类A/子分类A/文章A/",
+      "categories": ["分类A", "子分类A"]
     }
   ],
   "categoryTree": {
     "name": "root",
     "type": "category",
-    "children": [
-      {
-        "name": "分类1",
-        "type": "category",
-        "children": [
-          {
-            "name": "子分类1",
-            "type": "category",
-            "children": [],
-            "posts": [
-              {
-                "id": "分类1_子分类1_文章标题1",
-                "title": "文章标题1",
-                "date": "2026-02-28",
-                "path": "/Blog/archive/分类1/子分类1/文章标题1/",
-                "categories": ["分类1", "子分类1"]
-              }
-            ]
-          }
-        ],
-        "posts": [
-          {
-            "id": "分类1_文章标题2",
-            "title": "文章标题2",
-            "date": "2026-02-28",
-            "path": "/Blog/archive/分类1/文章标题2/",
-            "categories": ["分类1"]
-          }
-        ]
-      }
-    ],
-    "posts": [
-      {
-        "id": "文章标题3",
-        "title": "文章标题3",
-        "date": "2026-02-28",
-        "path": "/Blog/archive/文章标题3/",
-        "categories": []
-      }
-    ]
+    "children": [],
+    "posts": []
   }
 }
 ```
@@ -118,145 +85,66 @@ Blog/
 | `site.title` | string | 博客标题 |
 | `site.subtitle` | string | 博客副标题 |
 | `site.author` | string | 作者名称 |
-| `posts[].id` | string | 文章唯一标识符（分类路径用下划线连接） |
-| `posts[].title` | string | 文章标题 |
-| `posts[].date` | string | 文章发布日期 (YYYY-MM-DD) |
-| `posts[].path` | string | 文章归档路径 |
-| `posts[].categories` | string[] | 文章分类数组（支持多级分类） |
-| `categoryTree` | object | 分类树结构，用于层级导航 |
+| `posts[].id` | string | 文章唯一标识，通常由分类路径与文章目录名拼接而成 |
+| `posts[].title` | string | 从 Markdown 一级标题读取的文章标题 |
+| `posts[].date` | string | 文章日期，格式为 `YYYY-MM-DD` |
+| `posts[].path` | string | 文章目录的站点路径 |
+| `posts[].categories` | string[] | 文章所属分类路径 |
+| `categoryTree` | object | 分类树结构，用于首页导航 |
 
 ## 页面说明
 
-### 首页 (index.html) - 层级导航
+### `index.html`
 
-- 显示博客标题和副标题
-- **面包屑导航**：显示当前路径，支持点击返回上级
-- **分类卡片**：显示当前层级的子分类，带文件夹图标和数量统计
-- **文章列表**：显示当前层级的文章
-- 分类和文章分区显示
-- 点击分类卡片进入下一级
-- 点击文章卡片跳转到文章详情页
-- 响应式设计，支持移动端
+- 读取 `config.json` 并展示博客标题、副标题。
+- 使用面包屑导航展示当前分类路径。
+- 在当前层级展示子分类卡片和文章列表。
+- 文章项展示标题、日期和分类标签。
 
-### 文章详情页 (post.html)
+### `post.html`
 
-- 根据 URL 参数 `id` 加载对应文章
-- 显示文章标题、分类标签和日期
-- 分类标签在头部使用半透明样式
-- 渲染 Markdown 内容
-- 自动生成文章目录（TOC）
-- 支持文章资源（图片等）
+- 根据文章路径定位对应 Markdown 文件。
+- 使用 `marked.js` 渲染文章正文。
+- 使用 `highlight.js` 完成代码高亮与复制按钮。
+- 使用 `KaTeX` 渲染数学公式。
+- 自动生成目录（TOC），并支持滚动高亮。
+- 支持图片点击放大查看。
 
-## 工具脚本 (update_config.py)
+## 文章目录规则
 
-### 功能
+`update_config.py` 通过目录命名约定识别文章，当前规则如下：
 
-自动扫描 `archive` 目录下的文章文件夹，更新 `config.json` 文件，生成完整的分类树结构。
+- 文章必须放在独立文件夹中。
+- **文章文件夹名必须与其中的 Markdown 文件名一致。**
+- 分类文件夹本身不放置 Markdown 文件。
+- 支持任意深度的多级分类。
 
-### 特点
+示例：
 
-- 自动发现文章（支持多级分类文件夹）
-- 文章按修改时间倒序排列（最新的在前）
-- 分类按名称排序
-- 自动提取文章标题
-- 使用文件夹修改时间作为文章日期
-- 自动生成文章分类路径
-- **生成 categoryTree 分类树结构**
-- 支持无限级嵌套分类
+```text
+Blog/archive/
+└── 课内/
+    └── 人机交互技术/
+        └── 人机交互技术_1/
+            ├── 人机交互技术_1.md
+            └── assets/
+```
 
-### 使用方法
+如果文件夹名与 Markdown 文件名不一致，对应文章不会被收录到 `config.json`。
 
-#### Mac 系统
+## 使用方式
+
+新增或调整文章目录后，执行以下命令更新配置：
 
 ```bash
-cd Blog
-python3 update_config.py
+cd /Users/nanoshiki/Desktop/myWeb
+python3 Blog/update_config.py
 ```
 
-#### Windows 系统
-
-```cmd
-cd Blog
-python update_config.py
-```
-
-### 文章目录结构要求
-
-每个文章必须是一个独立的文件夹，支持多级分类：
-
-```
-archive/
-├── 分类1/                    # 一级分类
-│   ├── 子分类1/              # 二级分类
-│   │   └── 文章标题1/        # 文章文件夹
-│   │       ├── 文章标题1.md   # 文件夹名与 .md 文件名必须一致
-│   │       └── assets/         # 可选，存放图片等资源
-│   │           └── image1.png
-│   └── 文章标题2/            # 一级分类下的文章
-│       ├── 文章标题2.md
-│       └── assets/
-│           └── image2.png
-└── 文章标题3/                # 无分类的文章（直接在 archive 下）
-    ├── 文章标题3.md
-    └── assets/
-        └── image3.png
-```
-
-**规则：**
-- 文章文件夹名称与内部的 .md 文件名必须一致
-- 分类文件夹不包含 .md 文件
-- 支持任意深度的嵌套分类
-- 非文章文件夹（不含 .md）会被自动识别为分类
-
-### 输出示例
-
-```
-成功更新 config.json，共发现 3 篇文章
-```
-
-## 层级导航功能说明
-
-### 导航流程示例
-
-```
-博客首页
-├── UE (分类)
-│   ├── Lyra(二) GameFeatureAction浅析 (文章)
-│   └── Lyra(一) 地图切换 & Experience加载 & Loading界面 (文章)
-└── 课内 (分类)
-    ├── 人工交互技术 (子分类)
-    │   └── 人工交互技术_1 (文章)
-    ├── 计算机组成与系统结构 (子分类)
-    │   └── 计算机组成与系统结构_1 (文章)
-    ├── 机器学习 (子分类)
-    │   └── 机器学习_1 (文章)
-    └── 计算机图形学 (子分类)
-        └── 计算机图形学_1 (文章)
-```
-
-### 交互说明
-
-1. **首页**：显示所有一级分类（UE、课内）
-2. **点击 "UE"**：进入 UE 分类，显示该分类下的 2 篇文章
-3. **点击 "课内"**：进入课内分类，显示子分类 "人工交互技术"
-4. **点击 "人工交互技术"**：进入子分类，显示该分类下的文章
-
-### 面包屑导航
-
-- 显示格式：`博客 / 课内 / 人工交互技术`
-- 点击任意路径段可跳转到对应层级
-- 当前层级高亮显示
-
-## 样式特点
-
-- 渐变色头部（紫色系）
-- 卡片式分类和文章列表
-- 悬停动画效果
-- 面包屑导航
-- 响应式布局
-- 简洁现代的设计风格
+更新完成后，可以直接打开 `Blog/index.html` 或通过本地静态服务器查看效果。
 
 ## 相关文档
 
-- [readme](./readme.md)
-- [update_config.py 使用说明](../Blog/使用说明.md)
+- `Blog/使用说明.md`：配置生成脚本使用说明
+- `wiki/部署指南.md`：站点部署方法
+- `readme.md`：项目整体说明

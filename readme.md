@@ -24,11 +24,12 @@ myWeb/
 │   ├── index.html      # 🏠 博客首页
 │   ├── post.html       # 📖 文章详情页
 │   ├── config.json     # ⚙️ 博客配置
-│   └── update_config.py # 🛠️ 配置更新脚本
+│   ├── update_config.py # 🛠️ 配置更新脚本
+│   └── 使用说明.md      # 📘 脚本使用说明
 ├── wiki/               # 📖 技术文档
-│   ├── readme.md       # 📄 本文件
 │   ├── blog.md         # 📝 Blog 项目文档
 │   ├── 部署指南.md     # 🚀 部署指南
+│   ├── 课堂笔记整理指南.md # 🧾 笔记整理提示
 │   └── teach/          # 🎓 教学文档
 ├── index.html          # 🏠 个人主页
 ├── readme.md           # 📄 本文件
@@ -53,6 +54,7 @@ myWeb/
 
 - ✅ 文章归档与分类
 - ✅ 配置化管理
+- ✅ 多级分类导航与面包屑
 - ✅ 目录导航（TOC）
 - ✅ 代码高亮（支持 40+ 语言）
 - ✅ 一键复制代码
@@ -65,5 +67,6 @@ myWeb/
 
 - [部署指南](./wiki/部署指南.md) 🚀
 - [Blog 项目文档](./wiki/blog.md) 📝
+- [Blog 配置脚本说明](./Blog/使用说明.md) 📘
+- [课堂笔记整理指南](./wiki/课堂笔记整理指南.md) 🧾
 - [教学文档](./wiki/teach/README.md) 🎓
-
