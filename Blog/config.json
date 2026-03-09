@@ -6,6 +6,46 @@
   },
   "posts": [
     {
+      "id": "UE_Lyra_Lyra UIExtension插件介绍",
+      "title": "Lyra UIExtension插件介绍",
+      "date": "2026-03-09",
+      "path": "/Blog/archive/UE/Lyra/Lyra UIExtension插件介绍/",
+      "categories": [
+        "UE",
+        "Lyra"
+      ]
+    },
+    {
+      "id": "UE_Lyra_Lyra(二) GameFeatureAction浅析",
+      "title": "Lyra(二) GameFeatureAction浅析",
+      "date": "2026-03-09",
+      "path": "/Blog/archive/UE/Lyra/Lyra(二) GameFeatureAction浅析/",
+      "categories": [
+        "UE",
+        "Lyra"
+      ]
+    },
+    {
+      "id": "UE_Lyra_Lyra(一) 地图切换 & Experience加载 & Loading界面",
+      "title": "Lyra(一) 地图切换 & Experience加载 & Loading界面",
+      "date": "2026-03-09",
+      "path": "/Blog/archive/UE/Lyra/Lyra(一) 地图切换 & Experience加载 & Loading界面/",
+      "categories": [
+        "UE",
+        "Lyra"
+      ]
+    },
+    {
+      "id": "UE_Lyra_CommonLoadingScreen插件介绍",
+      "title": "CommonLoadingScreen插件介绍",
+      "date": "2026-03-09",
+      "path": "/Blog/archive/UE/Lyra/CommonLoadingScreen插件介绍/",
+      "categories": [
+        "UE",
+        "Lyra"
+      ]
+    },
+    {
       "id": "课内_计算机图形学_计算机图形学_1",
       "title": "计算机图形学_1",
       "date": "2026-03-06",
@@ -13,24 +53,6 @@
       "categories": [
         "课内",
         "计算机图形学"
-      ]
-    },
-    {
-      "id": "UE_Lyra(二) GameFeatureAction浅析",
-      "title": "Lyra(二) GameFeatureAction浅析",
-      "date": "2026-03-05",
-      "path": "/Blog/archive/UE/Lyra(二) GameFeatureAction浅析/",
-      "categories": [
-        "UE"
-      ]
-    },
-    {
-      "id": "UE_Lyra(一) 地图切换 & Experience加载 & Loading界面",
-      "title": "Lyra(一) 地图切换 & Experience加载 & Loading界面",
-      "date": "2026-03-05",
-      "path": "/Blog/archive/UE/Lyra(一) 地图切换 & Experience加载 & Loading界面/",
-      "categories": [
-        "UE"
       ]
     },
     {
@@ -71,27 +93,56 @@
       {
         "name": "UE",
         "type": "category",
-        "children": [],
-        "posts": [
+        "children": [
           {
-            "id": "UE_Lyra(二) GameFeatureAction浅析",
-            "title": "Lyra(二) GameFeatureAction浅析",
-            "date": "2026-03-05",
-            "path": "/Blog/archive/UE/Lyra(二) GameFeatureAction浅析/",
-            "categories": [
-              "UE"
-            ]
-          },
-          {
-            "id": "UE_Lyra(一) 地图切换 & Experience加载 & Loading界面",
-            "title": "Lyra(一) 地图切换 & Experience加载 & Loading界面",
-            "date": "2026-03-05",
-            "path": "/Blog/archive/UE/Lyra(一) 地图切换 & Experience加载 & Loading界面/",
-            "categories": [
-              "UE"
+            "name": "Lyra",
+            "type": "category",
+            "children": [],
+            "posts": [
+              {
+                "id": "UE_Lyra_Lyra UIExtension插件介绍",
+                "title": "Lyra UIExtension插件介绍",
+                "date": "2026-03-09",
+                "path": "/Blog/archive/UE/Lyra/Lyra UIExtension插件介绍/",
+                "categories": [
+                  "UE",
+                  "Lyra"
+                ]
+              },
+              {
+                "id": "UE_Lyra_Lyra(二) GameFeatureAction浅析",
+                "title": "Lyra(二) GameFeatureAction浅析",
+                "date": "2026-03-09",
+                "path": "/Blog/archive/UE/Lyra/Lyra(二) GameFeatureAction浅析/",
+                "categories": [
+                  "UE",
+                  "Lyra"
+                ]
+              },
+              {
+                "id": "UE_Lyra_Lyra(一) 地图切换 & Experience加载 & Loading界面",
+                "title": "Lyra(一) 地图切换 & Experience加载 & Loading界面",
+                "date": "2026-03-09",
+                "path": "/Blog/archive/UE/Lyra/Lyra(一) 地图切换 & Experience加载 & Loading界面/",
+                "categories": [
+                  "UE",
+                  "Lyra"
+                ]
+              },
+              {
+                "id": "UE_Lyra_CommonLoadingScreen插件介绍",
+                "title": "CommonLoadingScreen插件介绍",
+                "date": "2026-03-09",
+                "path": "/Blog/archive/UE/Lyra/CommonLoadingScreen插件介绍/",
+                "categories": [
+                  "UE",
+                  "Lyra"
+                ]
+              }
             ]
           }
-        ]
+        ],
+        "posts": []
       },
       {
         "name": "课内",
