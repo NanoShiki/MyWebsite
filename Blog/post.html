@@ -7,6 +7,8 @@
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@11.9.0/styles/github.min.css">
     <script src="https://cdn.jsdelivr.net/npm/highlight.js@11.9.0/lib/core.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/highlight.js@11.9.0/lib/languages/python.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/highlight.js@11.9.0/lib/languages/javascript.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/highlight.js@11.9.0/lib/languages/bash.min.js"></script>
@@ -555,9 +557,40 @@
                     return response.text();
                 })
                 .then(md => {
-                    let html = marked.parse(md);
+                    const mathItems = [];
+                    let processedMd = md;
+                    let id = 0;
+                    
+                    processedMd = processedMd.replace(/\$\$([\s\S]+?)\$\$/g, (match, math) => {
+                        const placeholder = `@@MATH_BLOCK_${id}@@`;
+                        mathItems.push({ placeholder, math, display: true });
+                        id++;
+                        return placeholder;
+                    });
+                    
+                    processedMd = processedMd.replace(/\$([^\$\n]+?)\$/g, (match, math) => {
+                        const placeholder = `@@MATH_INLINE_${id}@@`;
+                        mathItems.push({ placeholder, math, display: false });
+                        id++;
+                        return placeholder;
+                    });
+                    
+                    let html = marked.parse(processedMd);
                     
                     html = html.replace(/src="assets\//g, `src="${path}assets/`);
+                    
+                    mathItems.forEach(item => {
+                        try {
+                            const rendered = katex.renderToString(item.math.trim(), {
+                                displayMode: item.display,
+                                throwOnError: false
+                            });
+                            const regex = new RegExp(item.placeholder.replace(/([.*+?^=!:${}()|\[\]\/\\])/g, '\\$1'), 'g');
+                            html = html.replace(regex, rendered);
+                        } catch (e) {
+                            console.error('Math error:', e);
+                        }
+                    });
                     
                     document.getElementById('articleContent').innerHTML = html;
                     
