@@ -6,6 +6,16 @@
   },
   "posts": [
     {
+      "id": "课内_人工智能_人工智能_1",
+      "title": "人工智能 - 第1课：搜索基础与一般图搜索",
+      "date": "2026-03-10",
+      "path": "/Blog/archive/课内/人工智能/人工智能_1/",
+      "categories": [
+        "课内",
+        "人工智能"
+      ]
+    },
+    {
       "id": "UE_Lyra_Lyra UIExtension插件介绍",
       "title": "Lyra UIExtension插件介绍",
       "date": "2026-03-09",
@@ -168,6 +178,23 @@
         "name": "课内",
         "type": "category",
         "children": [
+          {
+            "name": "人工智能",
+            "type": "category",
+            "children": [],
+            "posts": [
+              {
+                "id": "课内_人工智能_人工智能_1",
+                "title": "人工智能 - 第1课：搜索基础与一般图搜索",
+                "date": "2026-03-10",
+                "path": "/Blog/archive/课内/人工智能/人工智能_1/",
+                "categories": [
+                  "课内",
+                  "人工智能"
+                ]
+              }
+            ]
+          },
           {
             "name": "人机交互技术",
             "type": "category",
