@@ -1,85 +1,96 @@
 ---
 name: classroom-transcript-notes
-description: [TODO: Complete and informative explanation of what the skill does and when to use it. Include WHEN to use this skill - specific scenarios, file types, or tasks that trigger it.]
+description: "Convert classroom audio transcripts, lecture transcriptions, pasted raw lecture text, or existing lesson-note drafts into concise Chinese study-note Markdown for this project. Use when Codex needs to: (1) rewrite 课堂录音转写文本 into publishable notes, (2) extract a complete set of 专业术语 and knowledge points from source material, (3) explain each knowledge point with a fixed structure of 是什么 / 是干嘛的 / 这一讲怎么用 / 例子, or (4) normalize lecture notes under Blog/archive/课内/ to the project's concise note format."
 ---
 
 # Classroom Transcript Notes
 
 ## Overview
+Use this skill to turn raw classroom transcript text into concise study notes for this project. Assume the default reader has only high-school-level math/science plus a little computer background.
 
-[TODO: 1-2 sentences explaining what this skill enables]
+Prioritize a `知识点讲解 + 举例讲解` result:
+- Extract knowledge points first.
+- Organize by knowledge point, not by speaking order.
+- Put the noun-like knowledge-point title first.
+- Only after the knowledge-point title, explain `是什么 / 是干嘛的 / 这一讲怎样用到它 / 一个例子或应用`.
+- The `是什么` part must define the point concretely, not abstractly.
+- If the point is a structured mathematical model, include its minimum complete mathematical structure in `是什么`.
+- For equation-like knowledge points, include the general form or standard written form when possible.
+- Keep the result compact and review-friendly.
+- Explain necessary terms in place instead of assuming advanced prerequisites.
+- Preserve structured source content when it is itself a knowledge point.
 
-## Structuring This Skill
+Read `references/style-guide.md` first for writing rules. Read `references/workflow.md` for the processing sequence. Read `references/quality-checklist.md` before finalizing.
 
-[TODO: Choose the structure that best fits this skill's purpose. Common patterns:
+## Core Principle
+Follow this principle for every note:
 
-**1. Workflow-Based** (best for sequential processes)
-- Works well when there are clear step-by-step procedures
-- Example: DOCX skill with "Workflow Decision Tree" -> "Reading" -> "Creating" -> "Editing"
-- Structure: ## Overview -> ## Workflow Decision Tree -> ## Step 1 -> ## Step 2...
+1. Extract as complete a list of professional terms and knowledge points as possible from the source.
+2. Turn those terms into noun-like knowledge-point headings first.
+3. Only then fill each heading with the fixed four-part explanation.
+4. In `是什么`, define the object concretely: if it is a formula or equation, write its general form or standard expression; if it is a method, state the basic flow; if it is a model, give variables and update rule; if it is a theorem, state the key claim.
+5. Never let a `为什么...` or `怎么...` question become the first entry point of a knowledge point.
 
-**2. Task-Based** (best for tool collections)
-- Works well when the skill offers different operations/capabilities
-- Example: PDF skill with "Quick Start" -> "Merge PDFs" -> "Split PDFs" -> "Extract Text"
-- Structure: ## Overview -> ## Quick Start -> ## Task Category 1 -> ## Task Category 2...
 
-**3. Reference/Guidelines** (best for standards or specifications)
-- Works well for brand guidelines, coding standards, or requirements
-- Example: Brand styling with "Brand Guidelines" -> "Colors" -> "Typography" -> "Features"
-- Structure: ## Overview -> ## Guidelines -> ## Specifications -> ## Usage...
+The source defines coverage. Codex is responsible for explanation quality and structure. By default, do not assume the reader already knows linear algebra, probability, architecture, graphics, or machine learning prerequisites.
 
-**4. Capabilities-Based** (best for integrated systems)
-- Works well when the skill provides multiple interrelated features
-- Example: Product Management with "Core Capabilities" -> numbered capability list
-- Structure: ## Overview -> ## Core Capabilities -> ### 1. Feature -> ### 2. Feature...
+## Workflow
+Follow this sequence:
 
-Patterns can be mixed and matched as needed. Most skills combine patterns (e.g., start with task-based, add workflow for complex operations).
+1. Read the transcript or raw note text completely.
+2. Extract a complete knowledge-point list before writing prose.
+3. Convert the list into noun-like headings.
+4. Mark named models, formulas, matrices, methods, and examples that must stay visible.
+5. Group scattered transcript fragments under the correct knowledge-point heading.
+6. Rewrite each knowledge point using a fixed pattern: `是什么 / 是干嘛的或为什么重要 / 这一讲里怎样用到它 / 一个例子或应用`.
+7. Make the `是什么` subsection concrete enough that a reader can know what object is being discussed without reading later subsections.
+8. Use domain understanding to clarify the point, but do not expand it into a long lecture handout.
+9. When a term has obvious prerequisite burden, explain it in place with the minimum necessary intuition.
+10. Preserve structured content explicitly when it is itself a knowledge point, such as matrix forms, recurrence relations, formulas, or algorithm steps.
+11. Remove classroom-language residue such as teacher references, fillers, and timeline narration.
+12. Stop and mark the file as blocked if the source transcript is empty or missing. Do not invent course content.
 
-Delete this entire "Structuring This Skill" section when done - it's just guidance.]
+## Output Shape
+Use this output style by default:
 
-## [TODO: Replace with the first main section based on chosen structure]
+- Title: `课程名 - 第X课[:主题]`
+- Main sections: concept groups
+- Subsections: noun-like knowledge-point titles
+- Each knowledge point: fixed four-part explanation in the order `是什么 -> 是干嘛的 / 为什么重要 -> 这一讲里怎样用到它 -> 一个例子或应用`
+- Ending: one compact summary section if helpful
 
-[TODO: Add content here. See examples in existing skills:
-- Code samples for technical skills
-- Decision trees for complex workflows
-- Concrete examples with realistic user requests
-- References to scripts/templates/references as needed]
+## Hard Rules
+Apply these defaults unless the user overrides them explicitly:
 
-## Resources (optional)
+- Write in Chinese.
+- Default to concise study-note style.
+- Do not require a 1500-character minimum by default.
+- Favor completeness plus brevity over long-form expansion.
+- Default to a reader with high-school-level math and only a little computer background.
+- Use the source transcript as the coverage boundary.
+- Use domain knowledge as an explanation enhancer, not as an excuse to add unrelated material.
+- Avoid classroom-record wording such as `本课`、`老师`、`课堂`、`录音`、`实录`.
+- Do not use `为什么...` or `怎么...` as the first heading of a knowledge point.
+- A knowledge point must appear as a noun-like title before any explanatory question appears under it.
+- The `是什么` subsection must concretely define the object itself, not just describe why it matters.
+- For equations, formulas, recurrence relations, and matrix models, prefer the minimum complete mathematical expression over purpose-only wording.
+- Use `$...$` for inline math and `$$...$$` for display math; do not use backticks to fake math rendering.
+- Do not output raw transcript cleanup with only light polishing.
+- Do not preserve obvious spoken-language repetition.
 
-Create only the resource directories this skill actually needs. Delete this section if no resources are required.
+## Failure Modes
+Handle these cases explicitly:
 
-### scripts/
-Executable code (Python/Bash/etc.) that can be run directly to perform specific operations.
+- Empty transcript: do not fabricate content; report the file as waiting for source material.
+- Extremely noisy transcript: extract the stable knowledge skeleton first, then rewrite.
+- Mixed logistics and content: keep only the logistics that materially affect studying; drop the rest.
+- Existing note already matches the target style: make only minimal edits.
+- Structured source detail missing in the rewrite: restore it explicitly instead of replacing it with prose summary.
+- Problem-first heading detected: rewrite the heading into a noun-like knowledge point, then place the question under it.
 
-**Examples from other skills:**
-- PDF skill: `fill_fillable_fields.py`, `extract_form_field_info.py` - utilities for PDF manipulation
-- DOCX skill: `document.py`, `utilities.py` - Python modules for document processing
+## Resources
+Use these reference files as needed:
 
-**Appropriate for:** Python scripts, shell scripts, or any executable code that performs automation, data processing, or specific operations.
-
-**Note:** Scripts may be executed without loading into context, but can still be read by Codex for patching or environment adjustments.
-
-### references/
-Documentation and reference material intended to be loaded into context to inform Codex's process and thinking.
-
-**Examples from other skills:**
-- Product management: `communication.md`, `context_building.md` - detailed workflow guides
-- BigQuery: API reference documentation and query examples
-- Finance: Schema documentation, company policies
-
-**Appropriate for:** In-depth documentation, API references, database schemas, comprehensive guides, or any detailed information that Codex should reference while working.
-
-### assets/
-Files not intended to be loaded into context, but rather used within the output Codex produces.
-
-**Examples from other skills:**
-- Brand styling: PowerPoint template files (.pptx), logo files
-- Frontend builder: HTML/React boilerplate project directories
-- Typography: Font files (.ttf, .woff2)
-
-**Appropriate for:** Templates, boilerplate code, document templates, images, icons, fonts, or any files meant to be copied or used in the final output.
-
----
-
-**Not every skill requires all three types of resources.**
+- `references/style-guide.md`
+- `references/workflow.md`
+- `references/quality-checklist.md`

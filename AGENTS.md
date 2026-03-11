@@ -38,7 +38,7 @@ npx serve .
 
 **Imports**: Standard library only (os, json, datetime)
 
-**Naming**: 
+**Naming**:
 - Functions: `snake_case` (e.g., `scan_directory`, `build_tree`)
 - Variables: `snake_case`
 - Constants: Not used
@@ -84,6 +84,7 @@ myWeb/
 │   ├── config.json         # Blog configuration (auto-generated)
 │   ├── update_config.py    # Config generator script
 │   └── archive/            # Blog posts (Markdown)
+├── skills/                 # Project-local Codex skills
 └── wiki/                   # Documentation
 ```
 
@@ -114,10 +115,31 @@ myWeb/
 ### 重要提示
 在整理课堂录音文本为笔记之前，**必须先查看** `/Users/nanoshiki/Desktop/myWeb/wiki/课堂笔记整理指南.md` 文件。
 
+### 默认工作方式
+- 优先使用项目内 skill：`/Users/nanoshiki/Desktop/myWeb/skills/classroom-transcript-notes/SKILL.md`
+- 输入默认是课堂录音转写文本、逐字稿，或已粘贴到目标 `md` 中的原始文本
+- 输出默认是可直接发布到博客的中文 Markdown 笔记
+- 如果源文本为空或缺失，不要编造内容；应明确标记为待补材料
+
 ### 笔记整理要求
-1. **字数控制**：1000字以内
-2. **内容完整**：涵盖所有核心知识点
-3. **易于理解**：使用教学性语言，适当补充解释
+1. **默认风格**：知识点讲解 + 举例讲解的精炼复习笔记
+2. **默认流程**：先提取专业术语和知识点，再逐点讲解，不按课堂顺序复述
+3. **标题规则**：每个知识点必须先以名词性标题立住，再展开“是什么 / 干嘛的 / 这一讲怎么用 / 例子”
+4. **内容完整**：尽量完整覆盖录音中的核心知识点
+5. **知识讲解**：每个知识点尽量讲清“是什么”“干嘛的”“这一讲怎么用”“一个例子或应用”
+6. **默认读者**：默认只预设高中数理基础与一点点计算机基础，不要默认读者已经学过高等数学、线性代数、离散数学、体系结构或机器学习先修
+7. **定义质量**：`是什么`必须具体定义知识点本身；如果是公式、模型、方法、定理，要写出最小完整形式
+8. **方程类要求**：若知识点属于方程、公式、递推关系，优先写一般形式或标准写法，并尽量补一个实例
+9. **术语处理**：遇到门槛较高的数学、算法、图形学、体系结构术语，要在正文中就地拆解，不要跳过先修前提
+10. **公式写法**：数学符号、递推式、状态更新式默认写成 Markdown/LaTeX 公式，不要用反引号代替公式渲染
+11. **表达限制**：避免使用“本课”“老师”“课堂”“录音”“实录”等课堂记录口吻
+12. **长度策略**：默认中等精炼，不强制 1500 字以上
+13. **结构禁忌**：不要在还没定义知识点时，直接用“为什么”“怎么”当标题
 
 ### 完整提示词
-请使用 wiki/课堂笔记整理指南.md 中提供的提示词进行整理。
+请使用 `wiki/课堂笔记整理指南.md` 和项目内 skill 中提供的提示词与流程进行整理。
+
+## Skills
+
+### Available project-local skills
+- `classroom-transcript-notes`: Convert classroom transcripts or raw lecture text into the project's concise `知识点讲解 + 举例讲解` Markdown notes, organized as noun-like knowledge-point headings followed by the fixed four-part explanation. (file: `/Users/nanoshiki/Desktop/myWeb/skills/classroom-transcript-notes/SKILL.md`)

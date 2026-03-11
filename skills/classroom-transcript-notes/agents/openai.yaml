@@ -1,0 +1,4 @@
+interface:
+  display_name: "课堂转笔记"
+  short_description: "将课堂录音转写文本整理成学霸笔记风格的 Markdown 笔记。"
+  default_prompt: "读取课堂录音转写文本或逐字稿，先提炼完整知识框架，再改写为学霸笔记风格的中文 Markdown，强调定义、讲解、例子、易混点和复习抓手。"
