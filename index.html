@@ -1,106 +1,90 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>如珩的个人主页</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-        }
-
-        .container {
-            text-align: center;
-            max-width: 800px;
-            width: 100%;
-        }
-
-        h1 {
-            color: white;
-            font-size: 3rem;
-            margin-bottom: 60px;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
-            font-weight: 300;
-            letter-spacing: 2px;
-        }
-
-        .sites-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 25px;
-            margin-top: 20px;
-        }
-
-        .site-card {
-            background: rgba(255, 255, 255, 0.95);
-            border-radius: 16px;
-            padding: 40px 30px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
-            text-decoration: none;
-            color: inherit;
-        }
-
-        .site-card:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25);
-            background: white;
-        }
-
-        .site-card h2 {
-            font-size: 1.6rem;
-            color: #333;
-            margin-bottom: 10px;
-            font-weight: 500;
-        }
-
-        .site-card p {
-            color: #666;
-            font-size: 1rem;
-            line-height: 1.6;
-        }
-
-        .site-icon {
-            font-size: 3rem;
-            margin-bottom: 20px;
-        }
-
-        @media (max-width: 600px) {
-            h1 {
-                font-size: 2rem;
-            }
-
-            .site-card {
-                padding: 30px 20px;
-            }
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script>
+    (() => {
+      const theme = localStorage.getItem('site-theme') === 'night' ? 'night' : 'day';
+      document.documentElement.dataset.theme = theme;
+      document.documentElement.style.colorScheme = theme === 'night' ? 'dark' : 'light';
+    })();
+  </script>
+  <title>如珩的个人网站</title>
+  <meta name="description" content="如珩的个人网站：首页作为导航入口，通往博客、GitHub 与 Bilibili。">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Noto+Sans+SC:wght@400;500;700&family=Noto+Serif+SC:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script type="module" src="/src/scripts/home.js"></script>
 </head>
-<body>
-    <div class="container">
-        <h1>如珩的个人主页</h1>
-        
-        <div class="sites-grid">
-            <a href="/Blog/" class="site-card">
-                <div class="site-icon">📝</div>
-                <h2>博客</h2>
-                <p>技术笔记与分享</p>
-            </a>
-        </div>
+<body class="home-page">
+  <a class="skip-link" href="#homeNavigation">跳到导航</a>
+
+  <div class="home-bg" aria-hidden="true">
+    <div class="home-bg-layer" data-bg-layer="0" data-depth="0.6"></div>
+    <div class="home-bg-overlay"></div>
+    <div class="home-bg-glow"></div>
+  </div>
+
+  <div class="home-topbar">
+    <a class="home-mini-brand" href="/">如珩</a>
+    <div class="inline-actions">
+      <button class="icon-button theme-button" type="button" data-theme-toggle></button>
     </div>
+  </div>
+
+  <main class="home-main">
+    <section class="home-hero home-panel-section" aria-labelledby="homeHeroTitle" data-home-panel="hero">
+      <div class="hero-center glass-section glass-section--hero home-hero-panel home-panel-frame">
+        <h1 class="home-title" id="homeHeroTitle">
+          <span class="home-title-line home-title-line--top" id="homeHeroTitleTop"></span>
+          <span class="home-title-line home-title-line--bottom" id="homeHeroTitleBottom"></span>
+        </h1>
+      </div>
+    </section>
+
+    <section class="home-navigation home-panel-section" id="homeNavigation" data-home-panel="camp">
+      <div class="home-panel-shell page-shell">
+        <div class="home-panel-card glass-section glass-section--content home-panel-frame">
+          <div class="navigation-head navigation-head--decorated home-panel-heading">
+            <h2 class="section-heading">营地</h2>
+            <span class="section-emoji" aria-hidden="true">⛺</span>
+          </div>
+          <div class="navigation-grid home-panel-body" id="homeDestinations"></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="home-stats home-panel-section" data-home-panel="stats">
+      <div class="home-panel-shell page-shell">
+        <div class="home-panel-card glass-section glass-section--content home-panel-frame">
+          <div class="navigation-head navigation-head--decorated home-panel-heading">
+            <h2 class="section-heading">旅者足迹</h2>
+            <span class="section-emoji" aria-hidden="true">🔥</span>
+          </div>
+          <div class="stats-grid home-panel-body">
+            <article class="stat-card" data-reveal>
+              <div class="stat-label">运行时长</div>
+              <div class="stat-value" id="runtimeCount">--</div>
+            </article>
+            <article class="stat-card" data-reveal>
+              <div class="stat-label">访客数量</div>
+              <div class="stat-value"><span id="busuanzi_value_site_uv" data-busuanzi-fallback>加载中</span></div>
+            </article>
+            <article class="stat-card" data-reveal>
+              <div class="stat-label">文章数量</div>
+              <div class="stat-value" id="articleCount">--</div>
+            </article>
+            <article class="stat-card" data-reveal>
+              <div class="stat-label">标签数量</div>
+              <div class="stat-value" id="categoryCount">--</div>
+            </article>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer home-footer-spacer" id="homeFooterText" aria-hidden="true"></footer>
 </body>
 </html>

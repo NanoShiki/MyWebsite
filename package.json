@@ -1,0 +1,19 @@
+{
+  "name": "myweb",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "highlight.js": "^11.11.1",
+    "katex": "^0.16.38",
+    "marked": "^17.0.4",
+    "simple-icons": "^16.11.0"
+  },
+  "devDependencies": {
+    "vite": "^7.3.1"
+  }
+}

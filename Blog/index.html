@@ -1,363 +1,72 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>如珩的博客</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
-            background: #f5f5f5;
-            min-height: 100vh;
-        }
-
-        .header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 60px 20px;
-            text-align: center;
-        }
-
-        .header h1 {
-            font-size: 2.5rem;
-            margin-bottom: 10px;
-            font-weight: 300;
-        }
-
-        .header p {
-            font-size: 1.1rem;
-            opacity: 0.9;
-        }
-
-        .container {
-            max-width: 900px;
-            margin: 0 auto;
-            padding: 40px 20px;
-        }
-
-        .breadcrumb {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            margin-bottom: 30px;
-            flex-wrap: wrap;
-        }
-
-        .breadcrumb-item {
-            color: #667eea;
-            text-decoration: none;
-            font-size: 0.95rem;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-
-        .breadcrumb-item:hover {
-            text-decoration: underline;
-        }
-
-        .breadcrumb-separator {
-            color: #999;
-        }
-
-        .breadcrumb-item.active {
-            color: #333;
-            font-weight: 500;
-            cursor: default;
-        }
-
-        .breadcrumb-item.active:hover {
-            text-decoration: none;
-        }
-
-        .nav-back {
-            display: inline-block;
-            margin-bottom: 20px;
-            color: #667eea;
-            text-decoration: none;
-            font-size: 0.95rem;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-
-        .nav-back:hover {
-            text-decoration: underline;
-        }
-
-        .content-grid {
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-        }
-
-        .categories-section {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
-
-        .section-title {
-            font-size: 1rem;
-            color: #888;
-            font-weight: 500;
-            margin-bottom: 5px;
-        }
-
-        .category-card {
-            background: white;
-            border-radius: 12px;
-            padding: 25px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-            transition: transform 0.2s, box-shadow 0.2s;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-
-        .category-card:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
-        }
-
-        .category-icon {
-            font-size: 2rem;
-        }
-
-        .category-info h3 {
-            font-size: 1.2rem;
-            color: #333;
-            margin-bottom: 5px;
-            font-weight: 500;
-        }
-
-        .category-info p {
-            color: #888;
-            font-size: 0.9rem;
-        }
-
-        .posts-section {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
-
-        .post-card {
-            background: white;
-            border-radius: 12px;
-            padding: 25px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-            transition: transform 0.2s, box-shadow 0.2s;
-        }
-
-        .post-card:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
-        }
-
-        .post-card a {
-            text-decoration: none;
-            color: inherit;
-            display: block;
-        }
-
-        .post-title {
-            font-size: 1.3rem;
-            color: #333;
-            margin-bottom: 10px;
-            font-weight: 500;
-        }
-
-        .post-meta {
-            color: #888;
-            font-size: 0.9rem;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            flex-wrap: wrap;
-        }
-
-        .post-categories {
-            display: flex;
-            gap: 6px;
-            flex-wrap: wrap;
-        }
-
-        .category-tag {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 2px 10px;
-            border-radius: 12px;
-            font-size: 0.8rem;
-        }
-
-        @media (max-width: 600px) {
-            .header h1 {
-                font-size: 2rem;
-            }
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script>
+    (() => {
+      const theme = localStorage.getItem('site-theme') === 'night' ? 'night' : 'day';
+      document.documentElement.dataset.theme = theme;
+      document.documentElement.style.colorScheme = theme === 'night' ? 'dark' : 'light';
+    })();
+  </script>
+  <title>如珩的博客</title>
+  <meta name="description" content="如珩的博客：首页采用上方分类、左侧杂项、右侧文章列表的布局。">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Noto+Sans+SC:wght@400;500;700&family=Noto+Serif+SC:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script type="module" src="/src/scripts/blog-index.js"></script>
 </head>
 <body>
-    <div class="header">
-        <h1>如珩的博客</h1>
-        <p>技术笔记与分享</p>
-    </div>
+  <a class="skip-link" href="#blogContent">跳到文章列表</a>
 
-    <div class="container">
-        <a href="/" class="nav-back">← 返回主页</a>
-        <div class="breadcrumb" id="breadcrumb"></div>
-        <div class="content-grid" id="contentGrid"></div>
-    </div>
+  <main class="page-shell blog-page" id="blogRoot">
+    <section class="surface-card blog-overview blog-overview--wide" data-reveal>
+      <div class="blog-overview-head">
+        <div>
+          <h1 class="section-heading" id="blogTitle">如珩的博客</h1>
+        </div>
+        <div class="inline-actions blog-overview-actions">
+          <button class="icon-button theme-button" type="button" data-theme-toggle></button>
+        </div>
+      </div>
+      <div class="blog-overview-archive" role="region" aria-label="Categories">
+        <div class="blog-overview-archive-head">
+          <h2 class="panel-title visually-hidden">Categories</h2>
+        </div>
+        <nav class="archive-tree" id="archiveTree" aria-label="博客分类目录"></nav>
+      </div>
+    </section>
 
-    <script>
-        let categoryTree = null;
-        let currentPath = [];
+    <section class="blog-layout">
+      <aside class="blog-sidebar">
+        <div class="blog-sidebar-sticky">
+          <section class="sidebar-card profile-card" data-reveal aria-label="个人简介">
+            <h3 class="sidebar-title visually-hidden">个人简介</h3>
+            <div class="profile-avatar" aria-hidden="true"></div>
+            <p class="profile-copy" id="profileCopy"></p>
+            <div class="profile-links" id="sidebarLinks"></div>
+          </section>
 
-        function init() {
-            fetch('/Blog/config.json')
-                .then(response => response.json())
-                .then(data => {
-                    categoryTree = data.categoryTree;
-                    renderCurrentLevel();
-                })
-                .catch(error => console.error('Error loading config:', error));
-        }
+          <section class="sidebar-card tag-cloud-card" data-reveal>
+            <div class="tag-heatmap" id="tagHeatmap"></div>
+          </section>
+        </div>
+      </aside>
 
-        function renderCurrentLevel() {
-            let node = categoryTree;
-            for (const cat of currentPath) {
-                node = node.children.find(c => c.name === cat);
-                if (!node) break;
-            }
+      <section class="blog-content" id="blogContent">
+        <section class="surface-card posts-panel" id="postsPanel" data-reveal aria-label="文章列表">
+          <h2 class="panel-title visually-hidden" id="postSectionTitle">文章列表</h2>
+          <p class="panel-copy visually-hidden" id="postSectionDesc"></p>
+          <div class="posts-toolbar" id="postsToolbar">
+            <button class="small-link posts-clear-filter" id="clearTagFilter" type="button" hidden>取消筛选</button>
+          </div>
+          <div class="posts-grid" id="postsGrid"></div>
+        </section>
+      </section>
+    </section>
+  </main>
 
-            renderBreadcrumb();
-            renderContent(node);
-        }
-
-        function renderBreadcrumb() {
-            const breadcrumb = document.getElementById('breadcrumb');
-            breadcrumb.innerHTML = '';
-
-            const rootItem = document.createElement('span');
-            rootItem.className = 'breadcrumb-item' + (currentPath.length === 0 ? ' active' : '');
-            rootItem.textContent = '博客';
-            if (currentPath.length > 0) {
-                rootItem.addEventListener('click', () => {
-                    currentPath = [];
-                    renderCurrentLevel();
-                });
-            }
-            breadcrumb.appendChild(rootItem);
-
-            for (let i = 0; i < currentPath.length; i++) {
-                const separator = document.createElement('span');
-                separator.className = 'breadcrumb-separator';
-                separator.textContent = '/';
-                breadcrumb.appendChild(separator);
-
-                const item = document.createElement('span');
-                const isLast = i === currentPath.length - 1;
-                item.className = 'breadcrumb-item' + (isLast ? ' active' : '');
-                item.textContent = currentPath[i];
-
-                if (!isLast) {
-                    item.addEventListener('click', () => {
-                        currentPath = currentPath.slice(0, i + 1);
-                        renderCurrentLevel();
-                    });
-                }
-
-                breadcrumb.appendChild(item);
-            }
-        }
-
-        function renderContent(node) {
-            const grid = document.getElementById('contentGrid');
-            grid.innerHTML = '';
-
-            if (node.children.length > 0) {
-                const section = document.createElement('div');
-                section.className = 'categories-section';
-
-                const title = document.createElement('div');
-                title.className = 'section-title';
-                title.textContent = '分类';
-                section.appendChild(title);
-
-                for (const child of node.children) {
-                    const card = document.createElement('div');
-                    card.className = 'category-card';
-                    card.addEventListener('click', () => {
-                        currentPath.push(child.name);
-                        renderCurrentLevel();
-                    });
-
-                    card.innerHTML = `
-                        <div class="category-icon">📁</div>
-                        <div class="category-info">
-                            <h3>${child.name}</h3>
-                            <p>${child.children.length} 个子分类 · ${child.posts.length} 篇文章</p>
-                        </div>
-                    `;
-
-                    section.appendChild(card);
-                }
-
-                grid.appendChild(section);
-            }
-
-            if (node.posts.length > 0) {
-                const section = document.createElement('div');
-                section.className = 'posts-section';
-
-                if (node.children.length > 0) {
-                    const title = document.createElement('div');
-                    title.className = 'section-title';
-                    title.textContent = '文章';
-                    section.appendChild(title);
-                }
-
-                for (const post of node.posts) {
-                    const card = document.createElement('div');
-                    card.className = 'post-card';
-
-                    let categoriesHtml = '';
-                    if (post.categories && post.categories.length > 0) {
-                        categoriesHtml = `
-                            <div class="post-categories">
-                                ${post.categories.map(cat => `<span class="category-tag">${cat}</span>`).join('')}
-                            </div>
-                        `;
-                    }
-
-                    card.innerHTML = `
-                        <a href="/Blog/post.html?id=${encodeURIComponent(post.id)}">
-                            <h2 class="post-title">${post.title}</h2>
-                            <div class="post-meta">
-                                ${categoriesHtml}
-                                <span>${post.date}</span>
-                            </div>
-                        </a>
-                    `;
-
-                    section.appendChild(card);
-                }
-
-                grid.appendChild(section);
-            }
-
-            if (node.children.length === 0 && node.posts.length === 0) {
-                grid.innerHTML = '<p style="text-align: center; color: #888; padding: 40px;">此分类下暂无内容</p>';
-            }
-        }
-
-        init();
-    </script>
+  <footer class="footer">在同一页内切换分类，继续浏览本站内容。</footer>
 </body>
 </html>
