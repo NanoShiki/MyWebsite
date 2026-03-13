@@ -186,6 +186,10 @@ function renderInlineError(message) {
 }
 
 async function renderMath(container) {
+  if (!container || container.dataset.mathEnhanced === 'true') {
+    return;
+  }
+
   for (let attempt = 0; attempt < 12; attempt += 1) {
     if (typeof window.renderMathInElement === 'function') {
       window.renderMathInElement(container, {
@@ -195,6 +199,7 @@ async function renderMath(container) {
           { left: '$', right: '$', display: false }
         ]
       });
+      container.dataset.mathEnhanced = 'true';
       return;
     }
 
@@ -599,6 +604,7 @@ async function renderPostContent(post) {
   }
 
   container.innerHTML = html;
+  delete container.dataset.mathEnhanced;
   setArticleStatus('Markdown 已加载，正在增强公式、代码和目录…');
 
   try {
