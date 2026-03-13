@@ -26,6 +26,7 @@ html.is-home-page body.home-page {
 }
 
 .home-bg-layer {
+  z-index: 0;
   background-position: center;
   background-size: cover;
   opacity: 1;
@@ -38,6 +39,7 @@ html.is-home-page body.home-page {
 }
 
 .home-bg-overlay {
+  z-index: 5;
   background: linear-gradient(
     180deg,
     rgba(255, 255, 255, calc(0.08 + var(--home-overlay-progress, 0) * 0.04)) 0%,
@@ -47,6 +49,7 @@ html.is-home-page body.home-page {
 }
 
 .home-bg-glow {
+  z-index: 6;
   background:
     radial-gradient(circle at 18% 18%, rgba(255, 255, 255, 0.55), transparent 24%),
     radial-gradient(circle at 82% 16%, rgba(255, 214, 152, 0.16), transparent 26%),
@@ -64,9 +67,14 @@ html.is-home-page body.home-page {
 }
 
 .home-scene {
+  z-index: 1;
   inset: -8%;
   transform: translate3d(0, 26px, 0) scale(1.08);
   filter: saturate(1.06);
+}
+
+.home-ambient {
+  z-index: 7;
 }
 
 .home-scene::before,
@@ -240,6 +248,16 @@ html[data-home-scene-hold='camp'] .home-scene--camp,
 html[data-home-scene-hold='trail'] .home-scene--trail {
   opacity: 1;
   transform: translate3d(0, 0, 0) scale(1);
+}
+
+html[data-home-active-scene='camp'] .home-scene--camp,
+html[data-home-active-scene='trail'] .home-scene--trail {
+  z-index: 3;
+}
+
+html[data-home-scene-hold='camp'] .home-scene--camp,
+html[data-home-scene-hold='trail'] .home-scene--trail {
+  z-index: 2;
 }
 
 html[data-home-active-panel='hero'] .home-ambient--stars {

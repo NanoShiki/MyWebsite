@@ -861,6 +861,13 @@ html[data-theme='night'] .blog-story-bg-glow {
 }
 
 html[data-theme='night'] .blog-story-bg-ink {
+  background-image:
+    var(--blog-wind-emblem, linear-gradient(transparent, transparent)),
+    var(--blog-ruins-overlay, linear-gradient(transparent, transparent)),
+    radial-gradient(circle at 14% 20%, rgba(255, 255, 255, 0.32) 0 1.1px, transparent 1.7px);
+  background-position: 88% 18%, center, 14% 20%;
+  background-repeat: no-repeat, no-repeat, repeat;
+  background-size: min(360px, 28vw) auto, min(1200px, 74vw) auto, auto;
   opacity: 0.24;
   mix-blend-mode: screen;
 }
