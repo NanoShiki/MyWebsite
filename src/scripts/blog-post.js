@@ -168,6 +168,69 @@ function stripLeadingHeading(markdown = '') {
   return markdown.replace(/^#\s+.+\n+/, '');
 }
 
+function protectDisplayMathBlocks(markdown = '') {
+  const lines = markdown.split('\n');
+  const output = [];
+  const displayMathBlocks = [];
+
+  let inFence = false;
+  let fenceToken = '';
+  let collectingDisplayMath = false;
+  let displayMathBuffer = [];
+
+  const pushDisplayMathPlaceholder = () => {
+    const index = displayMathBlocks.length;
+    displayMathBlocks.push(displayMathBuffer.join('\n'));
+    output.push('', `<div class="display-math-placeholder" data-display-math-placeholder="${index}"></div>`, '');
+    displayMathBuffer = [];
+  };
+
+  lines.forEach((line) => {
+    const trimmed = line.trim();
+    const fenceMatch = trimmed.match(/^(```+|~~~+)/);
+
+    if (fenceMatch && !collectingDisplayMath) {
+      const token = fenceMatch[1][0];
+      if (!inFence) {
+        inFence = true;
+        fenceToken = token;
+      } else if (token === fenceToken) {
+        inFence = false;
+        fenceToken = '';
+      }
+      output.push(line);
+      return;
+    }
+
+    if (!inFence && trimmed === '$$') {
+      if (!collectingDisplayMath) {
+        collectingDisplayMath = true;
+        displayMathBuffer = [];
+      } else {
+        collectingDisplayMath = false;
+        pushDisplayMathPlaceholder();
+      }
+      return;
+    }
+
+    if (collectingDisplayMath) {
+      displayMathBuffer.push(line);
+      return;
+    }
+
+    output.push(line);
+  });
+
+  if (collectingDisplayMath) {
+    output.push('$$', ...displayMathBuffer);
+  }
+
+  return {
+    markdown: output.join('\n'),
+    displayMathBlocks
+  };
+}
+
 function setArticleStatus(message = '') {
   const status = document.getElementById('articleStatus');
   if (!status) {
@@ -190,21 +253,72 @@ async function renderMath(container) {
     return;
   }
 
+  const renderDisplayMathPlaceholders = (displayMathBlocks = []) => {
+    if (!displayMathBlocks.length) {
+      return true;
+    }
+
+    const placeholders = [...container.querySelectorAll('[data-display-math-placeholder]')];
+    if (!placeholders.length) {
+      return true;
+    }
+
+    if (typeof window.katex?.render !== 'function') {
+      placeholders.forEach((node) => {
+        const index = Number(node.dataset.displayMathPlaceholder);
+        const tex = Number.isFinite(index) ? displayMathBlocks[index] || '' : '';
+        node.textContent = `$$\n${tex}\n$$`;
+      });
+      return false;
+    }
+
+    placeholders.forEach((node) => {
+      const index = Number(node.dataset.displayMathPlaceholder);
+      const tex = Number.isFinite(index) ? displayMathBlocks[index] || '' : '';
+      window.katex.render(tex, node, {
+        displayMode: true,
+        throwOnError: false
+      });
+      node.classList.remove('display-math-placeholder');
+      node.removeAttribute('data-display-math-placeholder');
+    });
+
+    return true;
+  };
+
+  const displayMathBlocks = container.__displayMathBlocks || [];
+  let hasRenderedDisplayMath = displayMathBlocks.length === 0;
+
   for (let attempt = 0; attempt < 12; attempt += 1) {
+    if (!hasRenderedDisplayMath) {
+      hasRenderedDisplayMath = renderDisplayMathPlaceholders(displayMathBlocks);
+    }
+
     if (typeof window.renderMathInElement === 'function') {
       window.renderMathInElement(container, {
         throwOnError: false,
         delimiters: [
-          { left: '$$', right: '$$', display: true },
           { left: '$', right: '$', display: false }
-        ]
+        ],
+        ignoredClasses: ['display-math-placeholder']
       });
       container.dataset.mathEnhanced = 'true';
+      delete container.__displayMathBlocks;
       return;
     }
 
     await new Promise((resolve) => window.setTimeout(resolve, 120));
   }
+
+  if (!hasRenderedDisplayMath) {
+    hasRenderedDisplayMath = renderDisplayMathPlaceholders(displayMathBlocks);
+  }
+
+  if (hasRenderedDisplayMath && displayMathBlocks.length) {
+    container.dataset.mathEnhanced = 'true';
+  }
+
+  delete container.__displayMathBlocks;
 }
 
 function normalizeRelativeAssets(container, basePath) {
@@ -596,14 +710,17 @@ async function renderPostContent(post) {
   setArticleStatus('正在读取 Markdown...');
 
   const rawMarkdown = await fetchMarkdown(post);
+  const strippedMarkdown = stripLeadingHeading(rawMarkdown);
+  const { markdown, displayMathBlocks } = protectDisplayMathBlocks(strippedMarkdown);
   let html;
   try {
-    html = marked.parse(stripLeadingHeading(rawMarkdown));
+    html = marked.parse(markdown);
   } catch (error) {
     throw new Error('markdown-render-failed');
   }
 
   container.innerHTML = html;
+  container.__displayMathBlocks = displayMathBlocks;
   delete container.dataset.mathEnhanced;
   setArticleStatus('Markdown 已加载，正在增强公式、代码和目录…');
 
