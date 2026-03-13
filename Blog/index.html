@@ -11,62 +11,104 @@
     })();
   </script>
   <title>如珩的博客</title>
-  <meta name="description" content="如珩的博客：首页采用上方分类、左侧杂项、右侧文章列表的布局。">
+  <meta name="description" content="如珩的博客：首页采用三段式封面、分类地图与文章列表布局。">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Noto+Sans+SC:wght@400;500;700&family=Noto+Serif+SC:wght@400;500;600;700&display=swap" rel="stylesheet">
   <script type="module" src="/src/scripts/blog-index.js"></script>
 </head>
-<body>
-  <a class="skip-link" href="#blogContent">跳到文章列表</a>
+<body class="blog-page-body">
+  <div class="blog-story-bg" aria-hidden="true">
+    <div class="blog-story-bg-layer"></div>
+    <div class="blog-story-bg-overlay"></div>
+    <div class="blog-story-bg-glow"></div>
+    <div class="blog-story-bg-ink"></div>
+  </div>
+  <a class="skip-link" href="#postsPanel">跳到文章列表</a>
 
-  <main class="page-shell blog-page" id="blogRoot">
-    <section class="surface-card blog-overview blog-overview--wide" data-reveal>
-      <div class="blog-overview-head">
-        <div>
-          <h1 class="section-heading" id="blogTitle">如珩的博客</h1>
+  <div class="blog-topbar">
+    <a class="blog-mini-brand" href="/">如珩</a>
+    <div class="inline-actions">
+      <button class="icon-button theme-button" type="button" data-theme-toggle></button>
+    </div>
+  </div>
+
+  <main class="blog-page" id="blogRoot">
+    <section class="blog-panel-section blog-panel-section--hero" data-blog-panel="hero" aria-labelledby="blogHeroTitle">
+      <div class="page-shell blog-panel-shell">
+        <div class="blog-landing-hero blog-panel-frame" data-reveal data-blog-replay="panel" aria-label="博客封面">
+          <div class="blog-landing-hero-copy blog-panel-heading">
+            <h1 class="blog-hero-title" id="blogHeroTitle" aria-label="如珩の 冒险笔记">
+              <span class="blog-title-line blog-title-line--top" id="blogHeroTitleTop">如珩の</span>
+              <span class="blog-title-line blog-title-line--bottom" id="blogHeroTitleBottom">冒险笔记</span>
+            </h1>
+            <p class="blog-hero-lead" id="blogHeroLead">风穿过石墙与晨光，<br>旅者在这里整理一路所得的见闻。</p>
+          </div>
+          <div class="blog-landing-hero-visual blog-panel-body" aria-hidden="true">
+            <div class="blog-hero-quill-media">
+              <img class="blog-hero-quill-image" id="blogHeroQuillImage" alt="" decoding="async" loading="eager">
+            </div>
+          </div>
         </div>
-        <div class="inline-actions blog-overview-actions">
-          <button class="icon-button theme-button" type="button" data-theme-toggle></button>
-        </div>
-      </div>
-      <div class="blog-overview-archive" role="region" aria-label="Categories">
-        <div class="blog-overview-archive-head">
-          <h2 class="panel-title visually-hidden">Categories</h2>
-        </div>
-        <nav class="archive-tree" id="archiveTree" aria-label="博客分类目录"></nav>
       </div>
     </section>
 
-    <section class="blog-layout">
-      <aside class="blog-sidebar">
-        <div class="blog-sidebar-sticky">
-          <section class="sidebar-card profile-card" data-reveal aria-label="个人简介">
-            <h3 class="sidebar-title visually-hidden">个人简介</h3>
-            <div class="profile-avatar" aria-hidden="true"></div>
-            <p class="profile-copy" id="profileCopy"></p>
-            <div class="profile-links" id="sidebarLinks"></div>
-          </section>
+    <section class="blog-panel-section blog-panel-section--map" data-blog-panel="map" aria-labelledby="blogOverviewTitle">
+      <div class="page-shell blog-panel-shell">
+        <section class="surface-card blog-overview blog-overview--wide blog-panel-frame" data-reveal data-blog-replay="panel">
+          <div class="blog-overview-head blog-panel-heading">
+            <div class="blog-overview-copy">
+              <h2 class="section-heading blog-overview-title" id="blogOverviewTitle" aria-label="文章地图"><span class="blog-overview-title-label">文章地图</span><span class="blog-overview-title-mark" aria-hidden="true">📜</span></h2>
+              <p class="blog-overview-lead" id="blogOverviewLead">风会穿过目录枝叶，<br>把每一篇旅途记录带回你的手边。</p>
+            </div>
+          </div>
+          <div class="blog-overview-archive blog-panel-body" role="region" aria-label="Categories">
+            <div class="blog-overview-archive-head">
+              <h3 class="panel-title visually-hidden">Categories</h3>
+            </div>
+            <nav class="archive-tree" id="archiveTree" aria-label="博客分类目录"></nav>
+          </div>
+        </section>
+      </div>
+    </section>
 
-          <section class="sidebar-card tag-cloud-card" data-reveal>
-            <div class="tag-heatmap" id="tagHeatmap"></div>
+    <section class="blog-panel-section blog-panel-section--journal" data-blog-panel="journal" aria-labelledby="postSectionTitle">
+      <div class="page-shell blog-panel-shell">
+        <div class="blog-journal-panel blog-panel-frame" data-reveal data-blog-replay="panel">
+          <section class="blog-layout blog-panel-body">
+            <aside class="blog-sidebar">
+              <div class="blog-sidebar-sticky">
+                <section class="sidebar-card profile-card" data-reveal data-blog-replay="panel" aria-label="个人简介">
+                  <h3 class="sidebar-title visually-hidden">个人简介</h3>
+                  <div class="profile-avatar" aria-hidden="true"></div>
+                  <p class="profile-copy" id="profileCopy"></p>
+                  <div class="profile-links" id="sidebarLinks"></div>
+                </section>
+
+                <section class="sidebar-card tag-cloud-card" data-reveal data-blog-replay="panel">
+                  <div class="tag-heatmap" id="tagHeatmap"></div>
+                  <div class="tag-cloud-actions">
+                    <button class="small-link posts-clear-filter" id="clearTagFilter" type="button" aria-hidden="true" aria-disabled="true" disabled>取消筛选</button>
+                  </div>
+                </section>
+              </div>
+            </aside>
+
+            <section class="blog-content" id="blogContent">
+              <section class="surface-card posts-panel" id="postsPanel" data-reveal data-blog-replay="panel" aria-label="文章列表">
+                <h2 class="panel-title visually-hidden" id="postSectionTitle">文章列表</h2>
+                <p class="panel-copy visually-hidden" id="postSectionDesc"></p>
+                <div class="posts-scroll-shell" id="postsScrollShell">
+                  <div class="posts-grid" id="postsGrid"></div>
+                </div>
+              </section>
+            </section>
           </section>
         </div>
-      </aside>
-
-      <section class="blog-content" id="blogContent">
-        <section class="surface-card posts-panel" id="postsPanel" data-reveal aria-label="文章列表">
-          <h2 class="panel-title visually-hidden" id="postSectionTitle">文章列表</h2>
-          <p class="panel-copy visually-hidden" id="postSectionDesc"></p>
-          <div class="posts-toolbar" id="postsToolbar">
-            <button class="small-link posts-clear-filter" id="clearTagFilter" type="button" hidden>取消筛选</button>
-          </div>
-          <div class="posts-grid" id="postsGrid"></div>
-        </section>
-      </section>
+      </div>
     </section>
   </main>
 
-  <footer class="footer">在同一页内切换分类，继续浏览本站内容。</footer>
+  <footer class="footer blog-footer-spacer" aria-hidden="true"></footer>
 </body>
 </html>

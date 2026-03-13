@@ -22,8 +22,13 @@
 
   <div class="home-bg" aria-hidden="true">
     <div class="home-bg-layer" data-bg-layer="0" data-depth="0.6"></div>
+    <div class="home-scene home-scene--camp"></div>
+    <div class="home-scene home-scene--trail"></div>
     <div class="home-bg-overlay"></div>
     <div class="home-bg-glow"></div>
+    <div class="home-ambient home-ambient--stars"></div>
+    <div class="home-ambient home-ambient--embers"></div>
+    <div class="home-ambient home-ambient--sparks"></div>
   </div>
 
   <div class="home-topbar">
@@ -46,36 +51,42 @@
     <section class="home-navigation home-panel-section" id="homeNavigation" data-home-panel="camp">
       <div class="home-panel-shell page-shell">
         <div class="home-panel-card glass-section glass-section--content home-panel-frame">
-          <div class="navigation-head navigation-head--decorated home-panel-heading">
-            <h2 class="section-heading">营地</h2>
-            <span class="section-emoji" aria-hidden="true">⛺</span>
+          <div class="home-panel-heading">
+            <div class="navigation-head navigation-head--decorated">
+              <h2 class="section-heading">营地</h2>
+              <span class="section-emoji" aria-hidden="true">⛺</span>
+            </div>
+            <p class="section-caption">在篝火边整备行囊，选定下一处据点。</p>
           </div>
           <div class="navigation-grid home-panel-body" id="homeDestinations"></div>
         </div>
       </div>
     </section>
 
-    <section class="home-stats home-panel-section" data-home-panel="stats">
+    <section class="home-stats home-panel-section" data-home-panel="trail">
       <div class="home-panel-shell page-shell">
         <div class="home-panel-card glass-section glass-section--content home-panel-frame">
-          <div class="navigation-head navigation-head--decorated home-panel-heading">
-            <h2 class="section-heading">旅者足迹</h2>
-            <span class="section-emoji" aria-hidden="true">🔥</span>
+          <div class="home-panel-heading">
+            <div class="navigation-head navigation-head--decorated">
+              <h2 class="section-heading">旅者足迹</h2>
+              <span class="section-emoji" aria-hidden="true">🔥</span>
+            </div>
+            <p class="section-caption">火光照见来时的路，每一步都留下回声。</p>
           </div>
           <div class="stats-grid home-panel-body">
-            <article class="stat-card" data-reveal>
+            <article class="stat-card">
               <div class="stat-label">运行时长</div>
               <div class="stat-value" id="runtimeCount">--</div>
             </article>
-            <article class="stat-card" data-reveal>
+            <article class="stat-card">
               <div class="stat-label">访客数量</div>
               <div class="stat-value"><span id="busuanzi_value_site_uv" data-busuanzi-fallback>加载中</span></div>
             </article>
-            <article class="stat-card" data-reveal>
+            <article class="stat-card">
               <div class="stat-label">文章数量</div>
               <div class="stat-value" id="articleCount">--</div>
             </article>
-            <article class="stat-card" data-reveal>
+            <article class="stat-card">
               <div class="stat-label">标签数量</div>
               <div class="stat-value" id="categoryCount">--</div>
             </article>

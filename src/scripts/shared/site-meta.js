@@ -34,6 +34,13 @@ export const HOME_DESTINATIONS = [
 export const SITE_COPY = {
   siteTitle: '如珩的个人网站',
   siteSubtitle: '把笔记、项目与灵感装进行囊，下一站从这里出发。',
+  blogProfileCopy: '漂泊之风',
+  blogHeroKicker: "Windward Archive / Traveler's Log",
+  blogHeroLead: '风穿过石墙与晨光，\n旅者在这里整理一路所得的见闻。',
+  blogHeroTitleTop: '如珩の',
+  blogHeroTitleBottom: '冒险笔记',
+  blogMapTitle: '文章地图',
+  blogMapLead: '风会穿过目录枝叶，\n把每一篇旅途记录带回你的手边。',
   homeHeroTitleTop: '如珩の',
   homeHeroTitleBottom: '冒险者札记',
   homeKicker: 'Guild Gate / Adventure Log',

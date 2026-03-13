@@ -1,9 +1,7 @@
 import '../styles/base.css';
 import '../styles/home.css';
-import heroImage from '../../6F5DB79D-3B66-42A3-A95A-7E7E18630933_1_105_c.jpeg';
 import { initBusuanzi } from './shared/busuanzi.js';
 import { icons } from './shared/icons.js';
-import { setupRevealAnimations } from './shared/motion.js';
 import { HOME_DESTINATIONS, SITE_COPY, SITE_START_DATE } from './shared/site-meta.js';
 import { initThemeToggles } from './shared/theme.js';
 import { fetchBlogConfig, formatRuntime, flattenCategoryNodes, withBase } from './shared/site-data.js';
@@ -15,11 +13,92 @@ const DESTINATION_ICONS = {
   zhihu: icons.zhihu
 };
 
+const HERO_BACKGROUND_ASSET = '/Ryu.png';
+
+const SCENE_ASSET_CANDIDATES = {
+  camp: {
+    day: [
+      '/site-assets/home/scenes/camp-scene-day.webp',
+      '/site-assets/home/scenes/camp-scene-day.png',
+      '/site-assets/home/scenes/camp-scene-day.jpg',
+      '/site-assets/home/scenes/camp-scene-day.jpeg'
+    ],
+    night: [
+      '/site-assets/home/scenes/camp-scene-night.webp',
+      '/site-assets/home/scenes/camp-scene-night.png',
+      '/site-assets/home/scenes/camp-scene-night.jpg',
+      '/site-assets/home/scenes/camp-scene-night.jpeg'
+    ],
+    fallback: [
+      '/site-assets/home/scenes/camp-scene.webp',
+      '/site-assets/home/scenes/camp-scene.png',
+      '/site-assets/home/scenes/camp-scene.jpg',
+      '/site-assets/home/scenes/camp-scene.jpeg',
+      '/home-assets/camp-scene.webp',
+      '/home-assets/camp-scene.png',
+      '/home-assets/camp-scene.jpg',
+      '/home-assets/camp-scene.jpeg'
+    ]
+  },
+  trail: [
+    '/site-assets/home/scenes/trail-scene.webp',
+    '/site-assets/home/scenes/trail-scene.png',
+    '/site-assets/home/scenes/trail-scene.jpg',
+    '/site-assets/home/scenes/trail-scene.jpeg',
+    '/home-assets/trail-scene.webp',
+    '/home-assets/trail-scene.png',
+    '/home-assets/trail-scene.jpg',
+    '/home-assets/trail-scene.jpeg'
+  ]
+};
+
+const homeSceneAssets = {
+  camp: {
+    day: '',
+    night: '',
+    fallback: ''
+  },
+  trail: ''
+};
+
 let heroTypingRunId = 0;
 let hasPrimedHeroTyping = false;
 
 function delay(ms = 0) {
   return new Promise((resolve) => window.setTimeout(resolve, ms));
+}
+
+async function probeAsset(url = '') {
+  if (!url) {
+    return false;
+  }
+
+  try {
+    const response = await fetch(url, { method: 'HEAD', cache: 'no-cache' });
+    if (response.ok) {
+      return true;
+    }
+
+    if (response.status === 405) {
+      const fallback = await fetch(url, { method: 'GET', cache: 'no-cache' });
+      return fallback.ok;
+    }
+  } catch {
+    return false;
+  }
+
+  return false;
+}
+
+async function findAvailableAsset(paths = []) {
+  for (const rawPath of paths) {
+    const assetUrl = withBase(rawPath);
+    if (await probeAsset(assetUrl)) {
+      return assetUrl;
+    }
+  }
+
+  return '';
 }
 
 function setupBackground() {
@@ -28,7 +107,70 @@ function setupBackground() {
     return;
   }
 
-  layer.style.backgroundImage = `url("${heroImage}")`;
+  layer.style.backgroundImage = `url("${withBase(HERO_BACKGROUND_ASSET)}")`;
+}
+
+function getCurrentTheme() {
+  return document.documentElement.dataset.theme === 'night' ? 'night' : 'day';
+}
+
+function applySceneAsset(root, key, assetUrl) {
+  if (!root || !key || !assetUrl) {
+    return;
+  }
+
+  root.classList.add(`has-${key}-scene`);
+  root.style.setProperty(`--${key}-scene-image`, `url("${assetUrl}")`);
+}
+
+function clearSceneAsset(root, key) {
+  if (!root || !key) {
+    return;
+  }
+
+  root.classList.remove(`has-${key}-scene`);
+  root.style.removeProperty(`--${key}-scene-image`);
+}
+
+function syncCampSceneAsset(root = document.documentElement) {
+  const preferredTheme = getCurrentTheme();
+  const preferredScene = preferredTheme === 'night'
+    ? homeSceneAssets.camp.night || homeSceneAssets.camp.day || homeSceneAssets.camp.fallback
+    : homeSceneAssets.camp.day || homeSceneAssets.camp.night || homeSceneAssets.camp.fallback;
+
+  if (preferredScene) {
+    applySceneAsset(root, 'camp', preferredScene);
+    return;
+  }
+
+  clearSceneAsset(root, 'camp');
+}
+
+async function setupOptionalSceneAssets() {
+  const root = document.documentElement;
+  const [campDayScene, campNightScene, campFallbackScene, trailScene] = await Promise.all([
+    findAvailableAsset(SCENE_ASSET_CANDIDATES.camp.day),
+    findAvailableAsset(SCENE_ASSET_CANDIDATES.camp.night),
+    findAvailableAsset(SCENE_ASSET_CANDIDATES.camp.fallback),
+    findAvailableAsset(SCENE_ASSET_CANDIDATES.trail)
+  ]);
+
+  homeSceneAssets.camp.day = campDayScene;
+  homeSceneAssets.camp.night = campNightScene;
+  homeSceneAssets.camp.fallback = campFallbackScene;
+  homeSceneAssets.trail = trailScene;
+
+  syncCampSceneAsset(root);
+
+  if (trailScene) {
+    applySceneAsset(root, 'trail', trailScene);
+  } else {
+    clearSceneAsset(root, 'trail');
+  }
+
+  window.addEventListener('site-theme-change', () => {
+    syncCampSceneAsset(root);
+  });
 }
 
 function setupOverlayProgress() {
@@ -72,7 +214,7 @@ function renderDestinations() {
     const rel = item.href.startsWith('http') ? 'noreferrer noopener' : '';
     const target = item.href.startsWith('http') ? '_blank' : '';
     return `
-      <a class="nav-card" href="${href}" ${target ? `target="${target}"` : ''} ${rel ? `rel="${rel}"` : ''} data-reveal aria-label="前往 ${item.label}">
+      <a class="nav-card nav-card--${item.key}" href="${href}" ${target ? `target="${target}"` : ''} ${rel ? `rel="${rel}"` : ''} aria-label="前往 ${item.label}">
         <div class="nav-card-head">
           <span class="card-icon">${DESTINATION_ICONS[item.key] || icons.compass}</span>
           <span class="nav-card-label">${item.label}</span>
@@ -251,19 +393,24 @@ async function playHeroTyping(options = {}) {
   titleBottom.classList.remove('is-typing');
 }
 
-function getSectionVisibilityScore(section) {
-  const viewportHeight = window.innerHeight || document.documentElement.clientHeight;
+function getSectionMetrics(section, viewportHeight) {
   const rect = section.getBoundingClientRect();
   const visibleHeight = Math.max(0, Math.min(rect.bottom, viewportHeight) - Math.max(rect.top, 0));
 
-  if (visibleHeight <= 0) {
-    return -1;
-  }
-
-  const visibleRatio = visibleHeight / Math.min(Math.max(rect.height, 1), viewportHeight);
+  const visibleRatio = visibleHeight > 0
+    ? visibleHeight / Math.min(Math.max(rect.height, 1), viewportHeight)
+    : 0;
   const centerOffset = Math.abs(rect.top + rect.height / 2 - viewportHeight / 2) / viewportHeight;
+  const score = visibleHeight <= 0 ? -1 : visibleRatio - centerOffset * 0.14;
 
-  return visibleRatio - centerOffset * 0.14;
+  return {
+    section,
+    panel: section.dataset.homePanel || 'hero',
+    visibleHeight,
+    visibleRatio,
+    centerOffset,
+    score
+  };
 }
 
 function setupHomePanelTransitions() {
@@ -272,18 +419,75 @@ function setupHomePanelTransitions() {
     return;
   }
 
+  const root = document.documentElement;
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const SWITCH_SCORE_DELTA = 0.06;
+  const DIRECT_SWITCH_VISIBLE_RATIO = 0.55;
+  const HERO_MIN_VISIBLE_RATIO = 0.42;
+  const HERO_TOP_GUARD_PX = 80;
+  const SCENE_HOLD_MS = reduceMotion ? 0 : 280;
   let activeSection = null;
   let rafId = null;
+  let sceneHoldTimerId = 0;
+
+  const isScenePanel = (panel = '') => panel === 'camp' || panel === 'trail';
+  const setActiveScene = (scene = '') => {
+    if (scene) {
+      root.dataset.homeActiveScene = scene;
+      return;
+    }
+    delete root.dataset.homeActiveScene;
+  };
+  const setSceneHold = (scene = '') => {
+    if (scene) {
+      root.dataset.homeSceneHold = scene;
+      return;
+    }
+    delete root.dataset.homeSceneHold;
+  };
+  const clearSceneHoldTimer = () => {
+    if (!sceneHoldTimerId) {
+      return;
+    }
+
+    window.clearTimeout(sceneHoldTimerId);
+    sceneHoldTimerId = 0;
+  };
+  const syncSceneState = (prevPanel, nextPanel) => {
+    clearSceneHoldTimer();
+
+    if (!isScenePanel(nextPanel)) {
+      setActiveScene('');
+      setSceneHold('');
+      return;
+    }
+
+    if (isScenePanel(prevPanel) && prevPanel !== nextPanel && SCENE_HOLD_MS > 0) {
+      setSceneHold(prevPanel);
+      setActiveScene(nextPanel);
+      sceneHoldTimerId = window.setTimeout(() => {
+        sceneHoldTimerId = 0;
+        setSceneHold('');
+      }, SCENE_HOLD_MS);
+      return;
+    }
+
+    setSceneHold('');
+    setActiveScene(nextPanel);
+  };
 
   const applySectionState = (nextSection) => {
     if (!nextSection || activeSection === nextSection) {
       return;
     }
 
+    const prevPanel = activeSection?.dataset.homePanel || '';
+    const nextPanel = nextSection.dataset.homePanel || 'hero';
+
     if (activeSection?.dataset.homePanel === 'hero' && activeSection !== nextSection) {
       cancelHeroTyping();
     }
+
 
     sections.forEach((section) => {
       const isActive = section === nextSection;
@@ -294,6 +498,8 @@ function setupHomePanelTransitions() {
     });
 
     activeSection = nextSection;
+    root.dataset.homeActivePanel = nextPanel;
+    syncSceneState(prevPanel, nextPanel);
 
     const finalizeActivation = () => {
       if (activeSection !== nextSection) {
@@ -317,16 +523,45 @@ function setupHomePanelTransitions() {
 
   const updateActiveSection = () => {
     rafId = null;
-
-    const nextSection = sections.reduce((bestSection, section) => {
-      if (!bestSection) {
-        return section;
+    const viewportHeight = window.innerHeight || document.documentElement.clientHeight;
+    const metrics = sections.map((section) => getSectionMetrics(section, viewportHeight));
+    const metricBySection = new Map(metrics.map((metric) => [metric.section, metric]));
+    const bestMetric = metrics.reduce((best, metric) => {
+      if (!best) {
+        return metric;
       }
-
-      return getSectionVisibilityScore(section) > getSectionVisibilityScore(bestSection) ? section : bestSection;
+      return metric.score > best.score ? metric : best;
     }, null);
 
-    applySectionState(nextSection);
+    if (!bestMetric) {
+      return;
+    }
+
+    let nextMetric = bestMetric;
+    const activeMetric = activeSection ? metricBySection.get(activeSection) || null : null;
+
+    if (activeMetric && nextMetric.section !== activeSection) {
+      const scoreDelta = nextMetric.score - activeMetric.score;
+      const canDirectSwitch = nextMetric.visibleRatio >= DIRECT_SWITCH_VISIBLE_RATIO;
+
+      if (!canDirectSwitch && scoreDelta < SWITCH_SCORE_DELTA) {
+        nextMetric = activeMetric;
+      }
+    }
+
+    if (
+      activeMetric &&
+      activeMetric.panel !== 'hero' &&
+      nextMetric.panel === 'hero'
+    ) {
+      const canHeroTakeover = nextMetric.visibleRatio >= HERO_MIN_VISIBLE_RATIO || window.scrollY <= HERO_TOP_GUARD_PX;
+
+      if (!canHeroTakeover) {
+        nextMetric = activeMetric;
+      }
+    }
+
+    applySectionState(nextMetric.section);
   };
 
   const requestUpdate = () => {
@@ -340,19 +575,23 @@ function setupHomePanelTransitions() {
   window.addEventListener('scroll', requestUpdate, { passive: true });
   window.addEventListener('resize', requestUpdate);
   window.addEventListener('orientationchange', requestUpdate);
+  window.addEventListener('pagehide', clearSceneHoldTimer, { once: true });
   requestUpdate();
 }
 
 async function hydrateHome() {
   document.documentElement.classList.add('is-home-page');
+  document.documentElement.dataset.homeActivePanel = 'hero';
+  delete document.documentElement.dataset.homeActiveScene;
+  delete document.documentElement.dataset.homeSceneHold;
 
   setupBackground();
+  void setupOptionalSceneAssets();
   setupOverlayProgress();
   initThemeToggles();
   initBusuanzi();
 
   renderDestinations();
-  setupRevealAnimations();
   setupHomePanelTransitions();
 
   try {

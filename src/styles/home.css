@@ -1,5 +1,6 @@
 body.home-page {
   background: transparent;
+  overflow-x: hidden;
 }
 
 html.is-home-page,
@@ -16,15 +17,24 @@ html.is-home-page body.home-page {
 
 .home-bg-layer,
 .home-bg-overlay,
-.home-bg-glow {
+.home-bg-glow,
+.home-scene,
+.home-ambient {
   position: absolute;
   inset: 0;
+  pointer-events: none;
 }
 
 .home-bg-layer {
   background-position: center;
   background-size: cover;
+  opacity: 1;
   filter: saturate(1.04) brightness(1.02);
+  transform: scale(1.03);
+  transition:
+    opacity 240ms var(--motion-ease-soft),
+    transform 1080ms var(--motion-ease-layered),
+    filter 820ms var(--motion-ease-soft);
 }
 
 .home-bg-overlay {
@@ -33,6 +43,7 @@ html.is-home-page body.home-page {
     rgba(255, 255, 255, calc(0.08 + var(--home-overlay-progress, 0) * 0.04)) 0%,
     rgba(18, 33, 54, calc(0.18 + var(--home-overlay-progress, 0) * 0.12)) 100%
   );
+  transition: background 760ms var(--motion-ease-soft), opacity 760ms var(--motion-ease-soft);
 }
 
 .home-bg-glow {
@@ -40,6 +51,210 @@ html.is-home-page body.home-page {
     radial-gradient(circle at 18% 18%, rgba(255, 255, 255, 0.55), transparent 24%),
     radial-gradient(circle at 82% 16%, rgba(255, 214, 152, 0.16), transparent 26%),
     radial-gradient(circle at 45% 88%, rgba(127, 169, 101, 0.14), transparent 26%);
+  transition: background 860ms var(--motion-ease-soft), opacity 860ms var(--motion-ease-soft);
+}
+
+.home-scene,
+.home-ambient {
+  opacity: 0;
+  transition:
+    opacity 820ms var(--motion-ease-soft),
+    transform 1080ms var(--motion-ease-layered),
+    filter 820ms var(--motion-ease-soft);
+}
+
+.home-scene {
+  inset: -8%;
+  transform: translate3d(0, 26px, 0) scale(1.08);
+  filter: saturate(1.06);
+}
+
+.home-scene::before,
+.home-scene::after {
+  content: '';
+  position: absolute;
+  pointer-events: none;
+}
+
+.home-scene--camp {
+  background-image:
+    linear-gradient(180deg, rgba(47, 27, 16, 0.05), rgba(77, 49, 26, 0.1)),
+    var(--camp-scene-image, linear-gradient(transparent, transparent)),
+    radial-gradient(circle at 50% 79%, rgba(255, 171, 89, 0.38), transparent 11%),
+    radial-gradient(circle at 50% 72%, rgba(255, 205, 133, 0.18), transparent 22%),
+    radial-gradient(circle at 16% 72%, rgba(247, 205, 151, 0.14), transparent 22%),
+    radial-gradient(circle at 86% 72%, rgba(219, 176, 121, 0.14), transparent 18%),
+    linear-gradient(180deg, transparent 0%, rgba(76, 61, 51, 0.16) 68%, rgba(40, 31, 26, 0.3) 100%);
+  background-position: center, center, center, center, center, center, center;
+  background-repeat: no-repeat;
+  background-size: auto, cover, auto, auto, auto, auto, auto;
+}
+
+.home-scene--camp::before {
+  left: 10%;
+  bottom: 16%;
+  width: 26%;
+  height: 24%;
+  background: linear-gradient(180deg, rgba(120, 93, 71, 0.48), rgba(66, 46, 31, 0.78));
+  clip-path: polygon(50% 0, 100% 90%, 0 90%);
+  opacity: 0.42;
+  filter: drop-shadow(0 18px 30px rgba(56, 36, 22, 0.26));
+}
+
+.home-scene--camp::after {
+  right: 12%;
+  bottom: 18%;
+  width: 18%;
+  height: 19%;
+  background: linear-gradient(180deg, rgba(108, 82, 61, 0.34), rgba(63, 42, 27, 0.7));
+  clip-path: polygon(50% 0, 100% 88%, 0 88%);
+  opacity: 0.26;
+}
+
+.home-scene--trail {
+  background-image:
+    linear-gradient(180deg, rgba(36, 22, 20, 0.08), rgba(66, 25, 18, 0.14)),
+    var(--trail-scene-image, linear-gradient(transparent, transparent)),
+    radial-gradient(circle at 50% 78%, rgba(255, 176, 88, 0.28), transparent 10%),
+    radial-gradient(circle at 48% 63%, rgba(255, 199, 132, 0.18), transparent 18%),
+    radial-gradient(circle at 18% 70%, rgba(148, 173, 222, 0.12), transparent 22%),
+    radial-gradient(circle at 82% 22%, rgba(255, 138, 92, 0.16), transparent 18%),
+    linear-gradient(180deg, rgba(24, 35, 56, 0.02) 0%, rgba(52, 45, 41, 0.22) 72%, rgba(38, 25, 19, 0.34) 100%),
+    repeating-linear-gradient(120deg, rgba(255, 226, 182, 0.04) 0 2px, transparent 2px 18px);
+  background-position: center, center, center, center, center, center, center, center;
+  background-repeat: no-repeat;
+  background-size: auto, cover, auto, auto, auto, auto, auto, auto;
+}
+
+html.has-camp-scene .home-scene--camp,
+html.has-trail-scene .home-scene--trail {
+  filter: saturate(1.1) brightness(1.03);
+}
+
+html.has-camp-scene .home-scene--camp::before,
+html.has-camp-scene .home-scene--camp::after,
+html.has-trail-scene .home-scene--trail::before,
+html.has-trail-scene .home-scene--trail::after {
+  opacity: 0.22;
+}
+
+.home-scene--trail::before {
+  left: 22%;
+  bottom: -7%;
+  width: 56%;
+  height: 43%;
+  background: linear-gradient(180deg, rgba(255, 207, 138, 0.14), rgba(255, 144, 76, 0.34));
+  clip-path: polygon(46% 0, 58% 0, 84% 100%, 16% 100%);
+  opacity: 0.56;
+  filter: blur(5px);
+}
+
+.home-scene--trail::after {
+  inset: auto 12% 16% 12%;
+  height: 19%;
+  background:
+    radial-gradient(circle at 12% 62%, rgba(255, 208, 150, 0.32), transparent 16%),
+    radial-gradient(circle at 36% 48%, rgba(255, 185, 121, 0.36), transparent 14%),
+    radial-gradient(circle at 58% 56%, rgba(255, 170, 103, 0.34), transparent 14%),
+    radial-gradient(circle at 82% 44%, rgba(255, 198, 132, 0.28), transparent 12%);
+  opacity: 0.42;
+}
+
+.home-ambient {
+  inset: -6%;
+  transform: translate3d(0, 18px, 0);
+}
+
+.home-ambient--stars {
+  background-image:
+    radial-gradient(circle, rgba(255, 255, 255, 0.95) 0 1px, transparent 1.6px),
+    radial-gradient(circle, rgba(211, 232, 255, 0.82) 0 1.2px, transparent 1.8px),
+    radial-gradient(circle, rgba(255, 225, 190, 0.74) 0 0.9px, transparent 1.5px);
+  background-size: 160px 160px, 220px 220px, 280px 280px;
+  background-position: 12% 18%, 78% 24%, 46% 74%;
+  animation: homeStarsDrift 24s linear infinite;
+}
+
+.home-ambient--embers {
+  background-image:
+    radial-gradient(circle, rgba(255, 215, 158, 0.9) 0 1.4px, transparent 2.2px),
+    radial-gradient(circle, rgba(255, 167, 88, 0.85) 0 1.2px, transparent 2px),
+    radial-gradient(circle, rgba(255, 232, 192, 0.72) 0 1px, transparent 1.8px);
+  background-size: 220px 180px, 180px 160px, 260px 220px;
+  background-position: 12% 78%, 58% 74%, 84% 68%;
+  animation: homeEmbersLift 14s linear infinite;
+}
+
+.home-ambient--sparks {
+  background-image:
+    radial-gradient(circle, rgba(255, 208, 145, 0.9) 0 1.2px, transparent 2px),
+    radial-gradient(circle, rgba(255, 149, 82, 0.88) 0 1.1px, transparent 1.9px),
+    radial-gradient(circle, rgba(255, 236, 200, 0.84) 0 0.9px, transparent 1.7px);
+  background-size: 180px 140px, 200px 160px, 240px 200px;
+  background-position: 18% 82%, 52% 76%, 78% 64%;
+  animation: homeSparksSweep 11s linear infinite;
+}
+
+html[data-home-active-panel='hero'] .home-bg-layer {
+  transform: scale(1.03);
+  filter: saturate(1.04) brightness(1.02);
+}
+
+html[data-home-active-panel='camp'] .home-bg-layer {
+  transform: scale(1.06) translate3d(0, -1.8%, 0);
+  filter: saturate(1.08) brightness(1.02);
+}
+
+
+html[data-home-active-panel='trail'] .home-bg-layer {
+  transform: scale(1.09) translate3d(0, -2.6%, 0);
+  filter: saturate(1.14) brightness(1.06);
+}
+
+
+html[data-home-active-panel='camp'] .home-bg-overlay {
+  background: linear-gradient(180deg, rgba(255, 238, 219, 0.14) 0%, rgba(74, 42, 24, 0.34) 100%);
+}
+
+html[data-home-active-panel='trail'] .home-bg-overlay {
+  background: linear-gradient(180deg, rgba(255, 228, 194, 0.08) 0%, rgba(72, 28, 19, 0.42) 100%);
+}
+
+html[data-home-active-panel='camp'] .home-bg-glow {
+  background:
+    radial-gradient(circle at 22% 72%, rgba(255, 214, 148, 0.38), transparent 18%),
+    radial-gradient(circle at 78% 18%, rgba(255, 195, 124, 0.18), transparent 24%),
+    radial-gradient(circle at 52% 84%, rgba(255, 153, 68, 0.2), transparent 26%);
+}
+
+html[data-home-active-panel='trail'] .home-bg-glow {
+  background:
+    radial-gradient(circle at 50% 78%, rgba(255, 164, 88, 0.28), transparent 18%),
+    radial-gradient(circle at 84% 22%, rgba(255, 128, 82, 0.22), transparent 20%),
+    radial-gradient(circle at 18% 22%, rgba(162, 186, 240, 0.14), transparent 24%);
+}
+
+html[data-home-active-scene='camp'] .home-scene--camp,
+html[data-home-active-scene='trail'] .home-scene--trail,
+html[data-home-scene-hold='camp'] .home-scene--camp,
+html[data-home-scene-hold='trail'] .home-scene--trail {
+  opacity: 1;
+  transform: translate3d(0, 0, 0) scale(1);
+}
+
+html[data-home-active-panel='hero'] .home-ambient--stars {
+  opacity: 0.72;
+  transform: translate3d(0, 0, 0);
+}
+
+html[data-home-active-panel='camp'] .home-ambient--embers {
+  opacity: 0.86;
+  transform: translate3d(0, 0, 0);
+}
+
+html[data-home-active-panel='trail'] .home-ambient--sparks {
+  opacity: 0.92;
+  transform: translate3d(0, 0, 0);
 }
 
 html[data-theme='night'] .home-bg-overlay {
@@ -48,6 +263,72 @@ html[data-theme='night'] .home-bg-overlay {
     rgba(8, 12, 20, calc(0.12 + var(--home-overlay-progress, 0) * 0.06)) 0%,
     rgba(8, 14, 22, calc(0.24 + var(--home-overlay-progress, 0) * 0.14)) 100%
   );
+}
+
+
+html[data-theme='night'][data-home-active-panel='camp'] .home-bg-overlay {
+  background: linear-gradient(180deg, rgba(18, 24, 36, 0.2) 0%, rgba(56, 32, 19, 0.54) 100%);
+}
+
+html[data-theme='night'][data-home-active-panel='trail'] .home-bg-overlay {
+  background: linear-gradient(180deg, rgba(14, 18, 30, 0.16) 0%, rgba(54, 18, 16, 0.58) 100%);
+}
+
+html[data-theme='night'] .home-bg-glow {
+  background:
+    radial-gradient(circle at 16% 16%, rgba(116, 149, 203, 0.18), transparent 26%),
+    radial-gradient(circle at 82% 12%, rgba(255, 221, 162, 0.12), transparent 24%),
+    radial-gradient(circle at 60% 82%, rgba(124, 156, 215, 0.12), transparent 24%);
+}
+
+html[data-theme='night'][data-home-active-panel='camp'] .home-bg-glow {
+  background:
+    radial-gradient(circle at 24% 74%, rgba(255, 187, 110, 0.3), transparent 20%),
+    radial-gradient(circle at 76% 18%, rgba(255, 159, 90, 0.16), transparent 22%),
+    radial-gradient(circle at 52% 86%, rgba(255, 133, 82, 0.18), transparent 24%);
+}
+
+html[data-theme='night'][data-home-active-panel='trail'] .home-bg-glow {
+  background:
+    radial-gradient(circle at 50% 78%, rgba(255, 164, 88, 0.24), transparent 18%),
+    radial-gradient(circle at 84% 18%, rgba(255, 116, 74, 0.2), transparent 20%),
+    radial-gradient(circle at 18% 22%, rgba(128, 160, 218, 0.14), transparent 20%);
+}
+
+@keyframes homeStarsDrift {
+  0% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  50% {
+    transform: translate3d(-8px, 10px, 0) scale(1.02);
+  }
+  100% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+}
+
+@keyframes homeEmbersLift {
+  0% {
+    transform: translate3d(0, 18px, 0) scale(1.02);
+  }
+  50% {
+    transform: translate3d(10px, -12px, 0) scale(1.05);
+  }
+  100% {
+    transform: translate3d(0, 18px, 0) scale(1.02);
+  }
+}
+
+@keyframes homeSparksSweep {
+  0% {
+    transform: translate3d(-8px, 18px, 0) scale(1.01);
+  }
+  50% {
+    transform: translate3d(10px, -10px, 0) scale(1.05);
+  }
+  100% {
+    transform: translate3d(-8px, 18px, 0) scale(1.01);
+  }
 }
 
 .home-topbar {
@@ -137,12 +418,62 @@ html[data-theme='night'] .home-hero-panel {
 .glass-section--content {
   width: min(100%, 1060px);
   margin: 0 auto;
-  padding: 26px;
-  background: linear-gradient(180deg, rgba(255, 250, 243, 0.56), rgba(255, 255, 255, 0.34));
+  padding: 28px;
+  overflow: hidden;
+  background: linear-gradient(180deg, rgba(255, 250, 243, 0.58), rgba(255, 255, 255, 0.34));
+}
+
+.home-navigation .glass-section--content {
+  background:
+    linear-gradient(180deg, rgba(255, 249, 241, 0.8), rgba(255, 246, 238, 0.52)),
+    radial-gradient(circle at 14% 18%, rgba(255, 219, 170, 0.24), transparent 22%);
+}
+
+.home-stats .glass-section--content {
+  background:
+    linear-gradient(180deg, rgba(255, 247, 239, 0.78), rgba(255, 252, 248, 0.38)),
+    radial-gradient(circle at 84% 18%, rgba(255, 173, 111, 0.16), transparent 18%);
 }
 
 html[data-theme='night'] .glass-section--content {
-  background: linear-gradient(180deg, rgba(18, 24, 36, 0.7), rgba(18, 24, 36, 0.58));
+  background: linear-gradient(180deg, rgba(18, 24, 36, 0.72), rgba(18, 24, 36, 0.58));
+}
+
+html[data-theme='night'] .home-navigation .glass-section--content {
+  background:
+    linear-gradient(180deg, rgba(27, 27, 35, 0.82), rgba(22, 25, 36, 0.64)),
+    radial-gradient(circle at 14% 18%, rgba(255, 181, 114, 0.12), transparent 22%);
+}
+
+html[data-theme='night'] .home-stats .glass-section--content {
+  background:
+    linear-gradient(180deg, rgba(25, 22, 28, 0.82), rgba(20, 24, 34, 0.64)),
+    radial-gradient(circle at 84% 18%, rgba(255, 139, 88, 0.12), transparent 20%);
+}
+
+.home-panel-card {
+  position: relative;
+}
+
+.home-panel-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  opacity: 0.72;
+}
+
+.home-navigation .home-panel-card::before {
+  background:
+    radial-gradient(circle at 14% 18%, rgba(255, 220, 163, 0.2), transparent 20%),
+    linear-gradient(145deg, rgba(255, 255, 255, 0.12), transparent 48%);
+}
+
+.home-stats .home-panel-card::before {
+  background:
+    radial-gradient(circle at 86% 16%, rgba(255, 177, 117, 0.18), transparent 18%),
+    linear-gradient(145deg, rgba(255, 255, 255, 0.1), transparent 48%);
 }
 
 .home-panel-section {
@@ -174,19 +505,19 @@ html[data-theme='night'] .glass-section--content {
 
 html.is-home-page .home-panel-frame {
   opacity: 0;
-  transform: translate3d(0, 78px, 0) scale(0.985);
+  transform: translate3d(0, 82px, 0) scale(0.982);
   transition:
-    opacity 620ms var(--motion-ease-soft),
-    transform 760ms cubic-bezier(0.16, 0.8, 0.2, 1);
+    opacity 660ms var(--motion-ease-soft),
+    transform 820ms cubic-bezier(0.16, 0.8, 0.2, 1);
 }
 
 html.is-home-page .home-panel-heading,
 html.is-home-page .home-panel-body {
   opacity: 0;
-  transform: translate3d(0, 28px, 0);
+  transform: translate3d(0, 34px, 0);
   transition:
-    opacity 420ms var(--motion-ease-soft),
-    transform 560ms var(--motion-ease-layered);
+    opacity 460ms var(--motion-ease-soft),
+    transform 620ms var(--motion-ease-layered);
 }
 
 html.is-home-page .home-panel-section.is-panel-visible .home-panel-frame {
@@ -197,13 +528,13 @@ html.is-home-page .home-panel-section.is-panel-visible .home-panel-frame {
 html.is-home-page .home-panel-section.is-panel-visible .home-panel-heading {
   opacity: 1;
   transform: translate3d(0, 0, 0);
-  transition-delay: 150ms;
+  transition-delay: 170ms;
 }
 
 html.is-home-page .home-panel-section.is-panel-visible .home-panel-body {
   opacity: 1;
   transform: translate3d(0, 0, 0);
-  transition-delay: 220ms;
+  transition-delay: 250ms;
 }
 
 .hero-center {
@@ -266,8 +597,17 @@ html[data-theme='night'] .home-title {
   }
 }
 
+.home-panel-heading {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  justify-items: start;
+  gap: 8px;
+  margin-bottom: 22px;
+}
+
 .navigation-head {
-  margin-bottom: 18px;
+  margin: 0;
 }
 
 .navigation-head--decorated {
@@ -288,6 +628,23 @@ html[data-theme='night'] .home-title {
   transform: translateY(-0.02em);
 }
 
+.section-caption {
+  margin: 0;
+  max-width: 34rem;
+  color: var(--text-secondary);
+  font-size: 0.98rem;
+  line-height: 1.72;
+}
+
+html[data-theme='night'] .section-caption {
+  color: rgba(235, 242, 255, 0.76);
+}
+
+.home-panel-body {
+  position: relative;
+  z-index: 1;
+}
+
 .navigation-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -295,30 +652,94 @@ html[data-theme='night'] .home-title {
 }
 
 .nav-card {
+  --destination-glow: rgba(113, 151, 221, 0.28);
+  --destination-border: rgba(139, 165, 214, 0.28);
+  --destination-fill: linear-gradient(145deg, rgba(255, 252, 248, 0.84), rgba(255, 248, 242, 0.56));
+  --destination-icon: var(--accent-primary-strong);
+  position: relative;
   display: flex;
   align-items: center;
-  min-height: 88px;
+  min-height: 94px;
   padding: 22px 24px;
-  background: rgba(255, 252, 248, 0.56);
-  backdrop-filter: blur(12px);
+  overflow: hidden;
+  border-color: var(--destination-border);
+  background: var(--destination-fill);
+  backdrop-filter: blur(14px);
+  box-shadow:
+    0 16px 36px rgba(50, 66, 98, 0.12),
+    inset 0 1px 0 rgba(255, 255, 255, 0.42);
   transition:
     transform var(--transition-base),
     background-color var(--transition-base),
     border-color var(--transition-base),
-    box-shadow var(--transition-base);
+    box-shadow var(--transition-base),
+    filter var(--transition-base);
+}
+
+.nav-card::before,
+.nav-card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.nav-card::before {
+  background:
+    linear-gradient(118deg, transparent 0 34%, rgba(255, 255, 255, 0.34) 44%, transparent 56%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.16), transparent 55%);
+  opacity: 0.72;
+  transform: translateX(-24%);
+  transition: transform 820ms var(--motion-ease-soft), opacity 460ms var(--motion-ease-soft);
+}
+
+.nav-card::after {
+  inset: auto -15% -55% 14%;
+  height: 130px;
+  background: radial-gradient(circle, var(--destination-glow) 0%, transparent 70%);
+  opacity: 0.84;
+  transition: transform 520ms var(--motion-ease-soft), opacity 460ms var(--motion-ease-soft);
 }
 
 html[data-theme='night'] .nav-card {
-  background: rgba(19, 24, 36, 0.46);
+  background: linear-gradient(145deg, rgba(28, 34, 47, 0.88), rgba(23, 28, 38, 0.66));
+  box-shadow:
+    0 18px 40px rgba(6, 10, 18, 0.26),
+    inset 0 1px 0 rgba(255, 255, 255, 0.04);
 }
 
 .nav-card:hover,
 .nav-card:focus-visible {
-  transform: translateY(-4px);
-  border-color: var(--border-strong);
+  transform: translateY(-6px) scale(1.01);
+  border-color: color-mix(in srgb, var(--destination-border) 54%, white 46%);
+  box-shadow:
+    0 22px 44px rgba(42, 53, 82, 0.18),
+    0 0 0 1px rgba(255, 255, 255, 0.16) inset;
+  filter: saturate(1.05);
+}
+
+html[data-theme='night'] .nav-card:hover,
+html[data-theme='night'] .nav-card:focus-visible {
+  box-shadow:
+    0 24px 46px rgba(6, 10, 18, 0.36),
+    0 0 0 1px rgba(255, 255, 255, 0.06) inset;
+}
+
+.nav-card:hover::before,
+.nav-card:focus-visible::before {
+  transform: translateX(8%);
+  opacity: 0.92;
+}
+
+.nav-card:hover::after,
+.nav-card:focus-visible::after {
+  transform: scale(1.08);
+  opacity: 1;
 }
 
 .nav-card-head {
+  position: relative;
+  z-index: 1;
   display: flex;
   align-items: center;
   gap: 14px;
@@ -331,7 +752,7 @@ html[data-theme='night'] .nav-card {
 .nav-card-arrow .brand-icon {
   width: 24px;
   height: 24px;
-  color: var(--accent-primary-strong);
+  color: var(--destination-icon);
   flex-shrink: 0;
 }
 
@@ -351,6 +772,40 @@ html[data-theme='night'] .nav-card {
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
+  transition: transform var(--transition-fast);
+}
+
+.nav-card:hover .nav-card-arrow,
+.nav-card:focus-visible .nav-card-arrow {
+  transform: translateX(4px);
+}
+
+.nav-card--blog {
+  --destination-glow: rgba(118, 161, 255, 0.34);
+  --destination-border: rgba(110, 151, 223, 0.32);
+  --destination-fill: linear-gradient(145deg, rgba(245, 249, 255, 0.86), rgba(241, 247, 255, 0.58));
+  --destination-icon: #5277ba;
+}
+
+.nav-card--github {
+  --destination-glow: rgba(171, 148, 214, 0.24);
+  --destination-border: rgba(141, 130, 186, 0.28);
+  --destination-fill: linear-gradient(145deg, rgba(248, 245, 255, 0.82), rgba(250, 247, 242, 0.56));
+  --destination-icon: #6f65a4;
+}
+
+.nav-card--bilibili {
+  --destination-glow: rgba(112, 210, 226, 0.24);
+  --destination-border: rgba(101, 179, 205, 0.3);
+  --destination-fill: linear-gradient(145deg, rgba(240, 252, 255, 0.84), rgba(242, 251, 249, 0.58));
+  --destination-icon: #389cb6;
+}
+
+.nav-card--zhihu {
+  --destination-glow: rgba(122, 153, 240, 0.28);
+  --destination-border: rgba(109, 141, 221, 0.3);
+  --destination-fill: linear-gradient(145deg, rgba(242, 247, 255, 0.84), rgba(244, 248, 255, 0.58));
+  --destination-icon: #4c6fbe;
 }
 
 .stats-grid {
@@ -358,6 +813,92 @@ html[data-theme='night'] .nav-card {
   grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 16px;
   margin-top: 18px;
+}
+
+.home-stats .stat-card {
+  position: relative;
+  overflow: hidden;
+  padding: 24px 22px;
+  border-color: rgba(216, 152, 92, 0.18);
+  background: linear-gradient(180deg, rgba(255, 251, 246, 0.84), rgba(255, 248, 240, 0.6));
+  box-shadow:
+    0 18px 38px rgba(54, 45, 37, 0.12),
+    inset 0 1px 0 rgba(255, 255, 255, 0.38);
+}
+
+.home-stats .stat-card::before {
+  content: '';
+  position: absolute;
+  inset: auto -12% -46% 12%;
+  height: 120px;
+  background: radial-gradient(circle, rgba(255, 183, 106, 0.22) 0%, transparent 72%);
+  opacity: 0.9;
+}
+
+.home-stats .stat-card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.16), transparent 42%);
+  opacity: 0.76;
+}
+
+html[data-theme='night'] .home-stats .stat-card {
+  border-color: rgba(255, 171, 110, 0.12);
+  background: linear-gradient(180deg, rgba(28, 24, 29, 0.84), rgba(24, 28, 38, 0.66));
+  box-shadow:
+    0 18px 42px rgba(6, 10, 18, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.03);
+}
+
+.home-stats .stat-card > * {
+  position: relative;
+  z-index: 1;
+}
+
+.home-stats .stat-value {
+  color: var(--text-primary);
+  text-shadow: 0 4px 14px rgba(255, 180, 108, 0.12);
+}
+
+html[data-theme='night'] .home-stats .stat-value {
+  text-shadow: 0 4px 14px rgba(255, 164, 88, 0.12);
+}
+
+html.is-home-page .home-navigation.is-panel-visible .nav-card,
+html.is-home-page .home-stats.is-panel-visible .stat-card {
+  animation: homeCardEnter 760ms var(--motion-ease-layered) both;
+}
+
+html.is-home-page .home-navigation.is-panel-visible .nav-card:nth-child(1),
+html.is-home-page .home-stats.is-panel-visible .stat-card:nth-child(1) {
+  animation-delay: 340ms;
+}
+
+html.is-home-page .home-navigation.is-panel-visible .nav-card:nth-child(2),
+html.is-home-page .home-stats.is-panel-visible .stat-card:nth-child(2) {
+  animation-delay: 420ms;
+}
+
+html.is-home-page .home-navigation.is-panel-visible .nav-card:nth-child(3),
+html.is-home-page .home-stats.is-panel-visible .stat-card:nth-child(3) {
+  animation-delay: 500ms;
+}
+
+html.is-home-page .home-navigation.is-panel-visible .nav-card:nth-child(4),
+html.is-home-page .home-stats.is-panel-visible .stat-card:nth-child(4) {
+  animation-delay: 580ms;
+}
+
+@keyframes homeCardEnter {
+  0% {
+    opacity: 0;
+    transform: translate3d(0, 28px, 0) scale(0.98);
+  }
+  100% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1);
+  }
 }
 
 @media (max-width: 1024px) {
@@ -388,7 +929,11 @@ html[data-theme='night'] .nav-card {
   }
 
   .glass-section--content {
-    padding: 20px;
+    padding: 22px 18px;
+  }
+
+  .home-panel-heading {
+    margin-bottom: 18px;
   }
 
   .navigation-head--decorated {
@@ -397,6 +942,11 @@ html[data-theme='night'] .nav-card {
 
   .section-emoji {
     font-size: clamp(1.45rem, 7vw, 1.9rem);
+  }
+
+  .section-caption {
+    font-size: 0.92rem;
+    line-height: 1.68;
   }
 
   .home-title-line--top {
@@ -409,6 +959,11 @@ html[data-theme='night'] .nav-card {
 
   .stats-grid {
     grid-template-columns: 1fr;
+  }
+
+  .nav-card,
+  .home-stats .stat-card {
+    min-height: 86px;
   }
 }
 
@@ -423,9 +978,30 @@ html[data-theme='night'] .nav-card {
   html.is-home-page body.home-page {
     scroll-snap-type: y proximity;
   }
+
+  .home-scene {
+    inset: -10%;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .home-bg-layer,
+  .home-bg-overlay,
+  .home-bg-glow,
+  .home-scene,
+  .home-ambient,
+  .nav-card,
+  .nav-card::before,
+  .nav-card::after,
+  .home-stats .stat-card {
+    animation: none !important;
+    transition: none !important;
+  }
+
+  .home-ambient {
+    opacity: 0 !important;
+  }
+
   html.is-home-page .home-panel-frame,
   html.is-home-page .home-panel-heading,
   html.is-home-page .home-panel-body {
@@ -433,4 +1009,139 @@ html[data-theme='night'] .nav-card {
     transform: none;
     transition: none;
   }
+}
+
+.home-navigation .section-heading,
+.home-stats .section-heading {
+  color: #2a4f80;
+  text-shadow: none;
+}
+
+.home-navigation .section-caption,
+.home-stats .section-caption {
+  color: rgba(58, 84, 124, 0.86);
+}
+
+.nav-card {
+  border-color: rgba(165, 190, 224, 0.72);
+  background: rgba(244, 249, 255, 0.92);
+  backdrop-filter: none;
+  box-shadow: none;
+  filter: none;
+}
+
+.nav-card::before,
+.nav-card::after {
+  content: none;
+}
+
+.nav-card:hover,
+.nav-card:focus-visible {
+  transform: none;
+  border-color: rgba(133, 170, 220, 0.92);
+  background: rgba(236, 245, 255, 0.96);
+  box-shadow: none;
+  filter: none;
+}
+
+.nav-card-label {
+  color: #29538b;
+  text-shadow: none;
+}
+
+.nav-card:hover .nav-card-arrow,
+.nav-card:focus-visible .nav-card-arrow {
+  transform: none;
+}
+
+.home-stats .stat-card {
+  border-color: rgba(168, 191, 221, 0.7);
+  background: rgba(245, 249, 255, 0.9);
+  box-shadow: none;
+}
+
+.home-stats .stat-card::before,
+.home-stats .stat-card::after {
+  content: none;
+}
+
+.home-stats .stat-label {
+  color: rgba(73, 97, 136, 0.82);
+}
+
+.home-stats .stat-value {
+  color: #1d4f86;
+  text-shadow: none;
+}
+
+.home-topbar .theme-button {
+  border-color: rgba(167, 192, 224, 0.72);
+  background: rgba(244, 249, 255, 0.92);
+  color: #48688e;
+  box-shadow: none;
+  backdrop-filter: none;
+}
+
+.home-topbar .theme-button:hover,
+.home-topbar .theme-button:focus-visible {
+  transform: none;
+  border-color: rgba(133, 170, 220, 0.92);
+  background: rgba(236, 245, 255, 0.96);
+  color: #1d4f86;
+  box-shadow: none;
+}
+
+html[data-theme='night'] .home-navigation .section-heading,
+html[data-theme='night'] .home-stats .section-heading {
+  color: #d6e8ff;
+}
+
+html[data-theme='night'] .home-navigation .section-caption,
+html[data-theme='night'] .home-stats .section-caption {
+  color: rgba(198, 218, 247, 0.8);
+}
+
+html[data-theme='night'] .nav-card {
+  border-color: rgba(153, 186, 236, 0.26);
+  background: rgba(30, 43, 64, 0.9);
+  box-shadow: none;
+}
+
+html[data-theme='night'] .nav-card:hover,
+html[data-theme='night'] .nav-card:focus-visible {
+  border-color: rgba(166, 202, 251, 0.44);
+  background: rgba(38, 54, 79, 0.94);
+  box-shadow: none;
+}
+
+html[data-theme='night'] .nav-card-label {
+  color: #d9ebff;
+}
+
+html[data-theme='night'] .home-stats .stat-card {
+  border-color: rgba(152, 186, 235, 0.26);
+  background: rgba(27, 39, 58, 0.9);
+  box-shadow: none;
+}
+
+html[data-theme='night'] .home-stats .stat-label {
+  color: rgba(185, 206, 236, 0.78);
+}
+
+html[data-theme='night'] .home-stats .stat-value {
+  color: #d9ebff;
+  text-shadow: none;
+}
+
+html[data-theme='night'] .home-topbar .theme-button {
+  border-color: rgba(152, 186, 235, 0.28);
+  background: rgba(31, 45, 66, 0.92);
+  color: #cfe2fb;
+}
+
+html[data-theme='night'] .home-topbar .theme-button:hover,
+html[data-theme='night'] .home-topbar .theme-button:focus-visible {
+  border-color: rgba(166, 202, 251, 0.44);
+  background: rgba(40, 58, 84, 0.96);
+  color: #edf5ff;
 }
