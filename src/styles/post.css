@@ -947,3 +947,170 @@ html[data-theme='night'] .lightbox button {
     padding: 14px;
   }
 }
+
+.post-page .article-hero,
+.post-page .toc-card,
+.post-page .article-shell {
+  border-color: rgba(255, 255, 255, 0.14);
+  background: rgba(230, 242, 255, 0.16);
+  background-image: none;
+  box-shadow: 0 20px 38px rgba(72, 103, 150, 0.1);
+  backdrop-filter: blur(20px) saturate(1.03);
+  -webkit-backdrop-filter: blur(20px) saturate(1.03);
+}
+
+.post-page .article-hero::before,
+.post-page .toc-card::before,
+.post-page .article-shell::before {
+  content: none;
+}
+
+.article-title {
+  text-shadow: none;
+}
+
+.post-page .meta-pill,
+.post-page .category-chip {
+  border-color: rgba(210, 227, 248, 0.64);
+  background: rgba(236, 247, 255, 0.34);
+  background-image: none;
+  color: #3a5f90;
+  box-shadow: none;
+  backdrop-filter: blur(12px) saturate(1.02);
+  -webkit-backdrop-filter: blur(12px) saturate(1.02);
+}
+
+.toc-link-button {
+  border-color: rgba(201, 221, 248, 0.45);
+  background: rgba(239, 248, 255, 0.28);
+  background-image: none;
+  color: rgba(57, 76, 108, 0.84);
+  box-shadow: none;
+  backdrop-filter: blur(10px) saturate(1.02);
+  -webkit-backdrop-filter: blur(10px) saturate(1.02);
+}
+
+.toc-link-button:hover,
+.toc-link-button:focus-visible,
+.toc-item.is-branch > .toc-link-button,
+.toc-link-button.is-active,
+.toc-item.is-active > .toc-link-button {
+  border-color: rgba(151, 186, 232, 0.66);
+  background: rgba(236, 247, 255, 0.42);
+  color: #1d4f86;
+  box-shadow: none;
+}
+
+.article-content {
+  background: rgba(241, 249, 255, 0.38);
+  background-image: none;
+  border-color: rgba(211, 228, 248, 0.54);
+  box-shadow: 0 18px 34px rgba(72, 103, 150, 0.08);
+  backdrop-filter: blur(16px) saturate(1.02);
+  -webkit-backdrop-filter: blur(16px) saturate(1.02);
+}
+
+.article-content blockquote {
+  background: rgba(121, 161, 214, 0.08);
+}
+
+.article-content img {
+  box-shadow: none;
+}
+
+.copy-button {
+  border-color: rgba(206, 224, 247, 0.62);
+  background: rgba(236, 247, 255, 0.36);
+  background-image: none;
+  color: #315988;
+  box-shadow: none;
+  backdrop-filter: blur(12px) saturate(1.02);
+  -webkit-backdrop-filter: blur(12px) saturate(1.02);
+}
+
+.lightbox button {
+  border-color: rgba(206, 224, 247, 0.62);
+  background: rgba(236, 247, 255, 0.42);
+  background-image: none;
+  color: #2f5788;
+  box-shadow: none;
+  backdrop-filter: blur(12px) saturate(1.02);
+  -webkit-backdrop-filter: blur(12px) saturate(1.02);
+}
+
+html[data-theme='night'] .post-page .article-hero,
+html[data-theme='night'] .post-page .toc-card,
+html[data-theme='night'] .post-page .article-shell {
+  border-color: rgba(255, 255, 255, 0.08);
+  background: rgba(21, 32, 48, 0.52);
+  background-image: none;
+  box-shadow: 0 22px 40px rgba(5, 10, 18, 0.2);
+  backdrop-filter: blur(20px) saturate(1.03);
+  -webkit-backdrop-filter: blur(20px) saturate(1.03);
+}
+
+html[data-theme='night'] .post-page .meta-pill,
+html[data-theme='night'] .post-page .category-chip {
+  border-color: rgba(144, 177, 224, 0.34);
+  background: rgba(29, 44, 66, 0.44);
+  background-image: none;
+  color: rgba(214, 230, 251, 0.86);
+  box-shadow: none;
+  backdrop-filter: blur(12px) saturate(1.02);
+  -webkit-backdrop-filter: blur(12px) saturate(1.02);
+}
+
+html[data-theme='night'] .toc-link-button {
+  border-color: rgba(146, 179, 225, 0.28);
+  background: rgba(30, 45, 67, 0.34);
+  background-image: none;
+  color: rgba(206, 224, 248, 0.82);
+  box-shadow: none;
+  backdrop-filter: blur(10px) saturate(1.02);
+  -webkit-backdrop-filter: blur(10px) saturate(1.02);
+}
+
+html[data-theme='night'] .toc-link-button:hover,
+html[data-theme='night'] .toc-link-button:focus-visible,
+html[data-theme='night'] .toc-item.is-branch > .toc-link-button,
+html[data-theme='night'] .toc-link-button.is-active,
+html[data-theme='night'] .toc-item.is-active > .toc-link-button {
+  border-color: rgba(155, 194, 246, 0.46);
+  background: rgba(38, 56, 82, 0.58);
+  background-image: none;
+  color: #eaf3ff;
+  box-shadow: none;
+}
+
+html[data-theme='night'] .article-content {
+  background: rgba(22, 34, 51, 0.58);
+  background-image: none;
+  border-color: rgba(143, 176, 222, 0.3);
+  box-shadow: 0 22px 40px rgba(5, 10, 18, 0.2);
+  backdrop-filter: blur(16px) saturate(1.02);
+  -webkit-backdrop-filter: blur(16px) saturate(1.02);
+}
+
+html[data-theme='night'] .article-content blockquote {
+  background: rgba(73, 99, 140, 0.24);
+}
+
+html[data-theme='night'] .copy-button {
+  border-color: rgba(142, 176, 223, 0.34);
+  background: rgba(35, 52, 77, 0.46);
+  background-image: none;
+  color: #d9eaff;
+  box-shadow: none;
+  backdrop-filter: blur(12px) saturate(1.02);
+  -webkit-backdrop-filter: blur(12px) saturate(1.02);
+}
+
+html[data-theme='night'] .lightbox button {
+  border-color: rgba(142, 176, 223, 0.34);
+  background: rgba(29, 44, 66, 0.54);
+  background-image: none;
+  color: #edf5ff;
+  box-shadow: none;
+  backdrop-filter: blur(12px) saturate(1.02);
+  -webkit-backdrop-filter: blur(12px) saturate(1.02);
+}

@@ -3355,3 +3355,26 @@ html[data-theme='night'] .blog-panel-section--journal .heat-tag.is-active {
     padding: 6px 0 18px;
   }
 }
+
+.blog-landing-hero {
+  border-color: rgba(255, 255, 255, 0.14);
+  background: rgba(230, 242, 255, 0.16);
+  background-image: none;
+  box-shadow: 0 20px 38px rgba(72, 103, 150, 0.1);
+  backdrop-filter: blur(20px) saturate(1.03);
+  -webkit-backdrop-filter: blur(20px) saturate(1.03);
+}
+
+.blog-landing-hero::before,
+.blog-landing-hero::after {
+  content: none;
+}
+
+html[data-theme='night'] .blog-landing-hero {
+  border-color: rgba(255, 255, 255, 0.08);
+  background: rgba(21, 32, 48, 0.52);
+  background-image: none;
+  box-shadow: 0 22px 40px rgba(5, 10, 18, 0.2);
+  backdrop-filter: blur(20px) saturate(1.03);
+  -webkit-backdrop-filter: blur(20px) saturate(1.03);
+}
