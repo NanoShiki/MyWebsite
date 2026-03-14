@@ -744,44 +744,31 @@ html[data-theme='night'] .post-story-bg-ink {
 }
 
 .post-page .article-hero,
-.post-page .toc-card,
-.post-page .article-shell {
+.post-page .toc-card {
   position: relative;
   overflow: hidden;
-  border: 1px solid rgba(255, 255, 255, 0.28);
+  border: 1px solid #d7c4a2;
   border-radius: 28px;
-  background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.26), rgba(255, 255, 255, 0.12)),
-    var(--post-glass-noise, linear-gradient(transparent, transparent));
-  background-repeat: no-repeat, repeat;
-  background-size: auto, 320px 320px;
-  backdrop-filter: blur(18px) saturate(1.06);
-  box-shadow:
-    0 24px 54px rgba(37, 58, 96, 0.14),
-    inset 0 1px 0 rgba(255, 255, 255, 0.42);
+  background-color: #fff2dc;
+  background-image: none;
+  box-shadow: 0 16px 32px rgba(86, 67, 40, 0.14);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
 }
 
 .post-page .article-hero::before,
-.post-page .toc-card::before,
-.post-page .article-shell::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  background: linear-gradient(145deg, rgba(255, 255, 255, 0.16), transparent 48%);
-  opacity: 0.84;
+.post-page .toc-card::before {
+  content: none;
 }
 
 html[data-theme='night'] .post-page .article-hero,
-html[data-theme='night'] .post-page .toc-card,
-html[data-theme='night'] .post-page .article-shell {
-  border-color: rgba(255, 255, 255, 0.08);
-  background:
-    linear-gradient(180deg, rgba(21, 31, 46, 0.66), rgba(16, 24, 36, 0.44)),
-    var(--post-glass-noise, linear-gradient(transparent, transparent));
-  box-shadow:
-    0 26px 58px rgba(5, 10, 18, 0.3),
-    inset 0 1px 0 rgba(255, 255, 255, 0.03);
+html[data-theme='night'] .post-page .toc-card {
+  border-color: #2d4568;
+  background-color: #1f2e44;
+  background-image: none;
+  box-shadow: 0 18px 34px rgba(4, 9, 16, 0.3);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
 }
 
 .article-hero {
@@ -800,17 +787,20 @@ html[data-theme='night'] .article-title {
 
 .post-page .meta-pill,
 .post-page .category-chip {
-  border-color: rgba(255, 255, 255, 0.22);
-  background: rgba(255, 255, 255, 0.16);
-  color: rgba(43, 67, 101, 0.86);
-  backdrop-filter: blur(12px);
+  border-color: #d2bf9d;
+  background-color: #f7ead1;
+  background-image: none;
+  color: #3e5b84;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
 }
 
 html[data-theme='night'] .post-page .meta-pill,
 html[data-theme='night'] .post-page .category-chip {
-  border-color: rgba(255, 255, 255, 0.08);
-  background: rgba(17, 25, 38, 0.34);
-  color: rgba(226, 238, 255, 0.82);
+  border-color: #3b5a84;
+  background-color: #2a3d57;
+  background-image: none;
+  color: #d8e7ff;
 }
 
 .toc-card {
@@ -819,31 +809,37 @@ html[data-theme='night'] .post-page .category-chip {
 
 .toc-link-button {
   border-radius: 12px;
-  color: rgba(57, 76, 108, 0.82);
+  border-color: #d9c39c;
+  background-color: #fbefd8;
+  background-image: none;
+  color: #3e5a82;
+  box-shadow: none;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
 }
 
 .toc-item--level-1 > .toc-link-button {
-  color: #28476f;
+  color: #2f4f79;
 }
 
 .toc-link-button:hover,
 .toc-link-button:focus-visible {
-  background: rgba(255, 255, 255, 0.04);
-  border-color: rgba(126, 168, 225, 0.26);
-  color: #27466f;
+  background-color: #f1dfc1;
+  border-color: #c9ac7e;
+  color: #21497a;
 }
 
 .toc-item.is-branch > .toc-link-button {
-  background: rgba(255, 255, 255, 0.05);
-  border-color: rgba(124, 166, 222, 0.3);
-  color: #234264;
+  background-color: #f1dfc1;
+  border-color: #c9ac7e;
+  color: #21497a;
 }
 
 .toc-link-button.is-active,
 .toc-item.is-active > .toc-link-button {
-  background: rgba(255, 255, 255, 0.06);
-  border-color: rgba(96, 142, 214, 0.58);
-  color: #27466f;
+  background-color: #f1dfc1;
+  border-color: #c9ac7e;
+  color: #21497a;
 }
 
 html[data-theme='night'] .toc-item--level-1 > .toc-link-button,
@@ -852,11 +848,29 @@ html[data-theme='night'] .toc-link-button:focus-visible,
 html[data-theme='night'] .toc-link-button.is-active,
 html[data-theme='night'] .toc-item.is-active > .toc-link-button,
 html[data-theme='night'] .toc-item.is-branch > .toc-link-button {
-  color: #eaf3ff;
+  color: #edf5ff;
+}
+
+html[data-theme='night'] .toc-link-button {
+  border-color: #3a597f;
+  background-color: #26384f;
+  background-image: none;
+  box-shadow: none;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+html[data-theme='night'] .toc-link-button:hover,
+html[data-theme='night'] .toc-link-button:focus-visible,
+html[data-theme='night'] .toc-item.is-branch > .toc-link-button,
+html[data-theme='night'] .toc-link-button.is-active,
+html[data-theme='night'] .toc-item.is-active > .toc-link-button {
+  border-color: #4f709e;
+  background-color: #304560;
 }
 
 .article-shell {
-  padding: 18px;
+  padding: 0;
 }
 
 .article-status {
@@ -869,20 +883,31 @@ html[data-theme='night'] .article-status {
 
 .article-content {
   color: #31496c;
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.92) 0%, rgba(249, 252, 255, 0.86) 100%);
-  border: 1px solid rgba(132, 172, 221, 0.2);
-  box-shadow:
-    0 20px 46px rgba(39, 63, 104, 0.08),
-    inset 0 1px 0 rgba(255, 255, 255, 0.52);
+  background-color: #fff7e8;
+  background-image: none;
+  border: 1px solid #dcc9a8;
+  box-shadow: 0 10px 24px rgba(86, 67, 40, 0.16);
+  opacity: 1;
+  mix-blend-mode: normal;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
 }
 
 html[data-theme='night'] .article-content {
   color: rgba(222, 233, 248, 0.88);
-  background: linear-gradient(180deg, rgba(17, 26, 40, 0.94) 0%, rgba(14, 22, 34, 0.9) 100%);
-  border-color: rgba(117, 146, 198, 0.16);
-  box-shadow:
-    0 24px 54px rgba(5, 10, 18, 0.24),
-    inset 0 1px 0 rgba(255, 255, 255, 0.03);
+  background-color: #1a2638;
+  background-image: none;
+  border-color: #2d4568;
+  box-shadow: 0 12px 28px rgba(4, 9, 16, 0.34);
+  opacity: 1;
+  mix-blend-mode: normal;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+.article-content::before,
+.article-content::after {
+  content: none !important;
 }
 
 .article-content h1,
@@ -966,50 +991,71 @@ html[data-theme='night'] .lightbox button {
 
 @media (max-width: 720px) {
   .article-shell {
-    padding: 14px;
+    padding: 0;
   }
 }
 
-.post-page .article-hero,
-.post-page .toc-card,
-.post-page .article-shell {
-  border-color: rgba(255, 255, 255, 0.14);
-  background: rgba(230, 242, 255, 0.16);
+.post-page .article-hero {
+  border-color: #dcc9a8;
+  background-color: #fff7e8;
   background-image: none;
-  box-shadow: 0 20px 38px rgba(72, 103, 150, 0.1);
-  backdrop-filter: blur(20px) saturate(1.03);
-  -webkit-backdrop-filter: blur(20px) saturate(1.03);
+  box-shadow: 0 10px 24px rgba(86, 67, 40, 0.16);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+.post-page .toc-card {
+  border-color: #d7c4a2;
+  background-color: #fff2dc;
+  background-image: none;
+  box-shadow: 0 16px 32px rgba(86, 67, 40, 0.14);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
 }
 
 .post-page .article-hero::before,
-.post-page .toc-card::before,
-.post-page .article-shell::before {
+.post-page .toc-card::before {
   content: none;
+}
+
+.post-page .article-shell,
+html[data-theme='night'] .post-page .article-shell {
+  border: none;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  overflow: visible;
+  padding: 0;
 }
 
 .article-title {
   text-shadow: none;
 }
 
-.post-page .meta-pill,
-.post-page .category-chip {
-  border-color: rgba(210, 227, 248, 0.64);
-  background: rgba(236, 247, 255, 0.34);
+.post-page .article-hero .meta-pill,
+.post-page .article-hero .category-chip {
+  border: none;
+  border-radius: 0;
+  background: transparent;
   background-image: none;
-  color: #3a5f90;
+  color: #3e5b84;
+  padding: 0;
+  min-height: 0;
   box-shadow: none;
-  backdrop-filter: blur(12px) saturate(1.02);
-  -webkit-backdrop-filter: blur(12px) saturate(1.02);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
 }
 
 .toc-link-button {
-  border-color: rgba(201, 221, 248, 0.45);
-  background: rgba(239, 248, 255, 0.28);
+  border-color: #d9c39c;
+  background-color: #fbefd8;
   background-image: none;
-  color: rgba(57, 76, 108, 0.84);
+  color: #3e5a82;
   box-shadow: none;
-  backdrop-filter: blur(10px) saturate(1.02);
-  -webkit-backdrop-filter: blur(10px) saturate(1.02);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
 }
 
 .toc-link-button:hover,
@@ -1017,17 +1063,21 @@ html[data-theme='night'] .lightbox button {
 .toc-item.is-branch > .toc-link-button,
 .toc-link-button.is-active,
 .toc-item.is-active > .toc-link-button {
-  border-color: rgba(151, 186, 232, 0.66);
-  background: rgba(236, 247, 255, 0.42);
-  color: #1d4f86;
+  border-color: #c9ac7e;
+  background-color: #f1dfc1;
+  color: #21497a;
   box-shadow: none;
 }
 
 .article-content {
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.98) 0%, rgba(247, 252, 255, 0.97) 100%);
+  background-color: #fff7e8;
   background-image: none;
-  border-color: rgba(211, 228, 248, 0.54);
-  box-shadow: 0 18px 34px rgba(72, 103, 150, 0.08);
+  border-color: #dcc9a8;
+  box-shadow: 0 10px 24px rgba(86, 67, 40, 0.16);
+  opacity: 1;
+  mix-blend-mode: normal;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
 }
 
 .article-content blockquote {
@@ -1058,36 +1108,46 @@ html[data-theme='night'] .lightbox button {
   -webkit-backdrop-filter: blur(12px) saturate(1.02);
 }
 
-html[data-theme='night'] .post-page .article-hero,
-html[data-theme='night'] .post-page .toc-card,
-html[data-theme='night'] .post-page .article-shell {
-  border-color: rgba(255, 255, 255, 0.08);
-  background: rgba(21, 32, 48, 0.52);
+html[data-theme='night'] .post-page .article-hero {
+  border-color: #2d4568;
+  background-color: #1a2638;
   background-image: none;
-  box-shadow: 0 22px 40px rgba(5, 10, 18, 0.2);
-  backdrop-filter: blur(20px) saturate(1.03);
-  -webkit-backdrop-filter: blur(20px) saturate(1.03);
+  box-shadow: 0 12px 28px rgba(4, 9, 16, 0.34);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
 }
 
-html[data-theme='night'] .post-page .meta-pill,
-html[data-theme='night'] .post-page .category-chip {
-  border-color: rgba(144, 177, 224, 0.34);
-  background: rgba(29, 44, 66, 0.44);
+html[data-theme='night'] .post-page .toc-card {
+  border-color: #2d4568;
+  background-color: #1f2e44;
   background-image: none;
-  color: rgba(214, 230, 251, 0.86);
+  box-shadow: 0 18px 34px rgba(4, 9, 16, 0.3);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+html[data-theme='night'] .post-page .article-hero .meta-pill,
+html[data-theme='night'] .post-page .article-hero .category-chip {
+  border: none;
+  border-radius: 0;
+  background: transparent;
+  background-image: none;
+  color: #d8e7ff;
+  padding: 0;
+  min-height: 0;
   box-shadow: none;
-  backdrop-filter: blur(12px) saturate(1.02);
-  -webkit-backdrop-filter: blur(12px) saturate(1.02);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
 }
 
 html[data-theme='night'] .toc-link-button {
-  border-color: rgba(146, 179, 225, 0.28);
-  background: rgba(30, 45, 67, 0.34);
+  border-color: #3a597f;
+  background-color: #26384f;
   background-image: none;
-  color: rgba(206, 224, 248, 0.82);
+  color: #d3e2fb;
   box-shadow: none;
-  backdrop-filter: blur(10px) saturate(1.02);
-  -webkit-backdrop-filter: blur(10px) saturate(1.02);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
 }
 
 html[data-theme='night'] .toc-link-button:hover,
@@ -1095,18 +1155,22 @@ html[data-theme='night'] .toc-link-button:focus-visible,
 html[data-theme='night'] .toc-item.is-branch > .toc-link-button,
 html[data-theme='night'] .toc-link-button.is-active,
 html[data-theme='night'] .toc-item.is-active > .toc-link-button {
-  border-color: rgba(155, 194, 246, 0.46);
-  background: rgba(38, 56, 82, 0.58);
+  border-color: #4f709e;
+  background-color: #304560;
   background-image: none;
-  color: #eaf3ff;
+  color: #edf5ff;
   box-shadow: none;
 }
 
 html[data-theme='night'] .article-content {
-  background: linear-gradient(180deg, rgba(18, 30, 46, 0.98) 0%, rgba(14, 24, 38, 0.97) 100%);
+  background-color: #1a2638;
   background-image: none;
-  border-color: rgba(143, 176, 222, 0.3);
-  box-shadow: 0 22px 40px rgba(5, 10, 18, 0.2);
+  border-color: #2d4568;
+  box-shadow: 0 12px 28px rgba(4, 9, 16, 0.34);
+  opacity: 1;
+  mix-blend-mode: normal;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
 }
 
 html[data-theme='night'] .article-content blockquote {
