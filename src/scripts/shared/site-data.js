@@ -109,8 +109,51 @@ export function getCategoryUrl(pathSegments = []) {
   return `${withBase('/Blog/')}?path=${encodeURIComponent(pathSegments.join('/'))}`;
 }
 
+function getPostCreatedTs(post = {}) {
+  const createdTs = Number(post.createdTs);
+  if (Number.isFinite(createdTs)) {
+    return createdTs;
+  }
+
+  const fallback = Date.parse(post.date || '');
+  if (Number.isFinite(fallback)) {
+    return fallback / 1000;
+  }
+
+  return 0;
+}
+
+function getPostFolderName(post = {}) {
+  const trimmed = (post.path || '').replace(/\/+$/, '');
+  if (!trimmed) {
+    return '';
+  }
+
+  const segments = trimmed.split('/').filter(Boolean);
+  return safeDecode(segments.at(-1) || '');
+}
+
+function comparePostsByCreatedAt(left = {}, right = {}) {
+  const createdDiff = getPostCreatedTs(right) - getPostCreatedTs(left);
+  if (createdDiff !== 0) {
+    return createdDiff;
+  }
+
+  const nameDiff = getPostFolderName(right).localeCompare(getPostFolderName(left), 'zh-Hans-CN-u-kn-true');
+  if (nameDiff !== 0) {
+    return nameDiff;
+  }
+
+  return (right.path || '').localeCompare((left.path || ''), 'zh-Hans-CN-u-kn-true');
+}
+
+export function sortPostsByCreatedAt(posts = []) {
+  return [...posts].sort(comparePostsByCreatedAt);
+}
+
+// 保留旧导出名，避免潜在调用方破坏。
 export function sortPostsByDate(posts = []) {
-  return [...posts].sort((left, right) => new Date(right.date) - new Date(left.date));
+  return sortPostsByCreatedAt(posts);
 }
 
 export function flattenCategoryNodes(tree) {
@@ -165,7 +208,7 @@ export function collectPostsFromNode(node) {
 
   const uniquePosts = new Map();
   [...posts, ...descendants].forEach((post) => uniquePosts.set(post.id, post));
-  return sortPostsByDate([...uniquePosts.values()]);
+  return sortPostsByCreatedAt([...uniquePosts.values()]);
 }
 
 export function findNodeByPath(tree, pathSegments = []) {

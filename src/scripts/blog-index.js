@@ -1521,7 +1521,7 @@ function setupPostsHoverController() {
 async function renderPosts(posts = [], renderToken = 0) {
   const container = document.getElementById('postsGrid');
   const description = document.getElementById('postSectionDesc');
-  description.textContent = '按时间倒序展示文章。';
+  description.textContent = '按创建时间倒序展示文章。';
 
   if (!posts.length) {
     container.innerHTML = '<div class="empty-card">这个筛选结果下暂时还没有文章。</div>';
