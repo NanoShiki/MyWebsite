@@ -213,6 +213,17 @@ function protectDisplayMathBlocks(markdown = '') {
       return;
     }
 
+    // Support single-line display math: $$ ... $$.
+    if (!inFence && !collectingDisplayMath) {
+      const singleLineDisplayMatch = trimmed.match(/^\$\$([\s\S]*?)\$\$$/);
+      if (singleLineDisplayMatch) {
+        const index = displayMathBlocks.length;
+        displayMathBlocks.push(singleLineDisplayMatch[1].trim());
+        output.push('', `<div class="display-math-placeholder" data-display-math-placeholder="${index}"></div>`, '');
+        return;
+      }
+    }
+
     if (collectingDisplayMath) {
       displayMathBuffer.push(line);
       return;
@@ -298,8 +309,12 @@ async function renderMath(container) {
       window.renderMathInElement(container, {
         throwOnError: false,
         delimiters: [
+          { left: '$$', right: '$$', display: true },
+          { left: '\\[', right: '\\]', display: true },
+          { left: '\\(', right: '\\)', display: false },
           { left: '$', right: '$', display: false }
         ],
+        ignoredTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
         ignoredClasses: ['display-math-placeholder']
       });
       container.dataset.mathEnhanced = 'true';
