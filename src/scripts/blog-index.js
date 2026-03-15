@@ -2,6 +2,7 @@ import '../styles/base.css';
 import '../styles/blog.css';
 import { marked } from 'marked';
 import { icons } from './shared/icons.js';
+import { IMAGE_SLOTS, pickDailyImageForSlot } from './shared/image-pool.js';
 import { PROFILE_LINKS, SITE_COPY } from './shared/site-meta.js';
 import { initThemeToggles } from './shared/theme.js';
 import {
@@ -12,8 +13,7 @@ import {
   formatDate,
   getMarkdownPathCandidates,
   getPostUrl,
-  resolveSiteAssetUrl,
-  withBase
+  resolveSiteAssetUrl
 } from './shared/site-data.js';
 
 const state = {
@@ -56,74 +56,9 @@ const TAG_PALETTES = [
   { day: '#438c9d', night: '#95dceb' }
 ];
 
-const BLOG_BACKGROUND_CANDIDATES = [
-  '/site-assets/blog/backgrounds/blog-cover.webp',
-  '/site-assets/blog/backgrounds/blog-cover.png',
-  '/site-assets/blog/backgrounds/blog-cover.jpg',
-  '/site-assets/blog/backgrounds/blog-cover.jpeg',
-  '/site-assets/shared/backgrounds/site-cover.webp',
-  '/site-assets/shared/backgrounds/site-cover.png',
-  '/site-assets/shared/backgrounds/site-cover.jpg',
-  '/site-assets/shared/backgrounds/site-cover.jpeg'
-];
-
-const BLOG_GLASS_NOISE_CANDIDATES = [
-  '/site-assets/blog/textures/glass-noise.webp',
-  '/site-assets/blog/textures/glass-noise.png',
-  '/site-assets/blog/textures/glass-noise.jpg',
-  '/site-assets/blog/textures/glass-noise.jpeg'
-];
-
-const BLOG_WIND_EMBLEM_CANDIDATES = [
-  '/site-assets/blog/ornaments/wind-emblem.webp',
-  '/site-assets/blog/ornaments/wind-emblem.png',
-  '/site-assets/blog/ornaments/wind-emblem.jpg',
-  '/site-assets/blog/ornaments/wind-emblem.jpeg'
-];
-
-const BLOG_PARCHMENT_TEXTURE_CANDIDATES = [
-  '/site-assets/blog/textures/parchment-texture.webp',
-  '/site-assets/blog/textures/parchment-texture.png',
-  '/site-assets/blog/textures/parchment-texture.jpg',
-  '/site-assets/blog/textures/parchment-texture.jpeg'
-];
-
-const BLOG_WOOD_GRAIN_CANDIDATES = [
-  '/site-assets/blog/textures/wood-grain.webp',
-  '/site-assets/blog/textures/wood-grain.png',
-  '/site-assets/blog/textures/wood-grain.jpg',
-  '/site-assets/blog/textures/wood-grain.jpeg'
-];
-
-const BLOG_RUINS_OVERLAY_CANDIDATES = [
-  '/site-assets/blog/ornaments/ruins-overlay.webp',
-  '/site-assets/blog/ornaments/ruins-overlay.png',
-  '/site-assets/blog/ornaments/ruins-overlay.jpg',
-  '/site-assets/blog/ornaments/ruins-overlay.jpeg'
-];
-
-const BLOG_CORNER_ORNAMENT_CANDIDATES = [
-  '/site-assets/blog/ornaments/corner-ornament.webp',
-  '/site-assets/blog/ornaments/corner-ornament.png',
-  '/site-assets/blog/ornaments/corner-ornament.jpg',
-  '/site-assets/blog/ornaments/corner-ornament.jpeg'
-];
-
-const BLOG_DIVIDER_SEAL_CANDIDATES = [
-  '/site-assets/blog/ornaments/divider-seal.webp',
-  '/site-assets/blog/ornaments/divider-seal.png',
-  '/site-assets/blog/ornaments/divider-seal.jpg',
-  '/site-assets/blog/ornaments/divider-seal.jpeg'
-];
-
 let cleanupBlogReplayAnimations = null;
 let triggerBlogReplayRefresh = () => {};
 let blogReplayRefreshTimers = [];
-let profileAvatarLoadToken = 0;
-
-const BLOG_PROFILE_AVATAR_CACHE_KEY = 'blog-profile-avatar-cache/v1';
-const BLOG_PROFILE_AVATAR_TIMEOUT_MS = 8000;
-const BLOG_PROFILE_AVATAR_SEED_URL = 'https://i2.hdslb.com/bfs/face/69257695fad31de469c230d559e0fb2dc0f79876.jpg';
 
 let blogHeroTypingRunId = 0;
 let hasPrimedBlogHeroTyping = false;
@@ -385,44 +320,6 @@ function renderBlogMapHeadingInstant() {
   lead.classList.remove('is-typing');
 }
 
-function findProfileLink(key = '') {
-  return PROFILE_LINKS.find((link) => link.key === key) || null;
-}
-
-function getBilibiliMidFromUrl(url = '') {
-  const match = url.match(/space\.bilibili\.com\/(\d+)/i);
-  return match?.[1] || '';
-}
-
-function readCachedProfileAvatar() {
-  try {
-    const raw = window.localStorage.getItem(BLOG_PROFILE_AVATAR_CACHE_KEY);
-    if (!raw) {
-      return '';
-    }
-
-    const parsed = JSON.parse(raw);
-    return typeof parsed?.url === 'string' ? parsed.url : '';
-  } catch {
-    return '';
-  }
-}
-
-function writeCachedProfileAvatar(url = '') {
-  if (!url) {
-    return;
-  }
-
-  try {
-    window.localStorage.setItem(BLOG_PROFILE_AVATAR_CACHE_KEY, JSON.stringify({
-      url,
-      updatedAt: Date.now()
-    }));
-  } catch {
-    // Ignore storage failures and keep runtime-only avatar state.
-  }
-}
-
 function applyProfileAvatar(url = '') {
   const avatar = document.querySelector('.profile-avatar');
   if (!(avatar instanceof HTMLElement)) {
@@ -469,152 +366,20 @@ function preloadProfileAvatar(url = '') {
   });
 }
 
-function requestJsonp(url = '', { callbackParam = 'callback', callbackPrefix = '__blogAvatarJsonp', timeout = BLOG_PROFILE_AVATAR_TIMEOUT_MS } = {}) {
-  return new Promise((resolve, reject) => {
-    if (!url) {
-      resolve(null);
-      return;
-    }
-
-    const callbackName = `${callbackPrefix}_${Date.now()}_${Math.random().toString(36).slice(2, 10)}`;
-    const script = document.createElement('script');
-    let settled = false;
-    let timerId = 0;
-
-    const cleanup = () => {
-      window.clearTimeout(timerId);
-      delete window[callbackName];
-      script.remove();
-    };
-
-    const finalizeResolve = (value) => {
-      if (settled) {
-        return;
-      }
-
-      settled = true;
-      cleanup();
-      resolve(value);
-    };
-
-    const finalizeReject = (error) => {
-      if (settled) {
-        return;
-      }
-
-      settled = true;
-      cleanup();
-      reject(error);
-    };
-
-    window[callbackName] = (payload) => {
-      finalizeResolve(payload);
-    };
-
-    const separator = url.includes('?') ? '&' : '?';
-    script.src = `${url}${separator}${callbackParam}=${encodeURIComponent(callbackName)}`;
-    script.async = true;
-    script.onerror = () => finalizeReject(new Error('jsonp-load-failed'));
-
-    timerId = window.setTimeout(() => {
-      finalizeReject(new Error('jsonp-timeout'));
-    }, timeout);
-
-    document.head.append(script);
-  });
-}
-
-async function fetchBilibiliProfileAvatar(mid = '') {
-  if (!mid) {
-    return '';
-  }
-
-  try {
-    const payload = await requestJsonp(`https://api.bilibili.com/x/web-interface/card?mid=${encodeURIComponent(mid)}&jsonp=jsonp`, {
-      callbackPrefix: '__blogBilibiliAvatarCb'
-    });
-
-    if (payload?.code !== 0) {
-      return '';
-    }
-
-    return payload?.data?.card?.face || '';
-  } catch {
-    return '';
-  }
-}
-
 function setupProfileAvatar() {
-  const bilibiliLink = findProfileLink('bilibili');
-  const mid = getBilibiliMidFromUrl(bilibiliLink?.href || '');
-
-  if (!mid) {
+  applyProfileAvatar('');
+  const avatarAsset = pickDailyImageForSlot(IMAGE_SLOTS.blogProfileAvatar);
+  if (!avatarAsset) {
     return;
   }
 
-  const cachedUrl = readCachedProfileAvatar();
-  const initialUrl = cachedUrl || BLOG_PROFILE_AVATAR_SEED_URL;
-  const loadToken = ++profileAvatarLoadToken;
-
-  applyProfileAvatar('');
-
-  if (initialUrl) {
-    void preloadProfileAvatar(initialUrl).then((resolvedUrl) => {
-      if (!resolvedUrl || loadToken !== profileAvatarLoadToken) {
-        return;
-      }
-
-      applyProfileAvatar(resolvedUrl);
-    });
-  }
-
-  void fetchBilibiliProfileAvatar(mid).then((avatarUrl) => {
-    if (!avatarUrl) {
+  void preloadProfileAvatar(avatarAsset).then((resolvedUrl) => {
+    if (!resolvedUrl) {
       return;
     }
 
-    void preloadProfileAvatar(avatarUrl).then((resolvedUrl) => {
-      if (!resolvedUrl || loadToken !== profileAvatarLoadToken) {
-        return;
-      }
-
-      applyProfileAvatar(resolvedUrl);
-      writeCachedProfileAvatar(resolvedUrl);
-    });
+    applyProfileAvatar(resolvedUrl);
   });
-}
-
-async function probeAsset(url = '') {
-  if (!url) {
-    return false;
-  }
-
-  try {
-    const response = await fetch(url, { method: 'HEAD', cache: 'no-cache' });
-    if (response.ok) {
-      return true;
-    }
-
-    if (response.status === 405) {
-      const fallback = await fetch(url, { method: 'GET', cache: 'no-cache' });
-      return fallback.ok;
-    }
-  } catch {
-    return false;
-  }
-
-  return false;
-}
-
-async function findAvailableAsset(paths = []) {
-  for (const rawPath of paths) {
-    const assetUrl = withBase(rawPath);
-    if (await probeAsset(assetUrl)) {
-      return assetUrl;
-    }
-  }
-
-  return '';
 }
 
 function applyOptionalBlogAsset(root, { className = '', cssVariable = '', assetUrl = '' } = {}) {
@@ -630,30 +395,18 @@ function applyOptionalBlogAsset(root, { className = '', cssVariable = '', assetU
   }
 }
 
-async function setupBlogBackground() {
+function setupBlogBackground() {
   const root = document.documentElement;
   root.classList.add('is-blog-page');
   root.style.removeProperty('--blog-story-image');
-
-  const [
-    backgroundAsset,
-    glassNoiseAsset,
-    windEmblemAsset,
-    parchmentTextureAsset,
-    woodGrainAsset,
-    ruinsOverlayAsset,
-    cornerOrnamentAsset,
-    dividerSealAsset
-  ] = await Promise.all([
-    findAvailableAsset(BLOG_BACKGROUND_CANDIDATES),
-    findAvailableAsset(BLOG_GLASS_NOISE_CANDIDATES),
-    findAvailableAsset(BLOG_WIND_EMBLEM_CANDIDATES),
-    findAvailableAsset(BLOG_PARCHMENT_TEXTURE_CANDIDATES),
-    findAvailableAsset(BLOG_WOOD_GRAIN_CANDIDATES),
-    findAvailableAsset(BLOG_RUINS_OVERLAY_CANDIDATES),
-    findAvailableAsset(BLOG_CORNER_ORNAMENT_CANDIDATES),
-    findAvailableAsset(BLOG_DIVIDER_SEAL_CANDIDATES)
-  ]);
+  const backgroundAsset = pickDailyImageForSlot(IMAGE_SLOTS.blogCover);
+  const glassNoiseAsset = pickDailyImageForSlot(IMAGE_SLOTS.blogGlassNoise);
+  const windEmblemAsset = pickDailyImageForSlot(IMAGE_SLOTS.blogWindEmblem);
+  const parchmentTextureAsset = pickDailyImageForSlot(IMAGE_SLOTS.blogParchment);
+  const woodGrainAsset = pickDailyImageForSlot(IMAGE_SLOTS.blogWoodGrain);
+  const ruinsOverlayAsset = pickDailyImageForSlot(IMAGE_SLOTS.blogRuins);
+  const cornerOrnamentAsset = pickDailyImageForSlot(IMAGE_SLOTS.blogCorner);
+  const dividerSealAsset = pickDailyImageForSlot(IMAGE_SLOTS.blogDivider);
 
   root.classList.toggle('has-blog-story-image', Boolean(backgroundAsset));
   if (backgroundAsset) {
@@ -1153,17 +906,18 @@ function renderHero() {
   renderBlogHeroTitleInstant();
 
   if (heroQuillImage instanceof HTMLImageElement) {
-    const assetUrl = withBase('/羽毛笔.png');
+    const assetUrl = pickDailyImageForSlot(IMAGE_SLOTS.blogQuill);
     heroQuillImage.onload = () => {
       heroQuillImage.closest('.blog-hero-quill-media')?.classList.remove('is-missing');
     };
     heroQuillImage.onerror = () => {
       heroQuillImage.closest('.blog-hero-quill-media')?.classList.add('is-missing');
     };
-    if (heroQuillImage.src !== assetUrl) {
+    if (assetUrl && heroQuillImage.src !== assetUrl) {
       heroQuillImage.src = assetUrl;
     }
-    heroQuillImage.closest('.blog-hero-quill-media')?.classList.toggle('is-missing', !heroQuillImage.complete || heroQuillImage.naturalWidth === 0);
+    const isMissing = !assetUrl || !heroQuillImage.complete || heroQuillImage.naturalWidth === 0;
+    heroQuillImage.closest('.blog-hero-quill-media')?.classList.toggle('is-missing', isMissing);
   }
 }
 
@@ -1763,7 +1517,7 @@ async function init() {
   document.documentElement.classList.add('is-blog-page');
   document.documentElement.dataset.blogActivePanel = 'hero';
   initThemeToggles();
-  void setupBlogBackground();
+  setupBlogBackground();
   renderSidebarLinks();
   setupProfileAvatar();
 

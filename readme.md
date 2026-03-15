@@ -29,6 +29,7 @@ myWeb/
 │   ├── update_config.py   # 配置更新脚本
 │   └── 使用说明.md         # 配置脚本说明
 ├── src/                   # 共享样式与前端脚本
+│   ├── assets/            # 页面视觉素材池（按槽位目录随机）
 │   ├── scripts/           # 页面逻辑与共享模块
 │   └── styles/            # 共享主题样式
 ├── wiki/                  # 项目文档与说明
@@ -92,6 +93,26 @@ dist/
 ```bash
 python3 Blog/update_config.py
 ```
+
+## 🖼️ 图片素材池（去硬引用）
+
+站点主要视觉图已改为“槽位目录 + 当天稳定随机”机制，代码不再写死具体文件名。  
+后续换图只需要把新图片放进对应目录，不需要改 JS。
+
+- 素材根目录：`src/assets/image-pools/`
+- 支持格式：`jpg` / `jpeg` / `png` / `webp`
+- 随机规则：同一天同页面固定同一张，跨天自动换图
+
+主要槽位：
+
+- 首页：`home/hero`、`home/camp-day`、`home/camp-night`、`home/trail`
+- 博客列表：`blog/cover`、`blog/glass-noise`、`blog/wind-emblem`、`blog/parchment`、`blog/wood-grain`、`blog/ruins`、`blog/corner`、`blog/divider`、`blog/quill`、`blog/profile-avatar`
+- 文章详情：`post/cover`、`post/glass-noise`、`post/wind-emblem`、`post/ruins`
+
+建议：
+
+- 同一槽位至少放 2 张图，随机效果更明显
+- 文件名可自定义，按你的习惯命名即可
 
 ## 📝 Blog 功能
 

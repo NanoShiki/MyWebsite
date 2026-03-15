@@ -1196,3 +1196,27 @@ html[data-theme='night'] .lightbox button {
   backdrop-filter: blur(12px) saturate(1.02);
   -webkit-backdrop-filter: blur(12px) saturate(1.02);
 }
+
+/* Final override: remove post background image masks and keep raw story image. */
+.post-story-bg-overlay,
+.post-story-bg-glow,
+.post-story-bg-ink {
+  display: none !important;
+}
+
+.post-story-bg-layer {
+  background-image: var(--post-story-image, linear-gradient(transparent, transparent)) !important;
+  background-size: cover !important;
+  background-position: center center !important;
+  background-repeat: no-repeat !important;
+  inset: 0 !important;
+  transform: none !important;
+  opacity: 0.92 !important;
+  filter: none !important;
+}
+
+html.has-post-story-image .post-story-bg-layer,
+html[data-theme='night'] .post-story-bg-layer {
+  opacity: 0.92 !important;
+  filter: none !important;
+}

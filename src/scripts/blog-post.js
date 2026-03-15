@@ -10,6 +10,7 @@ import xml from 'highlight.js/lib/languages/xml';
 import css from 'highlight.js/lib/languages/css';
 import { marked } from 'marked';
 import { icons } from './shared/icons.js';
+import { IMAGE_SLOTS, pickDailyImageForSlot } from './shared/image-pool.js';
 import { initThemeToggles } from './shared/theme.js';
 import {
   fetchBlogConfig,
@@ -17,8 +18,7 @@ import {
   getCategoryUrl,
   getMarkdownPathCandidates,
   resolveSiteAssetUrl,
-  slugifyHeading,
-  withBase
+  slugifyHeading
 } from './shared/site-data.js';
 
 hljs.registerLanguage('cpp', cpp);
@@ -46,71 +46,6 @@ const state = {
   tocCleanup: null
 };
 
-const POST_BACKGROUND_CANDIDATES = [
-  '/site-assets/blog/backgrounds/blog-cover.webp',
-  '/site-assets/blog/backgrounds/blog-cover.png',
-  '/site-assets/blog/backgrounds/blog-cover.jpg',
-  '/site-assets/blog/backgrounds/blog-cover.jpeg',
-  '/site-assets/shared/backgrounds/site-cover.webp',
-  '/site-assets/shared/backgrounds/site-cover.png',
-  '/site-assets/shared/backgrounds/site-cover.jpg',
-  '/site-assets/shared/backgrounds/site-cover.jpeg'
-];
-
-const POST_GLASS_NOISE_CANDIDATES = [
-  '/site-assets/blog/textures/glass-noise.webp',
-  '/site-assets/blog/textures/glass-noise.png',
-  '/site-assets/blog/textures/glass-noise.jpg',
-  '/site-assets/blog/textures/glass-noise.jpeg'
-];
-
-const POST_WIND_EMBLEM_CANDIDATES = [
-  '/site-assets/blog/ornaments/wind-emblem.webp',
-  '/site-assets/blog/ornaments/wind-emblem.png',
-  '/site-assets/blog/ornaments/wind-emblem.jpg',
-  '/site-assets/blog/ornaments/wind-emblem.jpeg'
-];
-
-const POST_RUINS_OVERLAY_CANDIDATES = [
-  '/site-assets/blog/ornaments/ruins-overlay.webp',
-  '/site-assets/blog/ornaments/ruins-overlay.png',
-  '/site-assets/blog/ornaments/ruins-overlay.jpg',
-  '/site-assets/blog/ornaments/ruins-overlay.jpeg'
-];
-
-async function probeAsset(url = '') {
-  if (!url) {
-    return false;
-  }
-
-  try {
-    const response = await fetch(url, { method: 'HEAD', cache: 'no-cache' });
-    if (response.ok) {
-      return true;
-    }
-
-    if (response.status === 405) {
-      const fallback = await fetch(url, { method: 'GET', cache: 'no-cache' });
-      return fallback.ok;
-    }
-  } catch {
-    return false;
-  }
-
-  return false;
-}
-
-async function findAvailableAsset(paths = []) {
-  for (const rawPath of paths) {
-    const assetUrl = withBase(rawPath);
-    if (await probeAsset(assetUrl)) {
-      return assetUrl;
-    }
-  }
-
-  return '';
-}
-
 function applyOptionalPostAsset(root, { className = '', cssVariable = '', assetUrl = '' } = {}) {
   if (!root || !className || !cssVariable) {
     return;
@@ -124,16 +59,13 @@ function applyOptionalPostAsset(root, { className = '', cssVariable = '', assetU
   }
 }
 
-async function setupPostBackground() {
+function setupPostBackground() {
   const root = document.documentElement;
   root.classList.add('is-post-page');
-
-  const [backgroundAsset, glassNoiseAsset, windEmblemAsset, ruinsOverlayAsset] = await Promise.all([
-    findAvailableAsset(POST_BACKGROUND_CANDIDATES),
-    findAvailableAsset(POST_GLASS_NOISE_CANDIDATES),
-    findAvailableAsset(POST_WIND_EMBLEM_CANDIDATES),
-    findAvailableAsset(POST_RUINS_OVERLAY_CANDIDATES)
-  ]);
+  const backgroundAsset = pickDailyImageForSlot(IMAGE_SLOTS.postCover);
+  const glassNoiseAsset = pickDailyImageForSlot(IMAGE_SLOTS.postGlassNoise);
+  const windEmblemAsset = pickDailyImageForSlot(IMAGE_SLOTS.postWindEmblem);
+  const ruinsOverlayAsset = pickDailyImageForSlot(IMAGE_SLOTS.postRuins);
 
   root.classList.toggle('has-post-story-image', Boolean(backgroundAsset));
   if (backgroundAsset) {
@@ -781,7 +713,7 @@ function showPostError(message) {
 async function init() {
   document.documentElement.classList.add('is-post-page');
   initThemeToggles();
-  void setupPostBackground();
+  setupPostBackground();
   setupDesktopSidebarRail();
 
   const postId = getPostIdFromUrl();

@@ -2,6 +2,7 @@ import '../styles/base.css';
 import '../styles/home.css';
 import { initBusuanzi } from './shared/busuanzi.js';
 import { icons } from './shared/icons.js';
+import { IMAGE_SLOTS, pickDailyImageForSlot } from './shared/image-pool.js';
 import { HOME_DESTINATIONS, SITE_COPY, SITE_START_DATE } from './shared/site-meta.js';
 import { initThemeToggles } from './shared/theme.js';
 import { fetchBlogConfig, formatRuntime, flattenCategoryNodes, withBase } from './shared/site-data.js';
@@ -11,45 +12,6 @@ const DESTINATION_ICONS = {
   github: icons.github,
   bilibili: icons.bilibili,
   zhihu: icons.zhihu
-};
-
-const HERO_BACKGROUND_ASSET = '/Ryu.png';
-
-const SCENE_ASSET_CANDIDATES = {
-  camp: {
-    day: [
-      '/site-assets/home/scenes/camp-scene-day.webp',
-      '/site-assets/home/scenes/camp-scene-day.png',
-      '/site-assets/home/scenes/camp-scene-day.jpg',
-      '/site-assets/home/scenes/camp-scene-day.jpeg'
-    ],
-    night: [
-      '/site-assets/home/scenes/camp-scene-night.webp',
-      '/site-assets/home/scenes/camp-scene-night.png',
-      '/site-assets/home/scenes/camp-scene-night.jpg',
-      '/site-assets/home/scenes/camp-scene-night.jpeg'
-    ],
-    fallback: [
-      '/site-assets/home/scenes/camp-scene.webp',
-      '/site-assets/home/scenes/camp-scene.png',
-      '/site-assets/home/scenes/camp-scene.jpg',
-      '/site-assets/home/scenes/camp-scene.jpeg',
-      '/home-assets/camp-scene.webp',
-      '/home-assets/camp-scene.png',
-      '/home-assets/camp-scene.jpg',
-      '/home-assets/camp-scene.jpeg'
-    ]
-  },
-  trail: [
-    '/site-assets/home/scenes/trail-scene.webp',
-    '/site-assets/home/scenes/trail-scene.png',
-    '/site-assets/home/scenes/trail-scene.jpg',
-    '/site-assets/home/scenes/trail-scene.jpeg',
-    '/home-assets/trail-scene.webp',
-    '/home-assets/trail-scene.png',
-    '/home-assets/trail-scene.jpg',
-    '/home-assets/trail-scene.jpeg'
-  ]
 };
 
 const homeSceneAssets = {
@@ -68,46 +30,18 @@ function delay(ms = 0) {
   return new Promise((resolve) => window.setTimeout(resolve, ms));
 }
 
-async function probeAsset(url = '') {
-  if (!url) {
-    return false;
-  }
-
-  try {
-    const response = await fetch(url, { method: 'HEAD', cache: 'no-cache' });
-    if (response.ok) {
-      return true;
-    }
-
-    if (response.status === 405) {
-      const fallback = await fetch(url, { method: 'GET', cache: 'no-cache' });
-      return fallback.ok;
-    }
-  } catch {
-    return false;
-  }
-
-  return false;
-}
-
-async function findAvailableAsset(paths = []) {
-  for (const rawPath of paths) {
-    const assetUrl = withBase(rawPath);
-    if (await probeAsset(assetUrl)) {
-      return assetUrl;
-    }
-  }
-
-  return '';
-}
-
 function setupBackground() {
   const layer = document.querySelector('[data-bg-layer="0"]');
   if (!layer) {
     return;
   }
 
-  layer.style.backgroundImage = `url("${withBase(HERO_BACKGROUND_ASSET)}")`;
+  const heroAsset = pickDailyImageForSlot(IMAGE_SLOTS.homeHero);
+  if (heroAsset) {
+    layer.style.backgroundImage = `url("${heroAsset}")`;
+  } else {
+    layer.style.removeProperty('background-image');
+  }
 }
 
 function getCurrentTheme() {
@@ -146,14 +80,12 @@ function syncCampSceneAsset(root = document.documentElement) {
   clearSceneAsset(root, 'camp');
 }
 
-async function setupOptionalSceneAssets() {
+function setupOptionalSceneAssets() {
   const root = document.documentElement;
-  const [campDayScene, campNightScene, campFallbackScene, trailScene] = await Promise.all([
-    findAvailableAsset(SCENE_ASSET_CANDIDATES.camp.day),
-    findAvailableAsset(SCENE_ASSET_CANDIDATES.camp.night),
-    findAvailableAsset(SCENE_ASSET_CANDIDATES.camp.fallback),
-    findAvailableAsset(SCENE_ASSET_CANDIDATES.trail)
-  ]);
+  const campDayScene = pickDailyImageForSlot(IMAGE_SLOTS.homeCampDay);
+  const campNightScene = pickDailyImageForSlot(IMAGE_SLOTS.homeCampNight);
+  const trailScene = pickDailyImageForSlot(IMAGE_SLOTS.homeTrail);
+  const campFallbackScene = campDayScene || campNightScene;
 
   homeSceneAssets.camp.day = campDayScene;
   homeSceneAssets.camp.night = campNightScene;
@@ -586,7 +518,7 @@ async function hydrateHome() {
   delete document.documentElement.dataset.homeSceneHold;
 
   setupBackground();
-  void setupOptionalSceneAssets();
+  setupOptionalSceneAssets();
   setupOverlayProgress();
   initThemeToggles();
   initBusuanzi();
