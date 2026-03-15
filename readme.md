@@ -109,10 +109,11 @@ python3 Blog/update_config.py
 
 ## 📖 相关文档
 
-- [部署指南](./wiki/部署指南.md)
-- [Blog 项目文档](./wiki/blog.md)
-- [首页素材需求](./wiki/首页素材需求.md)
-- [站点前端素材需求](./wiki/站点前端素材需求.md)
 - [Blog 配置脚本说明](./Blog/使用说明.md)
-- [课堂笔记整理指南](./wiki/课堂笔记整理指南.md)
-- [教学文档](./wiki/teach/README.md)
+- [教学文档（第 1 章）](./wiki/teach/01-Python基础.md)
+- [教学文档（第 10 章）](./wiki/teach/10-Web与安全.md)
+
+## 📌 项目整理说明
+
+- 2026-03-15 已完成安全级项目整理，清理了历史构建残留目录 `dist/Blog/archive 3`。
+- `wiki/` 历史文档已按当前仓库状态移除，README 仅保留当前可用文档入口，避免失效链接。
