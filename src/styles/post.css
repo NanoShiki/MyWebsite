@@ -457,12 +457,47 @@ html[data-theme='night'] .toc-item.is-active > .toc-link-button {
   position: absolute;
   top: 12px;
   right: 12px;
-  border: 1px solid rgba(255, 237, 205, 0.12);
-  background: rgba(255, 255, 255, 0.08);
+  width: 34px;
+  height: 34px;
+  padding: 0;
+  display: inline-grid;
+  place-items: center;
+  border: 1px solid rgba(255, 237, 205, 0.32);
+  background: rgba(255, 255, 255, 0.16);
   color: #f6edd9;
-  border-radius: 999px;
-  padding: 6px 10px;
-  font-size: 0.82rem;
+  border-radius: 11px;
+  line-height: 1;
+  box-shadow: 0 6px 14px rgba(6, 8, 14, 0.24);
+  transition:
+    background-color var(--transition-fast),
+    border-color var(--transition-fast),
+    color var(--transition-fast),
+    transform var(--transition-fast);
+}
+
+.copy-button:hover,
+.copy-button:focus-visible {
+  transform: translate3d(0, -1px, 0);
+  border-color: rgba(255, 237, 205, 0.5);
+  background: rgba(255, 255, 255, 0.24);
+}
+
+.copy-button .copy-button-icon {
+  width: 17px;
+  height: 17px;
+  display: block;
+}
+
+.copy-button.is-copied {
+  border-color: rgba(146, 227, 172, 0.78);
+  background: rgba(86, 176, 116, 0.28);
+  color: #e8ffe5;
+}
+
+.copy-button.is-error {
+  border-color: rgba(255, 183, 143, 0.76);
+  background: rgba(183, 88, 52, 0.34);
+  color: #fff0e3;
 }
 
 .article-content blockquote {
@@ -1101,11 +1136,11 @@ html[data-theme='night'] .post-page .article-shell {
 }
 
 .copy-button {
-  border-color: rgba(206, 224, 247, 0.62);
-  background: rgba(236, 247, 255, 0.36);
+  border-color: rgba(152, 188, 230, 0.72);
+  background: rgba(233, 245, 255, 0.6);
   background-image: none;
-  color: #315988;
-  box-shadow: none;
+  color: #234a75;
+  box-shadow: 0 8px 18px rgba(27, 53, 90, 0.18);
   backdrop-filter: blur(12px) saturate(1.02);
   -webkit-backdrop-filter: blur(12px) saturate(1.02);
 }
@@ -1190,13 +1225,25 @@ html[data-theme='night'] .article-content blockquote {
 }
 
 html[data-theme='night'] .copy-button {
-  border-color: rgba(142, 176, 223, 0.34);
-  background: rgba(35, 52, 77, 0.46);
+  border-color: rgba(156, 196, 245, 0.58);
+  background: rgba(29, 47, 72, 0.7);
   background-image: none;
-  color: #d9eaff;
-  box-shadow: none;
+  color: #eef6ff;
+  box-shadow: 0 10px 22px rgba(3, 8, 16, 0.4);
   backdrop-filter: blur(12px) saturate(1.02);
   -webkit-backdrop-filter: blur(12px) saturate(1.02);
+}
+
+html[data-theme='night'] .copy-button.is-copied {
+  border-color: rgba(149, 226, 178, 0.72);
+  background: rgba(71, 152, 108, 0.4);
+  color: #e6ffe8;
+}
+
+html[data-theme='night'] .copy-button.is-error {
+  border-color: rgba(255, 180, 144, 0.72);
+  background: rgba(165, 84, 54, 0.44);
+  color: #fff1e3;
 }
 
 html[data-theme='night'] .lightbox button {

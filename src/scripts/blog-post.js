@@ -502,6 +502,47 @@ function renderToc(headings) {
 }
 
 function enhanceCodeBlocks(container) {
+  const copyButtonIcons = {
+    copy: `
+      <svg class="copy-button-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <rect x="9" y="7" width="10" height="12" rx="2.4" stroke="currentColor" stroke-width="1.8"/>
+        <rect x="5" y="3" width="10" height="12" rx="2.4" stroke="currentColor" stroke-width="1.8"/>
+      </svg>
+    `,
+    copied: `
+      <svg class="copy-button-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <path d="M5 12.8 9.2 17 19 7.8" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    `,
+    error: `
+      <svg class="copy-button-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <path d="M12 8v5.5" stroke="currentColor" stroke-width="2.1" stroke-linecap="round"/>
+        <circle cx="12" cy="17.1" r="1.15" fill="currentColor"/>
+        <path d="M10 3.8 3.8 19.2a1.4 1.4 0 0 0 1.3 2h13.8a1.4 1.4 0 0 0 1.3-2L14 3.8a2.2 2.2 0 0 0-4 0Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>
+      </svg>
+    `
+  };
+
+  const copyButtonLabels = {
+    copy: '复制代码',
+    copied: '已复制',
+    error: '复制失败'
+  };
+
+  const applyCopyButtonState = (button, state) => {
+    button.classList.remove('is-copied', 'is-error');
+    if (state === 'copied') {
+      button.classList.add('is-copied');
+    }
+    if (state === 'error') {
+      button.classList.add('is-error');
+    }
+    const fallbackState = state === 'copied' || state === 'error' ? state : 'copy';
+    button.innerHTML = copyButtonIcons[fallbackState];
+    button.setAttribute('aria-label', copyButtonLabels[fallbackState]);
+    button.title = copyButtonLabels[fallbackState];
+  };
+
   container.querySelectorAll('pre code').forEach((codeBlock) => {
     try {
       hljs.highlightElement(codeBlock);
@@ -517,18 +558,29 @@ function enhanceCodeBlocks(container) {
     const button = document.createElement('button');
     button.type = 'button';
     button.className = 'copy-button';
-    button.textContent = '复制';
+    applyCopyButtonState(button, 'copy');
+    let resetTimer = null;
 
     button.addEventListener('click', async () => {
+      if (resetTimer) {
+        window.clearTimeout(resetTimer);
+        resetTimer = null;
+      }
+
       try {
         await navigator.clipboard.writeText(codeBlock.textContent || '');
-        button.textContent = '已复制';
-        window.setTimeout(() => {
-          button.textContent = '复制';
+        applyCopyButtonState(button, 'copied');
+        resetTimer = window.setTimeout(() => {
+          applyCopyButtonState(button, 'copy');
+          resetTimer = null;
         }, 1200);
       } catch (error) {
         console.error(error);
-        button.textContent = '复制失败';
+        applyCopyButtonState(button, 'error');
+        resetTimer = window.setTimeout(() => {
+          applyCopyButtonState(button, 'copy');
+          resetTimer = null;
+        }, 1200);
       }
     });
 
