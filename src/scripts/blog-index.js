@@ -56,6 +56,47 @@ const TAG_PALETTES = [
   { day: '#438c9d', night: '#95dceb' }
 ];
 
+const BLOG_PANEL_ASSET_SLOTS = Object.freeze({
+  hero: Object.freeze({
+    background: IMAGE_SLOTS.blogPanelHeroBackground,
+    glassNoise: IMAGE_SLOTS.blogPanelHeroGlassNoise,
+    windEmblem: IMAGE_SLOTS.blogPanelHeroWindEmblem,
+    paperTexture: IMAGE_SLOTS.blogPanelHeroPaperTexture,
+    woodGrain: IMAGE_SLOTS.blogPanelHeroWoodGrain,
+    ruinsOverlay: IMAGE_SLOTS.blogPanelHeroRuinsOverlay,
+    cornerOrnament: IMAGE_SLOTS.blogPanelHeroCornerOrnament,
+    dividerSeal: IMAGE_SLOTS.blogPanelHeroDividerSeal
+  }),
+  map: Object.freeze({
+    background: IMAGE_SLOTS.blogPanelMapBackground,
+    glassNoise: IMAGE_SLOTS.blogPanelMapGlassNoise,
+    windEmblem: IMAGE_SLOTS.blogPanelMapWindEmblem,
+    paperTexture: IMAGE_SLOTS.blogPanelMapPaperTexture,
+    woodGrain: IMAGE_SLOTS.blogPanelMapWoodGrain,
+    ruinsOverlay: IMAGE_SLOTS.blogPanelMapRuinsOverlay,
+    cornerOrnament: IMAGE_SLOTS.blogPanelMapCornerOrnament,
+    dividerSeal: IMAGE_SLOTS.blogPanelMapDividerSeal
+  }),
+  journal: Object.freeze({
+    background: IMAGE_SLOTS.blogPanelJournalBackground,
+    glassNoise: IMAGE_SLOTS.blogPanelJournalGlassNoise,
+    windEmblem: IMAGE_SLOTS.blogPanelJournalWindEmblem,
+    paperTexture: IMAGE_SLOTS.blogPanelJournalPaperTexture,
+    woodGrain: IMAGE_SLOTS.blogPanelJournalWoodGrain,
+    ruinsOverlay: IMAGE_SLOTS.blogPanelJournalRuinsOverlay,
+    cornerOrnament: IMAGE_SLOTS.blogPanelJournalCornerOrnament,
+    dividerSeal: IMAGE_SLOTS.blogPanelJournalDividerSeal
+  })
+});
+
+const BLOG_PANEL_SEQUENCE = Object.freeze(['hero', 'map', 'journal']);
+
+const blogStoryBackgroundState = {
+  activePanel: 'hero',
+  currentUrl: '',
+  records: new Map()
+};
+
 let cleanupBlogReplayAnimations = null;
 let triggerBlogReplayRefresh = () => {};
 let blogReplayRefreshTimers = [];
@@ -368,7 +409,7 @@ function preloadProfileAvatar(url = '') {
 
 function setupProfileAvatar() {
   applyProfileAvatar('');
-  const avatarAsset = pickDailyImageForSlot(IMAGE_SLOTS.blogProfileAvatar);
+  const avatarAsset = pickDailyImageForSlot(IMAGE_SLOTS.blogSidebarProfileAvatar);
   if (!avatarAsset) {
     return;
   }
@@ -379,6 +420,132 @@ function setupProfileAvatar() {
     }
 
     applyProfileAvatar(resolvedUrl);
+  });
+}
+
+function normalizeBlogPanelName(panelName = '') {
+  return panelName === 'map' || panelName === 'journal' ? panelName : 'hero';
+}
+
+function getBlogPanelAssetSlots(panelName = '') {
+  const normalized = normalizeBlogPanelName(panelName);
+  return BLOG_PANEL_ASSET_SLOTS[normalized] || BLOG_PANEL_ASSET_SLOTS.hero;
+}
+
+function getBlogPanelContext(panelName = '') {
+  const normalized = normalizeBlogPanelName(panelName);
+  return `${window.location.pathname}|blog-panel:${normalized}`;
+}
+
+function getBlogPanelBackgroundAsset(panelName = '') {
+  const normalized = normalizeBlogPanelName(panelName);
+  const slots = getBlogPanelAssetSlots(normalized);
+  return pickDailyImageForSlot(slots.background, { pageContext: getBlogPanelContext(normalized) });
+}
+
+function setBlogStoryImage(root, url = '') {
+  if (!root || !url) {
+    return;
+  }
+
+  if (blogStoryBackgroundState.currentUrl !== url) {
+    root.style.setProperty('--blog-story-image', `url("${url}")`);
+    blogStoryBackgroundState.currentUrl = url;
+  }
+
+  root.classList.add('has-blog-story-image');
+}
+
+function ensureBlogPanelBackgroundPreload(panelName = '') {
+  const normalized = normalizeBlogPanelName(panelName);
+  const url = getBlogPanelBackgroundAsset(normalized);
+  const existing = blogStoryBackgroundState.records.get(normalized);
+
+  if (existing && existing.url === url && (existing.status === 'loaded' || existing.status === 'pending')) {
+    return existing;
+  }
+
+  if (!url) {
+    const emptyRecord = {
+      panel: normalized,
+      url: '',
+      status: 'failed',
+      promise: Promise.resolve(false)
+    };
+    blogStoryBackgroundState.records.set(normalized, emptyRecord);
+    return emptyRecord;
+  }
+
+  const preloadImage = new Image();
+  preloadImage.decoding = 'async';
+
+  const preloadPromise = new Promise((resolve) => {
+    preloadImage.onload = () => {
+      const latest = blogStoryBackgroundState.records.get(normalized);
+      if (latest && latest.url === url) {
+        latest.status = 'loaded';
+      }
+      resolve(true);
+    };
+
+    preloadImage.onerror = () => {
+      const latest = blogStoryBackgroundState.records.get(normalized);
+      if (latest && latest.url === url) {
+        latest.status = 'failed';
+      }
+      resolve(false);
+    };
+  });
+
+  const record = {
+    panel: normalized,
+    url,
+    status: 'pending',
+    promise: preloadPromise
+  };
+  blogStoryBackgroundState.records.set(normalized, record);
+  preloadImage.src = url;
+  return record;
+}
+
+function primeBlogPanelBackgroundPreloads() {
+  BLOG_PANEL_SEQUENCE.forEach((panelName) => {
+    ensureBlogPanelBackgroundPreload(panelName);
+  });
+}
+
+function applyBlogStoryImageForPanel(root, panelName = '') {
+  const normalized = normalizeBlogPanelName(panelName);
+  blogStoryBackgroundState.activePanel = normalized;
+
+  const record = ensureBlogPanelBackgroundPreload(normalized);
+  if (!record || !record.url) {
+    if (!blogStoryBackgroundState.currentUrl) {
+      root.classList.remove('has-blog-story-image');
+    }
+    return;
+  }
+
+  if (record.status === 'loaded') {
+    setBlogStoryImage(root, record.url);
+    return;
+  }
+
+  record.promise.then((didLoad) => {
+    if (!didLoad) {
+      return;
+    }
+
+    const latestRecord = blogStoryBackgroundState.records.get(normalized);
+    if (!latestRecord || latestRecord.status !== 'loaded') {
+      return;
+    }
+
+    if (blogStoryBackgroundState.activePanel !== normalized) {
+      return;
+    }
+
+    setBlogStoryImage(document.documentElement, latestRecord.url);
   });
 }
 
@@ -395,25 +562,21 @@ function applyOptionalBlogAsset(root, { className = '', cssVariable = '', assetU
   }
 }
 
-function setupBlogBackground() {
+function applyBlogPanelAssets(panelName = '') {
   const root = document.documentElement;
-  root.classList.add('is-blog-page');
-  root.style.removeProperty('--blog-story-image');
-  const backgroundAsset = pickDailyImageForSlot(IMAGE_SLOTS.blogCover);
-  const glassNoiseAsset = pickDailyImageForSlot(IMAGE_SLOTS.blogGlassNoise);
-  const windEmblemAsset = pickDailyImageForSlot(IMAGE_SLOTS.blogWindEmblem);
-  const parchmentTextureAsset = pickDailyImageForSlot(IMAGE_SLOTS.blogParchment);
-  const woodGrainAsset = pickDailyImageForSlot(IMAGE_SLOTS.blogWoodGrain);
-  const ruinsOverlayAsset = pickDailyImageForSlot(IMAGE_SLOTS.blogRuins);
-  const cornerOrnamentAsset = pickDailyImageForSlot(IMAGE_SLOTS.blogCorner);
-  const dividerSealAsset = pickDailyImageForSlot(IMAGE_SLOTS.blogDivider);
+  const normalizedPanelName = normalizeBlogPanelName(panelName);
+  const slots = getBlogPanelAssetSlots(normalizedPanelName);
+  const panelContext = getBlogPanelContext(normalizedPanelName);
 
-  root.classList.toggle('has-blog-story-image', Boolean(backgroundAsset));
-  if (backgroundAsset) {
-    root.style.setProperty('--blog-story-image', `url("${backgroundAsset}")`);
-  } else {
-    root.style.removeProperty('--blog-story-image');
-  }
+  root.classList.add('is-blog-page');
+  applyBlogStoryImageForPanel(root, normalizedPanelName);
+  const glassNoiseAsset = pickDailyImageForSlot(slots.glassNoise, { pageContext: panelContext });
+  const windEmblemAsset = pickDailyImageForSlot(slots.windEmblem, { pageContext: panelContext });
+  const parchmentTextureAsset = pickDailyImageForSlot(slots.paperTexture, { pageContext: panelContext });
+  const woodGrainAsset = pickDailyImageForSlot(slots.woodGrain, { pageContext: panelContext });
+  const ruinsOverlayAsset = pickDailyImageForSlot(slots.ruinsOverlay, { pageContext: panelContext });
+  const cornerOrnamentAsset = pickDailyImageForSlot(slots.cornerOrnament, { pageContext: panelContext });
+  const dividerSealAsset = pickDailyImageForSlot(slots.dividerSeal, { pageContext: panelContext });
 
   applyOptionalBlogAsset(root, {
     className: 'has-blog-glass-noise',
@@ -450,6 +613,13 @@ function setupBlogBackground() {
     cssVariable: '--blog-divider-seal',
     assetUrl: dividerSealAsset
   });
+
+  root.dataset.blogAssetPanel = normalizedPanelName;
+}
+
+function setupBlogBackground() {
+  const panelName = document.documentElement.dataset.blogActivePanel || 'hero';
+  applyBlogPanelAssets(panelName);
 }
 
 function clearBlogReplayRefreshTimers() {
@@ -506,19 +676,33 @@ function scheduleBlogReplayRefresh() {
   });
 }
 
-function getBlogPanelVisibilityScore(section) {
-  const viewportHeight = window.innerHeight || document.documentElement.clientHeight;
+function getBlogPanelVisibilityMetric(section, viewportHeight) {
+  const safeViewportHeight = viewportHeight || window.innerHeight || document.documentElement.clientHeight;
   const rect = section.getBoundingClientRect();
-  const visibleHeight = Math.max(0, Math.min(rect.bottom, viewportHeight) - Math.max(rect.top, 0));
+  const visibleHeight = Math.max(0, Math.min(rect.bottom, safeViewportHeight) - Math.max(rect.top, 0));
 
   if (visibleHeight <= 0) {
-    return -1;
+    return {
+      section,
+      panel: section.dataset.blogPanel || 'hero',
+      visibleHeight: 0,
+      visibleRatio: 0,
+      centerOffset: 1,
+      score: -1
+    };
   }
 
-  const visibleRatio = visibleHeight / Math.min(Math.max(rect.height, 1), viewportHeight);
-  const centerOffset = Math.abs(rect.top + rect.height / 2 - viewportHeight / 2) / viewportHeight;
+  const visibleRatio = visibleHeight / Math.min(Math.max(rect.height, 1), safeViewportHeight);
+  const centerOffset = Math.abs(rect.top + rect.height / 2 - safeViewportHeight / 2) / safeViewportHeight;
 
-  return visibleRatio - centerOffset * 0.14;
+  return {
+    section,
+    panel: section.dataset.blogPanel || 'hero',
+    visibleHeight,
+    visibleRatio,
+    centerOffset,
+    score: visibleRatio - centerOffset * 0.14
+  };
 }
 
 function setupBlogPanelTransitions() {
@@ -529,6 +713,10 @@ function setupBlogPanelTransitions() {
 
   const root = document.documentElement;
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const SWITCH_SCORE_DELTA = 0.06;
+  const DIRECT_SWITCH_VISIBLE_RATIO = 0.55;
+  const HERO_MIN_VISIBLE_RATIO = 0.42;
+  const HERO_TOP_GUARD_PX = 80;
   let activeSection = null;
   let rafId = null;
 
@@ -551,6 +739,8 @@ function setupBlogPanelTransitions() {
 
     activeSection = nextSection;
     root.dataset.blogActivePanel = nextSection.dataset.blogPanel || 'hero';
+    applyBlogPanelAssets(root.dataset.blogActivePanel);
+    refreshBlogReplayAnimations({ immediate: true });
 
     const finalizeActivation = () => {
       if (activeSection !== nextSection) {
@@ -579,16 +769,45 @@ function setupBlogPanelTransitions() {
 
   const updateActiveSection = () => {
     rafId = null;
-
-    const nextSection = sections.reduce((bestSection, section) => {
-      if (!bestSection) {
-        return section;
+    const viewportHeight = window.innerHeight || document.documentElement.clientHeight;
+    const metrics = sections.map((section) => getBlogPanelVisibilityMetric(section, viewportHeight));
+    const metricBySection = new Map(metrics.map((metric) => [metric.section, metric]));
+    const bestMetric = metrics.reduce((best, metric) => {
+      if (!best) {
+        return metric;
       }
-
-      return getBlogPanelVisibilityScore(section) > getBlogPanelVisibilityScore(bestSection) ? section : bestSection;
+      return metric.score > best.score ? metric : best;
     }, null);
 
-    applySectionState(nextSection);
+    if (!bestMetric) {
+      return;
+    }
+
+    let nextMetric = bestMetric;
+    const activeMetric = activeSection ? metricBySection.get(activeSection) || null : null;
+
+    if (activeMetric && nextMetric.section !== activeSection) {
+      const scoreDelta = nextMetric.score - activeMetric.score;
+      const canDirectSwitch = nextMetric.visibleRatio >= DIRECT_SWITCH_VISIBLE_RATIO;
+
+      if (!canDirectSwitch && scoreDelta < SWITCH_SCORE_DELTA) {
+        nextMetric = activeMetric;
+      }
+    }
+
+    if (
+      activeMetric &&
+      activeMetric.panel !== 'hero' &&
+      nextMetric.panel === 'hero'
+    ) {
+      const canHeroTakeover = nextMetric.visibleRatio >= HERO_MIN_VISIBLE_RATIO || window.scrollY <= HERO_TOP_GUARD_PX;
+
+      if (!canHeroTakeover) {
+        nextMetric = activeMetric;
+      }
+    }
+
+    applySectionState(nextMetric.section);
   };
 
   const requestUpdate = () => {
@@ -657,7 +876,13 @@ function setupBlogReplayAnimations() {
     }
 
     targets.forEach((target) => {
-      target.classList.toggle('is-visible', shouldActivateReplayTarget(target));
+      if (target.classList.contains('is-visible')) {
+        return;
+      }
+
+      if (shouldActivateReplayTarget(target)) {
+        target.classList.add('is-visible');
+      }
     });
   };
 
@@ -906,7 +1131,7 @@ function renderHero() {
   renderBlogHeroTitleInstant();
 
   if (heroQuillImage instanceof HTMLImageElement) {
-    const assetUrl = pickDailyImageForSlot(IMAGE_SLOTS.blogQuill);
+    const assetUrl = pickDailyImageForSlot(IMAGE_SLOTS.blogPanelHeroQuill);
     heroQuillImage.onload = () => {
       heroQuillImage.closest('.blog-hero-quill-media')?.classList.remove('is-missing');
     };
@@ -1517,6 +1742,7 @@ async function init() {
   document.documentElement.classList.add('is-blog-page');
   document.documentElement.dataset.blogActivePanel = 'hero';
   initThemeToggles();
+  primeBlogPanelBackgroundPreloads();
   setupBlogBackground();
   renderSidebarLinks();
   setupProfileAvatar();

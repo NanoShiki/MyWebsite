@@ -36,7 +36,7 @@ function setupBackground() {
     return;
   }
 
-  const heroAsset = pickDailyImageForSlot(IMAGE_SLOTS.homeHero);
+  const heroAsset = pickDailyImageForSlot(IMAGE_SLOTS.homePageBackground);
   if (heroAsset) {
     layer.style.backgroundImage = `url("${heroAsset}")`;
   } else {
@@ -82,9 +82,9 @@ function syncCampSceneAsset(root = document.documentElement) {
 
 function setupOptionalSceneAssets() {
   const root = document.documentElement;
-  const campDayScene = pickDailyImageForSlot(IMAGE_SLOTS.homeCampDay);
-  const campNightScene = pickDailyImageForSlot(IMAGE_SLOTS.homeCampNight);
-  const trailScene = pickDailyImageForSlot(IMAGE_SLOTS.homeTrail);
+  const campDayScene = pickDailyImageForSlot(IMAGE_SLOTS.homePageCampDay);
+  const campNightScene = pickDailyImageForSlot(IMAGE_SLOTS.homePageCampNight);
+  const trailScene = pickDailyImageForSlot(IMAGE_SLOTS.homePageTrail);
   const campFallbackScene = campDayScene || campNightScene;
 
   homeSceneAssets.camp.day = campDayScene;

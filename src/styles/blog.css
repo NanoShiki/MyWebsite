@@ -1914,6 +1914,20 @@ html.is-blog-page .blog-panel-section.is-panel-visible .blog-panel-body {
   transition-delay: 250ms;
 }
 
+/* Fallback: keep active panel visible even before is-panel-visible is finalized. */
+html.is-blog-page .blog-panel-section.is-active .blog-panel-frame {
+  opacity: 1;
+  transform: translate3d(0, 0, 0) scale(1);
+  transition-delay: 0ms;
+}
+
+html.is-blog-page .blog-panel-section.is-active .blog-panel-heading,
+html.is-blog-page .blog-panel-section.is-active .blog-panel-body {
+  opacity: 1;
+  transform: translate3d(0, 0, 0);
+  transition-delay: 0ms;
+}
+
 .blog-panel-section--hero {
   place-items: center;
 }
@@ -3448,6 +3462,7 @@ html[data-theme='night'] .blog-panel-section--journal .post-card-slot .post-card
 }
 
 .blog-story-bg-layer {
+  background-color: #e5edf8 !important;
   background-image: var(--blog-story-image, linear-gradient(transparent, transparent)) !important;
   background-size: cover !important;
   background-position: center center !important;
@@ -3458,9 +3473,15 @@ html[data-theme='night'] .blog-panel-section--journal .post-card-slot .post-card
   filter: none !important;
 }
 
-html.has-blog-story-image .blog-story-bg-layer,
+html.has-blog-story-image .blog-story-bg-layer {
+  background-color: #e5edf8 !important;
+  opacity: 0.94 !important;
+  filter: none !important;
+}
+
 html[data-theme='night'] .blog-story-bg-layer,
 html[data-theme='night'].has-blog-story-image .blog-story-bg-layer {
+  background-color: #0f1b2a !important;
   opacity: 0.94 !important;
   filter: none !important;
 }

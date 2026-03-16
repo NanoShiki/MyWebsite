@@ -94,25 +94,34 @@ dist/
 python3 Blog/update_config.py
 ```
 
-## 🖼️ 图片素材池（去硬引用）
+## 🖼️ 图片素材池（按位置独立文件夹）
 
-站点主要视觉图已改为“槽位目录 + 当天稳定随机”机制，代码不再写死具体文件名。  
-后续换图只需要把新图片放进对应目录，不需要改 JS。
+站点视觉图已改为“一个显示位置一个目录 + 按天稳定随机”机制。  
+运行时只读取对应目录里的文件，不再硬编码具体图片文件名。
+视觉素材唯一来源为 `src/assets/image-pools/`，`public/` 根目录不再作为图片兜底来源。
 
 - 素材根目录：`src/assets/image-pools/`
+- 放图指南入口：`src/assets/image-pools/README.md`（由 `npm run docs:image-pools` 自动生成）
 - 支持格式：`jpg` / `jpeg` / `png` / `webp`
-- 随机规则：同一天同页面固定同一张，跨天自动换图
+- 随机规则：同一天同位置固定同一张，跨天自动换图
 
-主要槽位：
+目录规范（节选）：
 
-- 首页：`home/hero`、`home/camp-day`、`home/camp-night`、`home/trail`
-- 博客列表：`blog/cover`、`blog/glass-noise`、`blog/wind-emblem`、`blog/parchment`、`blog/wood-grain`、`blog/ruins`、`blog/corner`、`blog/divider`、`blog/quill`、`blog/profile-avatar`
-- 文章详情：`post/cover`、`post/glass-noise`、`post/wind-emblem`、`post/ruins`
+- 首页：`home/page/background`、`home/page/camp-day`、`home/page/camp-night`、`home/page/trail`
+- 博客分页背景：`blog/panel-hero/background`、`blog/panel-map/background`、`blog/panel-journal/background`
+- 博客装饰按位置拆分：
+  `blog/panel-hero/*`、`blog/panel-map/*`、`blog/panel-journal/*`、`blog/sidebar/profile-avatar`
+- 文章详情：`post/page/background`、`post/page/glass-noise`、`post/page/wind-emblem`、`post/page/ruins-overlay`
 
-建议：
+维护方式：
 
-- 同一槽位至少放 2 张图，随机效果更明显
-- 文件名可自定义，按你的习惯命名即可
+- 只需把新图片放进对应位置目录，不需要改脚本
+- 同一位置建议至少放 2 张图，随机效果更明显
+
+构建产物卫生约定：
+
+- `dist/` 不应包含 `.DS_Store`、`Thumbs.db` 等系统垃圾文件
+- 构建后根目录不应出现业务未引用的重复 jpg 资源文件
 
 ## 📝 Blog 功能
 
@@ -138,3 +147,4 @@ python3 Blog/update_config.py
 
 - 2026-03-15 已完成安全级项目整理，清理了历史构建残留目录 `dist/Blog/archive 3`。
 - `wiki/` 历史文档已按当前仓库状态移除，README 仅保留当前可用文档入口，避免失效链接。
+- 2026-03-16 已收敛视觉素材来源为 `src/assets/image-pools/`，并清理 `public/` 根目录旧图片与构建系统垃圾文件路径。

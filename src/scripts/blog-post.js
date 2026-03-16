@@ -62,10 +62,10 @@ function applyOptionalPostAsset(root, { className = '', cssVariable = '', assetU
 function setupPostBackground() {
   const root = document.documentElement;
   root.classList.add('is-post-page');
-  const backgroundAsset = pickDailyImageForSlot(IMAGE_SLOTS.postCover);
-  const glassNoiseAsset = pickDailyImageForSlot(IMAGE_SLOTS.postGlassNoise);
-  const windEmblemAsset = pickDailyImageForSlot(IMAGE_SLOTS.postWindEmblem);
-  const ruinsOverlayAsset = pickDailyImageForSlot(IMAGE_SLOTS.postRuins);
+  const backgroundAsset = pickDailyImageForSlot(IMAGE_SLOTS.postPageBackground);
+  const glassNoiseAsset = pickDailyImageForSlot(IMAGE_SLOTS.postPageGlassNoise);
+  const windEmblemAsset = pickDailyImageForSlot(IMAGE_SLOTS.postPageWindEmblem);
+  const ruinsOverlayAsset = pickDailyImageForSlot(IMAGE_SLOTS.postPageRuinsOverlay);
 
   root.classList.toggle('has-post-story-image', Boolean(backgroundAsset));
   if (backgroundAsset) {

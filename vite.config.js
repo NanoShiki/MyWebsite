@@ -1,11 +1,16 @@
 import { defineConfig } from 'vite';
 import { cpSync, copyFileSync, existsSync, mkdirSync } from 'node:fs';
-import { dirname, resolve } from 'node:path';
+import { basename, dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
 function copyBlogContentPlugin() {
+  const shouldIncludeArchiveEntry = (sourcePath) => {
+    const fileName = basename(sourcePath);
+    return fileName !== '.DS_Store' && fileName !== 'Thumbs.db';
+  };
+
   return {
     name: 'copy-blog-content',
     writeBundle() {
@@ -16,9 +21,16 @@ function copyBlogContentPlugin() {
       const archiveSource = resolve(__dirname, 'Blog/archive');
       const archiveTarget = resolve(distBlogDir, 'archive');
       if (existsSync(archiveTarget)) {
-        cpSync(archiveSource, archiveTarget, { recursive: true, force: true });
+        cpSync(archiveSource, archiveTarget, {
+          recursive: true,
+          force: true,
+          filter: shouldIncludeArchiveEntry
+        });
       } else {
-        cpSync(archiveSource, archiveTarget, { recursive: true });
+        cpSync(archiveSource, archiveTarget, {
+          recursive: true,
+          filter: shouldIncludeArchiveEntry
+        });
       }
     }
   };
