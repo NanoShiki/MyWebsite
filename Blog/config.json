@@ -6,6 +6,39 @@
   },
   "posts": [
     {
+      "id": "AI_HelloAgent笔记_第四章 智能体经典范式构建",
+      "title": "第四章 智能体经典范式构建",
+      "date": "2026-03-16",
+      "createdTs": 1773660978,
+      "path": "/Blog/archive/AI/HelloAgent笔记/第四章 智能体经典范式构建/",
+      "categories": [
+        "AI",
+        "HelloAgent笔记"
+      ]
+    },
+    {
+      "id": "AI_HelloAgent笔记_第三章 大语言模型基础",
+      "title": "第三章 大语言模型基础",
+      "date": "2026-03-16",
+      "createdTs": 1773660927,
+      "path": "/Blog/archive/AI/HelloAgent笔记/第三章 大语言模型基础/",
+      "categories": [
+        "AI",
+        "HelloAgent笔记"
+      ]
+    },
+    {
+      "id": "AI_HelloAgent笔记_第一章 初识智能体",
+      "title": "第一章 初识智能体",
+      "date": "2026-03-16",
+      "createdTs": 1773660905,
+      "path": "/Blog/archive/AI/HelloAgent笔记/第一章 初识智能体/",
+      "categories": [
+        "AI",
+        "HelloAgent笔记"
+      ]
+    },
+    {
       "id": "课内(由ai生成的笔记)_计算机组成与系统结构_计算机组成与系统结构_4",
       "title": "计算机组成与系统结构 - 第4课：数据寻址、存储组织与数值表示",
       "date": "2026-03-16",
@@ -197,6 +230,53 @@
     "name": "root",
     "type": "category",
     "children": [
+      {
+        "name": "AI",
+        "type": "category",
+        "children": [
+          {
+            "name": "HelloAgent笔记",
+            "type": "category",
+            "children": [],
+            "posts": [
+              {
+                "id": "AI_HelloAgent笔记_第四章 智能体经典范式构建",
+                "title": "第四章 智能体经典范式构建",
+                "date": "2026-03-16",
+                "createdTs": 1773660978,
+                "path": "/Blog/archive/AI/HelloAgent笔记/第四章 智能体经典范式构建/",
+                "categories": [
+                  "AI",
+                  "HelloAgent笔记"
+                ]
+              },
+              {
+                "id": "AI_HelloAgent笔记_第三章 大语言模型基础",
+                "title": "第三章 大语言模型基础",
+                "date": "2026-03-16",
+                "createdTs": 1773660927,
+                "path": "/Blog/archive/AI/HelloAgent笔记/第三章 大语言模型基础/",
+                "categories": [
+                  "AI",
+                  "HelloAgent笔记"
+                ]
+              },
+              {
+                "id": "AI_HelloAgent笔记_第一章 初识智能体",
+                "title": "第一章 初识智能体",
+                "date": "2026-03-16",
+                "createdTs": 1773660905,
+                "path": "/Blog/archive/AI/HelloAgent笔记/第一章 初识智能体/",
+                "categories": [
+                  "AI",
+                  "HelloAgent笔记"
+                ]
+              }
+            ]
+          }
+        ],
+        "posts": []
+      },
       {
         "name": "UE",
         "type": "category",
