@@ -1,5 +1,6 @@
 import '../styles/base.css';
 import '../styles/blog.css';
+import fixedProfileAvatarUrl from '../assets/image-pools/blog/sidebar/profile-avatar/profile-avatar-2.jpg';
 import { marked } from 'marked';
 import { icons } from './shared/icons.js';
 import { IMAGE_SLOTS, pickDailyImageForSlot } from './shared/image-pool.js';
@@ -90,7 +91,7 @@ const BLOG_PANEL_ASSET_SLOTS = Object.freeze({
 });
 
 const BLOG_PANEL_SEQUENCE = Object.freeze(['hero', 'map', 'journal']);
-const FIXED_PROFILE_AVATAR_PATH = '/src/assets/image-pools/blog/sidebar/profile-avatar/profile-avatar-2.jpg';
+const FIXED_PROFILE_AVATAR_URL = fixedProfileAvatarUrl;
 
 const blogStoryBackgroundState = {
   activePanel: 'hero',
@@ -410,7 +411,7 @@ function preloadProfileAvatar(url = '') {
 
 function setupProfileAvatar() {
   applyProfileAvatar('');
-  const avatarAsset = resolveSiteAssetUrl('/', FIXED_PROFILE_AVATAR_PATH);
+  const avatarAsset = FIXED_PROFILE_AVATAR_URL;
   if (!avatarAsset) {
     return;
   }
