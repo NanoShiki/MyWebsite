@@ -1,6 +1,6 @@
 # src 图片槽位放图指南（自动生成）
 
-> 生成时间：2026-03-16 10:52
+> 生成时间：2026-03-16 21:33
 > 请勿手改本文件；请运行 `npm run docs:image-pools` 重新生成。
 
 ## 总规则
@@ -47,7 +47,7 @@
 | `blogPanelMapRuinsOverlay` | `blog.panel-map.ruins-overlay` | `blog/panel-map/ruins-overlay` | Blog Index | 1 | 正常 |
 | `blogPanelMapWindEmblem` | `blog.panel-map.wind-emblem` | `blog/panel-map/wind-emblem` | Blog Index | 1 | 正常 |
 | `blogPanelMapWoodGrain` | `blog.panel-map.wood-grain` | `blog/panel-map/wood-grain` | Blog Index | 1 | 正常 |
-| `blogSidebarProfileAvatar` | `blog.sidebar.profile-avatar` | `blog/sidebar/profile-avatar` | Blog Index | 1 | 正常 |
+| `blogSidebarProfileAvatar` | `blog.sidebar.profile-avatar` | `blog/sidebar/profile-avatar` | Blog Index | 2 | 正常 |
 | `homePageBackground` | `home.page.background` | `home/page/background` | Home | 1 | 正常 |
 | `homePageCampDay` | `home.page.camp-day` | `home/page/camp-day` | Home | 1 | 正常 |
 | `homePageCampNight` | `home.page.camp-night` | `home/page/camp-night` | Home | 1 | 正常 |
@@ -112,7 +112,7 @@
 
 | slotConst | 目录 | 当前图片数 |
 | --- | --- | ---: |
-| `blogSidebarProfileAvatar` | `blog/sidebar/profile-avatar` | 1 |
+| `blogSidebarProfileAvatar` | `blog/sidebar/profile-avatar` | 2 |
 
 ### Post
 

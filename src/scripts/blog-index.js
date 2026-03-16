@@ -90,6 +90,7 @@ const BLOG_PANEL_ASSET_SLOTS = Object.freeze({
 });
 
 const BLOG_PANEL_SEQUENCE = Object.freeze(['hero', 'map', 'journal']);
+const FIXED_PROFILE_AVATAR_PATH = '/src/assets/image-pools/blog/sidebar/profile-avatar/profile-avatar-2.jpg';
 
 const blogStoryBackgroundState = {
   activePanel: 'hero',
@@ -409,7 +410,7 @@ function preloadProfileAvatar(url = '') {
 
 function setupProfileAvatar() {
   applyProfileAvatar('');
-  const avatarAsset = pickDailyImageForSlot(IMAGE_SLOTS.blogSidebarProfileAvatar);
+  const avatarAsset = resolveSiteAssetUrl('/', FIXED_PROFILE_AVATAR_PATH);
   if (!avatarAsset) {
     return;
   }
