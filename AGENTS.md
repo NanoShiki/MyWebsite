@@ -110,6 +110,27 @@ myWeb/
 - Chinese content is expected and normal
 - No formal testing framework - manual verification required
 
+### Auto Preview Requirement
+
+- After every completed task and final response, local preview is mandatory.
+- Check existing preview services in order:
+  - First `127.0.0.1:5173`
+  - Then `127.0.0.1:5174` if 5173 is unavailable
+  - Reuse an existing service if found; do not start duplicate servers.
+- If no service is running, start Vite preview:
+  - `npm run dev -- --host 127.0.0.1 --port 5173`
+  - If 5173 is occupied, use port 5174.
+- Open at least these pages:
+  - `http://127.0.0.1:<port>/`
+  - `http://127.0.0.1:<port>/Blog/`
+- Every final response must include:
+  - Current preview URL
+  - Listener process PID
+  - Stop command: `kill <PID>`
+- If Node/Vite preview fails, fall back to:
+  - `python3 -m http.server 8000`
+  - Mention explicitly in the final response that fallback mode is being used.
+
 ## 课堂笔记整理
 
 ### 重要提示

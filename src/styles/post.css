@@ -1,14 +1,21 @@
 @import 'highlight.js/styles/base16/gruvbox-dark-medium.css';
 
-.post-page {
+.page-shell.post-page {
   display: grid;
   gap: 12px;
   margin-top: 24px;
+  --post-left-boundary: 5vw;
+  --post-right-boundary: 5vw;
+  --post-content-width: calc(100vw - var(--post-left-boundary) - var(--post-right-boundary));
+  inline-size: var(--post-content-width);
+  max-inline-size: var(--post-content-width);
+  width: var(--post-content-width);
+  max-width: var(--post-content-width);
+  margin-inline: auto;
   --post-sidebar-width: 344px;
   --post-sidebar-left: 8px;
   --post-sidebar-top: 24px;
   --post-sidebar-max-height: calc(100vh - 48px);
-  --post-shell-width: 1480px;
 }
 
 .post-layout {
@@ -16,6 +23,14 @@
   grid-template-columns: minmax(292px, var(--post-sidebar-width)) minmax(0, 1fr);
   gap: 12px;
   align-items: start;
+  inline-size: 100%;
+}
+
+.page-shell.post-page > .article-hero,
+.page-shell.post-page > .post-layout {
+  inline-size: 100%;
+  width: 100%;
+  justify-self: stretch;
 }
 
 .post-sidebar {
@@ -279,6 +294,7 @@ html[data-theme='night'] .toc-item.is-active > .toc-link-button {
 
 .article-hero--full {
   width: 100%;
+  inline-size: 100%;
   justify-items: center;
   text-align: center;
 }
@@ -532,10 +548,6 @@ html[data-theme='night'] .toc-item.is-active > .toc-link-button {
 }
 
 @media (min-width: 1040px) {
-  .post-page {
-    width: min(calc(100% - 16px), var(--post-shell-width));
-  }
-
   .post-sidebar-sticky {
     position: fixed;
     top: var(--post-sidebar-top, 24px);
@@ -736,7 +748,7 @@ html[data-theme='night'] .post-story-bg-ink {
   opacity: 0.14;
 }
 
-.post-page {
+.page-shell.post-page {
   position: relative;
   z-index: 1;
   gap: 18px;
@@ -1219,4 +1231,32 @@ html.has-post-story-image .post-story-bg-layer,
 html[data-theme='night'] .post-story-bg-layer {
   opacity: 0.92 !important;
   filter: none !important;
+}
+
+/* Overflow guards for long post content. */
+.post-layout,
+.post-sidebar,
+.post-main,
+.article-shell,
+.article-content {
+  min-width: 0;
+}
+
+.article-content {
+  max-width: 100%;
+}
+
+.article-content pre,
+.article-content table,
+.article-content .katex-display {
+  max-width: 100%;
+  overflow-x: auto;
+}
+
+.article-content table {
+  display: block;
+}
+
+.article-content .katex-display {
+  overflow-y: hidden;
 }

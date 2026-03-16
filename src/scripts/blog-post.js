@@ -43,7 +43,8 @@ const state = {
   post: null,
   activeTocId: '',
   tocIndex: new Map(),
-  tocCleanup: null
+  tocCleanup: null,
+  layoutBoundsSync: null
 };
 
 function applyOptionalPostAsset(root, { className = '', cssVariable = '', assetUrl = '' } = {}) {
@@ -535,6 +536,45 @@ function enhanceCodeBlocks(container) {
   });
 }
 
+function setupPostLayoutBoundsSync() {
+  const root = document.getElementById('postRoot');
+  if (!root) {
+    return;
+  }
+
+  let frameId = null;
+
+  const sync = () => {
+    const viewportWidth = document.documentElement?.clientWidth || window.innerWidth;
+    if (!viewportWidth) {
+      frameId = null;
+      return;
+    }
+
+    const leftBoundary = viewportWidth * 0.05;
+    const rightBoundary = viewportWidth * 0.05;
+    const contentWidth = Math.max(0, viewportWidth - leftBoundary - rightBoundary);
+
+    root.style.setProperty('--post-left-boundary', `${leftBoundary}px`);
+    root.style.setProperty('--post-right-boundary', `${rightBoundary}px`);
+    root.style.setProperty('--post-content-width', `${contentWidth}px`);
+    frameId = null;
+  };
+
+  const requestSync = () => {
+    if (frameId !== null) {
+      return;
+    }
+    frameId = window.requestAnimationFrame(sync);
+  };
+
+  state.layoutBoundsSync = requestSync;
+  sync();
+  window.addEventListener('resize', requestSync, { passive: true });
+  window.addEventListener('orientationchange', requestSync);
+  window.setTimeout(requestSync, 60);
+}
+
 function setupDesktopSidebarRail() {
   const sidebar = document.querySelector('.post-sidebar');
   const rail = document.querySelector('.post-sidebar-sticky');
@@ -560,7 +600,7 @@ function setupDesktopSidebarRail() {
     const topOffset = heroRect ? Math.max(24, heroRect.bottom + 12) : 24;
     const maxHeight = Math.max(220, window.innerHeight - topOffset - 24);
 
-    rail.style.setProperty('--post-sidebar-left', `${Math.max(8, rect.left)}px`);
+    rail.style.setProperty('--post-sidebar-left', `${rect.left}px`);
     rail.style.setProperty('--post-sidebar-width', `${rect.width}px`);
     rail.style.setProperty('--post-sidebar-top', `${topOffset}px`);
     rail.style.setProperty('--post-sidebar-max-height', `${maxHeight}px`);
@@ -702,6 +742,7 @@ async function renderPostContent(post) {
     console.error('image-enhance-failed', error);
   }
 
+  state.layoutBoundsSync?.();
   setArticleStatus('');
 }
 
@@ -714,6 +755,7 @@ async function init() {
   document.documentElement.classList.add('is-post-page');
   initThemeToggles();
   setupPostBackground();
+  setupPostLayoutBoundsSync();
   setupDesktopSidebarRail();
 
   const postId = getPostIdFromUrl();
