@@ -404,19 +404,25 @@ html[data-theme='night'] .toc-item.is-active > .toc-link-button {
   font-family: 'SFMono-Regular', 'Cascadia Code', 'Fira Code', Menlo, Consolas, monospace;
   position: relative;
   overflow: auto;
-  padding: 20px 18px 18px;
+  padding: 0;
+  border: none;
   border-radius: 16px;
-  background: #221c19;
+  background: transparent;
   color: #f6edd9;
-  box-shadow: inset 0 0 0 1px rgba(255, 227, 176, 0.08);
+  box-shadow: none;
 }
 
 .article-content pre code,
 .article-content pre code.hljs {
   display: block;
-  padding: 0;
-  background: transparent;
+  padding: 20px 18px 18px;
+  background: #221c19;
+  border-radius: 16px;
   color: #f6edd9;
+}
+
+.article-content pre > code.hljs {
+  background: #221c19;
 }
 
 .article-content pre .hljs-comment,
@@ -553,11 +559,12 @@ html[data-theme='night'] .toc-item.is-active > .toc-link-button {
 
 .lightbox-inner {
   position: relative;
-  max-width: min(92vw, 1100px);
+  max-width: 92vw;
   max-height: 88vh;
 }
 
 .lightbox img {
+  display: block;
   max-width: 100%;
   max-height: 80vh;
   border-radius: 18px;
@@ -577,12 +584,44 @@ html[data-theme='night'] .toc-item.is-active > .toc-link-button {
 }
 
 .lightbox-caption {
-  margin-top: 12px;
-  color: white;
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  margin: 0;
+  padding: 38px 14px 12px;
+  border-radius: 0 0 18px 18px;
+  background: linear-gradient(
+    180deg,
+    rgba(8, 12, 18, 0) 0%,
+    rgba(8, 12, 18, 0.56) 44%,
+    rgba(8, 12, 18, 0.78) 100%
+  );
+  color: rgba(255, 255, 255, 0.94);
   text-align: center;
+  pointer-events: none;
+}
+
+.lightbox-caption:empty {
+  display: none;
 }
 
 @media (min-width: 1040px) {
+  .lightbox-inner {
+    width: 80vw;
+    height: 80vh;
+    max-width: none;
+    max-height: none;
+  }
+
+  .lightbox img {
+    width: 100%;
+    height: 100%;
+    max-width: none;
+    max-height: none;
+    object-fit: contain;
+  }
+
   .post-sidebar-sticky {
     position: fixed;
     top: var(--post-sidebar-top, 24px);
