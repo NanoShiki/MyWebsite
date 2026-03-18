@@ -29,7 +29,7 @@ myWeb/
 │   ├── update_config.py   # 配置更新脚本
 │   └── 使用说明.md         # 配置脚本说明
 ├── src/                   # 共享样式与前端脚本
-│   ├── assets/            # 页面视觉素材池（按槽位目录随机）
+│   ├── assets/            # 页面视觉素材池 + 站点图标资源
 │   ├── scripts/           # 页面逻辑与共享模块
 │   └── styles/            # 共享主题样式
 ├── wiki/                  # 项目文档与说明
@@ -99,8 +99,10 @@ python3 Blog/update_config.py
 站点视觉图已改为“一个显示位置一个目录 + 按天稳定随机”机制。  
 运行时只读取对应目录里的文件，不再硬编码具体图片文件名。
 视觉素材唯一来源为 `src/assets/image-pools/`，`public/` 根目录不再作为图片兜底来源。
+站点图标（favicon / apple-touch-icon）统一存放于 `src/assets/site-icons/`，不再放在 `public/` 目录。
 
 - 素材根目录：`src/assets/image-pools/`
+- 站点图标目录：`src/assets/site-icons/`
 - 放图指南入口：`src/assets/image-pools/README.md`（由 `npm run docs:image-pools` 自动生成）
 - 支持格式：`jpg` / `jpeg` / `png` / `webp`
 - 随机规则：同一天同位置固定同一张，跨天自动换图
