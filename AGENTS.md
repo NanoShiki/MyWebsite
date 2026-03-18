@@ -131,6 +131,17 @@ myWeb/
   - `python3 -m http.server 8000`
   - Mention explicitly in the final response that fallback mode is being used.
 
+### Notes Post-Update Requirement
+
+- For every classroom notes generation/rewriting task (especially files under `Blog/archive/课内(由ai生成的笔记)/`), running `python Blog/update_config.py` is mandatory before final response.
+- This command is non-optional and must not be skipped based on judgment like “no new folder” or “no structure change”.
+- After running the command, agents must verify `Blog/config.json` is synchronized (at minimum: command succeeded and `Blog/config.json` is readable).
+- Every final response must explicitly report:
+  - The update command was executed.
+  - Command result (`success` or `failed`).
+  - If failed, include the failure reason and explicitly mark: `博客配置未完成同步`.
+- Keep the existing rule `Run update_config.py after any blog structure changes`; this section is a stricter override for classroom notes tasks.
+
 ## 课堂笔记整理
 
 ### 重要提示
@@ -157,6 +168,8 @@ myWeb/
 9. **核心概念门禁**：`### 核心概念` 必须写成连贯讲解段落（建议 2-4 段），重点是讲清概念与原理，而不是机械分点罗列。
 10. **禁用机械模板**：`核心概念` 中禁止 `- 定义：/- 机制：/- 对比：/- 边界与易错：` 这类 checklist 前缀；允许自然展开讲解。
 11. **禁用轱辘话**：`核心概念` 中禁止“这一讲从…介绍…”“本节放在这里是为了…”等流程话术；优先提供可直接用于理解与解题的知识内容。
+12. **标题格式强规则**：课堂笔记一级标题统一为 `# <课程名> - 第<课次>课：<主题>`；若主题信息不足，允许写为 `# <课程名> - 第<课次>课`，不使用“（自学版）”后缀；课次默认与文件名后缀（如 `_2.md`）一致。
+13. **标题质检**：生成/改写后交付前必须检查一级标题格式，禁止 `# <课程名>：<主题>（自学版）` 等旧格式，避免标题格式漂移。
 
 ## Skills
 
