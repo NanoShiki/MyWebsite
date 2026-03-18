@@ -6,6 +6,17 @@
   },
   "posts": [
     {
+      "id": "AI_HelloAgent笔记_第六章 框架开发实践",
+      "title": "第六章 框架开发实践",
+      "date": "2026-03-18",
+      "createdTs": 1773839883,
+      "path": "/Blog/archive/AI/HelloAgent笔记/第六章 框架开发实践/",
+      "categories": [
+        "AI",
+        "HelloAgent笔记"
+      ]
+    },
+    {
       "id": "课内(由ai生成的笔记)_计算机网络_计算机网络_2",
       "title": "计算机网络 - 第2课：应用层、Web 缓存与 FTP",
       "date": "2026-03-18",
@@ -261,6 +272,17 @@
             "type": "category",
             "children": [],
             "posts": [
+              {
+                "id": "AI_HelloAgent笔记_第六章 框架开发实践",
+                "title": "第六章 框架开发实践",
+                "date": "2026-03-18",
+                "createdTs": 1773839883,
+                "path": "/Blog/archive/AI/HelloAgent笔记/第六章 框架开发实践/",
+                "categories": [
+                  "AI",
+                  "HelloAgent笔记"
+                ]
+              },
               {
                 "id": "AI_HelloAgent笔记_第四章 智能体经典范式构建",
                 "title": "第四章 智能体经典范式构建",
