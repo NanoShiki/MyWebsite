@@ -1,6 +1,6 @@
 # src 图片槽位放图指南（自动生成）
 
-> 生成时间：2026-03-22 22:23
+> 生成时间：2026-03-22 22:57
 > 请勿手改本文件；请运行 `npm run docs:image-pools` 重新生成。
 
 ## 总规则
@@ -27,7 +27,7 @@
 | `blogJournalBackground` | `blog.journal.background` | `blog-journal-bg` | Blog Index | 1 | 正常 |
 | `blogMapBackground` | `blog.map.background` | `blog-map-bg` | Blog Index | 1 | 正常 |
 | `homeCampBackground` | `home.camp.background` | `home-camp-bg` | Home | 2 | 正常 |
-| `homeHeroBackground` | `home.hero.background` | `home-hero-bg` | Home | 1 | 正常 |
+| `homeHeroBackground` | `home.hero.background` | `home-hero-bg` | Home | 3 | 正常 |
 | `homeTrailBackground` | `home.trail.background` | `home-trail-bg` | Home | 1 | 正常 |
 | `postPageBackground` | `post.page.background` | `post-page-bg` | Blog Post | 1 | 正常 |
 
@@ -38,7 +38,7 @@
 | slotConst | 目录 | 当前图片数 |
 | --- | --- | ---: |
 | `homeCampBackground` | `home-camp-bg` | 2 |
-| `homeHeroBackground` | `home-hero-bg` | 1 |
+| `homeHeroBackground` | `home-hero-bg` | 3 |
 | `homeTrailBackground` | `home-trail-bg` | 1 |
 
 ### Blog Hero
