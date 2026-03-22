@@ -1,6 +1,6 @@
 import '../styles/base.css';
 import '../styles/blog.css';
-import fixedProfileAvatarUrl from '../assets/image-pools/blog/sidebar/profile-avatar/profile-avatar-2.jpg';
+import fixedProfileAvatarUrl from '../assets/site-icons/favicon-profile-v2.png';
 import { marked } from 'marked';
 import { icons } from './shared/icons.js';
 import { IMAGE_SLOTS, pickDailyImageForSlot } from './shared/image-pool.js';
@@ -59,34 +59,13 @@ const TAG_PALETTES = [
 
 const BLOG_PANEL_ASSET_SLOTS = Object.freeze({
   hero: Object.freeze({
-    background: IMAGE_SLOTS.blogPanelHeroBackground,
-    glassNoise: IMAGE_SLOTS.blogPanelHeroGlassNoise,
-    windEmblem: IMAGE_SLOTS.blogPanelHeroWindEmblem,
-    paperTexture: IMAGE_SLOTS.blogPanelHeroPaperTexture,
-    woodGrain: IMAGE_SLOTS.blogPanelHeroWoodGrain,
-    ruinsOverlay: IMAGE_SLOTS.blogPanelHeroRuinsOverlay,
-    cornerOrnament: IMAGE_SLOTS.blogPanelHeroCornerOrnament,
-    dividerSeal: IMAGE_SLOTS.blogPanelHeroDividerSeal
+    background: IMAGE_SLOTS.blogHeroBackground
   }),
   map: Object.freeze({
-    background: IMAGE_SLOTS.blogPanelMapBackground,
-    glassNoise: IMAGE_SLOTS.blogPanelMapGlassNoise,
-    windEmblem: IMAGE_SLOTS.blogPanelMapWindEmblem,
-    paperTexture: IMAGE_SLOTS.blogPanelMapPaperTexture,
-    woodGrain: IMAGE_SLOTS.blogPanelMapWoodGrain,
-    ruinsOverlay: IMAGE_SLOTS.blogPanelMapRuinsOverlay,
-    cornerOrnament: IMAGE_SLOTS.blogPanelMapCornerOrnament,
-    dividerSeal: IMAGE_SLOTS.blogPanelMapDividerSeal
+    background: IMAGE_SLOTS.blogMapBackground
   }),
   journal: Object.freeze({
-    background: IMAGE_SLOTS.blogPanelJournalBackground,
-    glassNoise: IMAGE_SLOTS.blogPanelJournalGlassNoise,
-    windEmblem: IMAGE_SLOTS.blogPanelJournalWindEmblem,
-    paperTexture: IMAGE_SLOTS.blogPanelJournalPaperTexture,
-    woodGrain: IMAGE_SLOTS.blogPanelJournalWoodGrain,
-    ruinsOverlay: IMAGE_SLOTS.blogPanelJournalRuinsOverlay,
-    cornerOrnament: IMAGE_SLOTS.blogPanelJournalCornerOrnament,
-    dividerSeal: IMAGE_SLOTS.blogPanelJournalDividerSeal
+    background: IMAGE_SLOTS.blogJournalBackground
   })
 });
 
@@ -551,69 +530,35 @@ function applyBlogStoryImageForPanel(root, panelName = '') {
   });
 }
 
-function applyOptionalBlogAsset(root, { className = '', cssVariable = '', assetUrl = '' } = {}) {
-  if (!root || !className || !cssVariable) {
-    return;
-  }
-
-  root.classList.toggle(className, Boolean(assetUrl));
-  if (assetUrl) {
-    root.style.setProperty(cssVariable, `url("${assetUrl}")`);
-  } else {
-    root.style.removeProperty(cssVariable);
-  }
-}
-
 function applyBlogPanelAssets(panelName = '') {
   const root = document.documentElement;
   const normalizedPanelName = normalizeBlogPanelName(panelName);
-  const slots = getBlogPanelAssetSlots(normalizedPanelName);
-  const panelContext = getBlogPanelContext(normalizedPanelName);
 
   root.classList.add('is-blog-page');
   applyBlogStoryImageForPanel(root, normalizedPanelName);
-  const glassNoiseAsset = pickDailyImageForSlot(slots.glassNoise, { pageContext: panelContext });
-  const windEmblemAsset = pickDailyImageForSlot(slots.windEmblem, { pageContext: panelContext });
-  const parchmentTextureAsset = pickDailyImageForSlot(slots.paperTexture, { pageContext: panelContext });
-  const woodGrainAsset = pickDailyImageForSlot(slots.woodGrain, { pageContext: panelContext });
-  const ruinsOverlayAsset = pickDailyImageForSlot(slots.ruinsOverlay, { pageContext: panelContext });
-  const cornerOrnamentAsset = pickDailyImageForSlot(slots.cornerOrnament, { pageContext: panelContext });
-  const dividerSealAsset = pickDailyImageForSlot(slots.dividerSeal, { pageContext: panelContext });
 
-  applyOptionalBlogAsset(root, {
-    className: 'has-blog-glass-noise',
-    cssVariable: '--blog-glass-noise',
-    assetUrl: glassNoiseAsset
+  // Clear legacy decorative assets after slot simplification.
+  [
+    '--blog-glass-noise',
+    '--blog-wind-emblem',
+    '--blog-paper-texture',
+    '--blog-wood-grain',
+    '--blog-ruins-overlay',
+    '--blog-corner-ornament',
+    '--blog-divider-seal'
+  ].forEach((cssVariable) => {
+    root.style.removeProperty(cssVariable);
   });
-  applyOptionalBlogAsset(root, {
-    className: 'has-blog-wind-emblem',
-    cssVariable: '--blog-wind-emblem',
-    assetUrl: windEmblemAsset
-  });
-  applyOptionalBlogAsset(root, {
-    className: 'has-blog-paper-texture',
-    cssVariable: '--blog-paper-texture',
-    assetUrl: parchmentTextureAsset
-  });
-  applyOptionalBlogAsset(root, {
-    className: 'has-blog-wood-grain',
-    cssVariable: '--blog-wood-grain',
-    assetUrl: woodGrainAsset
-  });
-  applyOptionalBlogAsset(root, {
-    className: 'has-blog-ruins-overlay',
-    cssVariable: '--blog-ruins-overlay',
-    assetUrl: ruinsOverlayAsset
-  });
-  applyOptionalBlogAsset(root, {
-    className: 'has-blog-corner-ornament',
-    cssVariable: '--blog-corner-ornament',
-    assetUrl: cornerOrnamentAsset
-  });
-  applyOptionalBlogAsset(root, {
-    className: 'has-blog-divider-seal',
-    cssVariable: '--blog-divider-seal',
-    assetUrl: dividerSealAsset
+  [
+    'has-blog-glass-noise',
+    'has-blog-wind-emblem',
+    'has-blog-paper-texture',
+    'has-blog-wood-grain',
+    'has-blog-ruins-overlay',
+    'has-blog-corner-ornament',
+    'has-blog-divider-seal'
+  ].forEach((className) => {
+    root.classList.remove(className);
   });
 
   root.dataset.blogAssetPanel = normalizedPanelName;
@@ -1133,7 +1078,7 @@ function renderHero() {
   renderBlogHeroTitleInstant();
 
   if (heroQuillImage instanceof HTMLImageElement) {
-    const assetUrl = pickDailyImageForSlot(IMAGE_SLOTS.blogPanelHeroQuill);
+    const assetUrl = pickDailyImageForSlot(IMAGE_SLOTS.blogHeroQuill);
     heroQuillImage.onload = () => {
       heroQuillImage.closest('.blog-hero-quill-media')?.classList.remove('is-missing');
     };

@@ -2,8 +2,8 @@ import { promises as fs } from 'node:fs';
 import path from 'node:path';
 
 const IMAGE_POOL_FILE = path.resolve(process.cwd(), 'src/scripts/shared/image-pool.js');
-const IMAGE_POOL_ROOT = path.resolve(process.cwd(), 'src/assets/image-pools');
-const OUTPUT_FILE = path.resolve(process.cwd(), 'src/assets/image-pools/README.md');
+const IMAGE_POOL_ROOT = path.resolve(process.cwd(), 'src/assets');
+const OUTPUT_FILE = path.resolve(process.cwd(), 'src/assets/image-pools.md');
 const USAGE_FILES = [
   path.resolve(process.cwd(), 'src/scripts/home.js'),
   path.resolve(process.cwd(), 'src/scripts/blog-index.js'),
@@ -65,22 +65,19 @@ function parseSlotDirectories(blockText) {
 }
 
 function classifySlotGroup(directory) {
-  if (directory.startsWith('home/')) {
+  if (directory.startsWith('home-')) {
     return 'Home';
   }
-  if (directory.startsWith('blog/panel-hero/')) {
+  if (directory.startsWith('blog-hero-')) {
     return 'Blog Hero';
   }
-  if (directory.startsWith('blog/panel-map/')) {
+  if (directory.startsWith('blog-map-')) {
     return 'Blog Map';
   }
-  if (directory.startsWith('blog/panel-journal/')) {
+  if (directory.startsWith('blog-journal-')) {
     return 'Blog Journal';
   }
-  if (directory.startsWith('blog/sidebar/')) {
-    return 'Blog Sidebar';
-  }
-  if (directory.startsWith('post/')) {
+  if (directory.startsWith('post-')) {
     return 'Post';
   }
   return 'Other';
@@ -185,7 +182,7 @@ async function main() {
   }
 
   rows.sort((left, right) => left.directory.localeCompare(right.directory, 'zh-Hans-CN-u-kn-true'));
-  const groups = ['Home', 'Blog Hero', 'Blog Map', 'Blog Journal', 'Blog Sidebar', 'Post', 'Other'];
+  const groups = ['Home', 'Blog Hero', 'Blog Map', 'Blog Journal', 'Post', 'Other'];
   const emptyRows = rows.filter((row) => row.imageCount === 0);
 
   const markdownLines = [
@@ -196,7 +193,7 @@ async function main() {
     '',
     '## 总规则',
     '',
-    '- 素材根目录：`src/assets/image-pools/`',
+    '- 素材根目录：`src/assets/`',
     '- 槽位来源：`src/scripts/shared/image-pool.js`（`IMAGE_SLOTS` + `SLOT_DIRECTORIES`）',
     '- 支持格式：`jpg`、`jpeg`、`png`、`webp`',
     '- 随机策略：按天稳定随机（同一天同位置固定，跨天自动变化）',

@@ -47,26 +47,10 @@ const state = {
   layoutBoundsSync: null
 };
 
-function applyOptionalPostAsset(root, { className = '', cssVariable = '', assetUrl = '' } = {}) {
-  if (!root || !className || !cssVariable) {
-    return;
-  }
-
-  root.classList.toggle(className, Boolean(assetUrl));
-  if (assetUrl) {
-    root.style.setProperty(cssVariable, `url("${assetUrl}")`);
-  } else {
-    root.style.removeProperty(cssVariable);
-  }
-}
-
 function setupPostBackground() {
   const root = document.documentElement;
   root.classList.add('is-post-page');
   const backgroundAsset = pickDailyImageForSlot(IMAGE_SLOTS.postPageBackground);
-  const glassNoiseAsset = pickDailyImageForSlot(IMAGE_SLOTS.postPageGlassNoise);
-  const windEmblemAsset = pickDailyImageForSlot(IMAGE_SLOTS.postPageWindEmblem);
-  const ruinsOverlayAsset = pickDailyImageForSlot(IMAGE_SLOTS.postPageRuinsOverlay);
 
   root.classList.toggle('has-post-story-image', Boolean(backgroundAsset));
   if (backgroundAsset) {
@@ -74,21 +58,11 @@ function setupPostBackground() {
   } else {
     root.style.removeProperty('--post-story-image');
   }
-
-  applyOptionalPostAsset(root, {
-    className: 'has-post-glass-noise',
-    cssVariable: '--post-glass-noise',
-    assetUrl: glassNoiseAsset
+  ['--post-glass-noise', '--post-wind-emblem', '--post-ruins-overlay'].forEach((cssVariable) => {
+    root.style.removeProperty(cssVariable);
   });
-  applyOptionalPostAsset(root, {
-    className: 'has-post-wind-emblem',
-    cssVariable: '--post-wind-emblem',
-    assetUrl: windEmblemAsset
-  });
-  applyOptionalPostAsset(root, {
-    className: 'has-post-ruins-overlay',
-    cssVariable: '--post-ruins-overlay',
-    assetUrl: ruinsOverlayAsset
+  ['has-post-glass-noise', 'has-post-wind-emblem', 'has-post-ruins-overlay'].forEach((className) => {
+    root.classList.remove(className);
   });
 }
 
