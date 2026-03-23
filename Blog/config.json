@@ -6,6 +6,16 @@
   },
   "posts": [
     {
+      "id": "其他_mac版vscode耗电异常问题的解决方案",
+      "title": "mac版vscode耗电异常问题的解决方案",
+      "date": "2026-03-23",
+      "createdTs": 1774230809,
+      "path": "/Blog/archive/其他/mac版vscode耗电异常问题的解决方案/",
+      "categories": [
+        "其他"
+      ]
+    },
+    {
       "id": "AI_HelloAgent笔记_第六章 框架开发实践",
       "title": "第六章 框架开发实践",
       "date": "2026-03-18",
@@ -213,6 +223,23 @@
           }
         ],
         "posts": []
+      },
+      {
+        "name": "其他",
+        "type": "category",
+        "children": [],
+        "posts": [
+          {
+            "id": "其他_mac版vscode耗电异常问题的解决方案",
+            "title": "mac版vscode耗电异常问题的解决方案",
+            "date": "2026-03-23",
+            "createdTs": 1774230809,
+            "path": "/Blog/archive/其他/mac版vscode耗电异常问题的解决方案/",
+            "categories": [
+              "其他"
+            ]
+          }
+        ]
       }
     ],
     "posts": []

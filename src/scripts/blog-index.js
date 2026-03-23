@@ -507,9 +507,13 @@ function applyBlogStoryImageForPanel(root, panelName = '') {
     return;
   }
 
-  if (record.status === 'loaded') {
+  // Show the first panel background immediately so first paint does not wait for onload.
+  const needsInitialPaint = !blogStoryBackgroundState.currentUrl;
+  if (record.status === 'loaded' || needsInitialPaint) {
     setBlogStoryImage(root, record.url);
-    return;
+    if (record.status === 'loaded') {
+      return;
+    }
   }
 
   record.promise.then((didLoad) => {
