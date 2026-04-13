@@ -1342,11 +1342,27 @@ html[data-theme='night'] .post-story-bg-layer {
   overflow-y: hidden;
 }
 
-.post-export-button {
+.post-export-control {
   position: absolute;
   right: 16px;
   bottom: 18px;
   z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 5px;
+  opacity: 0;
+  pointer-events: none;
+  transform: translate3d(0, 8px, 0);
+}
+
+.post-export-control.is-mounted {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translate3d(0, 0, 0);
+}
+
+.post-export-button {
   min-width: 0;
   min-height: 34px;
   padding: 6px 12px;
@@ -1356,15 +1372,15 @@ html[data-theme='night'] .post-story-bg-layer {
   color: #36527c;
   box-shadow: 0 8px 18px rgba(103, 79, 47, 0.1);
   white-space: nowrap;
-  opacity: 0;
-  pointer-events: none;
-  transform: translate3d(0, 8px, 0);
 }
 
-.post-export-button.is-mounted {
-  opacity: 1;
-  pointer-events: auto;
-  transform: translate3d(0, 0, 0);
+.post-export-count {
+  color: rgba(54, 82, 124, 0.86);
+  font-size: 0.72rem;
+  line-height: 1.1;
+  text-align: right;
+  white-space: nowrap;
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
 }
 
 .post-export-button:hover,
@@ -1400,6 +1416,11 @@ html[data-theme='night'] .post-export-button {
   box-shadow: 0 10px 22px rgba(2, 8, 18, 0.22);
 }
 
+html[data-theme='night'] .post-export-count {
+  color: rgba(220, 234, 255, 0.84);
+  text-shadow: none;
+}
+
 html[data-theme='night'] .post-export-button:hover,
 html[data-theme='night'] .post-export-button:focus-visible {
   border-color: rgba(126, 161, 212, 0.52);
@@ -1424,10 +1445,17 @@ html[data-theme='night'] .post-export-button[data-export-state='error'] {
 }
 
 @media (max-width: 720px) {
-  .post-export-button {
+  .post-export-control {
     right: 12px;
     bottom: 12px;
+  }
+
+  .post-export-button {
     padding: 6px 11px;
     border-radius: 10px;
+  }
+
+  .post-export-count {
+    font-size: 0.68rem;
   }
 }

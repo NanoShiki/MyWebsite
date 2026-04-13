@@ -57,6 +57,8 @@ const EXPORT_BUTTON_COPY = Object.freeze({
   error: '导出失败'
 });
 
+const EXPORT_COUNT_STORAGE_PREFIX = 'blog-export-count:';
+
 function setupPostBackground() {
   const root = document.documentElement;
   root.classList.add('is-post-page');
@@ -270,6 +272,46 @@ function buildExportMarkdown(post, rawMarkdown = '') {
   return `${content.trimEnd()}\n\n文章地址: ${articleUrl}\n`;
 }
 
+function getExportCountStorageKey(post) {
+  return `${EXPORT_COUNT_STORAGE_PREFIX}${post?.id || 'unknown'}`;
+}
+
+function readExportCount(post) {
+  if (!post?.id) {
+    return 0;
+  }
+
+  try {
+    const raw = window.localStorage.getItem(getExportCountStorageKey(post));
+    const count = Number(raw);
+    return Number.isFinite(count) && count > 0 ? Math.floor(count) : 0;
+  } catch (error) {
+    console.error('read-export-count-failed', error);
+    return 0;
+  }
+}
+
+function writeExportCount(post, count) {
+  if (!post?.id) {
+    return;
+  }
+
+  try {
+    window.localStorage.setItem(getExportCountStorageKey(post), String(Math.max(0, Math.floor(count))));
+  } catch (error) {
+    console.error('write-export-count-failed', error);
+  }
+}
+
+function setExportCountText(count = 0) {
+  const label = document.getElementById('postExportCount');
+  if (!label) {
+    return;
+  }
+
+  label.textContent = `本文已被导出${Math.max(0, Math.floor(count))}次`;
+}
+
 function setExportButtonState(mode = 'idle', { enabled = true } = {}) {
   const button = document.getElementById('postExportMdButton');
   if (!button) {
@@ -293,6 +335,13 @@ function mountExportButton() {
     return existingButton;
   }
 
+  let control = document.getElementById('postExportControl');
+  if (!control) {
+    control = document.createElement('div');
+    control.id = 'postExportControl';
+    control.className = 'post-export-control';
+  }
+
   const button = document.createElement('button');
   button.type = 'button';
   button.id = 'postExportMdButton';
@@ -300,9 +349,15 @@ function mountExportButton() {
   button.textContent = EXPORT_BUTTON_COPY.idle;
   button.disabled = true;
 
-  hero.append(button);
+  const count = document.createElement('div');
+  count.id = 'postExportCount';
+  count.className = 'post-export-count';
+  count.textContent = '本文已被导出0次';
+
+  control.append(button, count);
+  hero.append(control);
   window.requestAnimationFrame(() => {
-    button.classList.add('is-mounted');
+    control.classList.add('is-mounted');
   });
 
   return button;
@@ -313,6 +368,8 @@ function setupExportButton(post) {
   if (!button) {
     return;
   }
+
+  setExportCountText(readExportCount(post));
 
   if (button.dataset.exportBound === 'true') {
     return;
@@ -347,6 +404,10 @@ function setupExportButton(post) {
       downloadLink.click();
       downloadLink.remove();
       window.setTimeout(() => URL.revokeObjectURL(blobUrl), 800);
+
+      const nextExportCount = readExportCount(post) + 1;
+      writeExportCount(post, nextExportCount);
+      setExportCountText(nextExportCount);
 
       setExportButtonState('success');
     } catch (error) {
