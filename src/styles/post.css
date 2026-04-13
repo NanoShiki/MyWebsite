@@ -1341,3 +1341,93 @@ html[data-theme='night'] .post-story-bg-layer {
 .article-content .katex-display {
   overflow-y: hidden;
 }
+
+.post-export-button {
+  position: absolute;
+  right: 16px;
+  bottom: 18px;
+  z-index: 2;
+  min-width: 0;
+  min-height: 34px;
+  padding: 6px 12px;
+  border-radius: 12px;
+  border-color: rgba(163, 133, 86, 0.28);
+  background: rgba(255, 245, 226, 0.9);
+  color: #36527c;
+  box-shadow: 0 8px 18px rgba(103, 79, 47, 0.1);
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transform: translate3d(0, 8px, 0);
+}
+
+.post-export-button.is-mounted {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translate3d(0, 0, 0);
+}
+
+.post-export-button:hover,
+.post-export-button:focus-visible {
+  border-color: rgba(130, 98, 49, 0.38);
+  background: rgba(255, 249, 238, 0.98);
+  color: #234471;
+}
+
+.post-export-button:disabled {
+  cursor: not-allowed;
+  opacity: 0.68;
+  transform: none;
+  box-shadow: none;
+}
+
+.post-export-button[data-export-state='success'] {
+  border-color: rgba(95, 161, 112, 0.4);
+  background: rgba(229, 249, 233, 0.96);
+  color: #2b6a3d;
+}
+
+.post-export-button[data-export-state='error'] {
+  border-color: rgba(193, 122, 93, 0.42);
+  background: rgba(255, 238, 230, 0.96);
+  color: #9d4d34;
+}
+
+html[data-theme='night'] .post-export-button {
+  border-color: rgba(101, 132, 175, 0.4);
+  background: rgba(34, 52, 77, 0.92);
+  color: #deebff;
+  box-shadow: 0 10px 22px rgba(2, 8, 18, 0.22);
+}
+
+html[data-theme='night'] .post-export-button:hover,
+html[data-theme='night'] .post-export-button:focus-visible {
+  border-color: rgba(126, 161, 212, 0.52);
+  background: rgba(41, 63, 93, 0.98);
+  color: #f2f7ff;
+}
+
+html[data-theme='night'] .post-export-button:disabled {
+  box-shadow: none;
+}
+
+html[data-theme='night'] .post-export-button[data-export-state='success'] {
+  border-color: rgba(102, 176, 122, 0.44);
+  background: rgba(30, 71, 49, 0.94);
+  color: #e4ffea;
+}
+
+html[data-theme='night'] .post-export-button[data-export-state='error'] {
+  border-color: rgba(207, 132, 106, 0.45);
+  background: rgba(95, 45, 33, 0.94);
+  color: #ffece5;
+}
+
+@media (max-width: 720px) {
+  .post-export-button {
+    right: 12px;
+    bottom: 12px;
+    padding: 6px 11px;
+    border-radius: 10px;
+  }
+}

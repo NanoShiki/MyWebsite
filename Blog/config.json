@@ -6,6 +6,17 @@
   },
   "posts": [
     {
+      "id": "UE_Lyra_Lyra相机方案拆解与拓展",
+      "title": "Lyra相机方案拆解与拓展",
+      "date": "2026-04-13",
+      "createdTs": 1776069234,
+      "path": "/Blog/archive/UE/Lyra/Lyra相机方案拆解与拓展/",
+      "categories": [
+        "UE",
+        "Lyra"
+      ]
+    },
+    {
       "id": "其他_mac版vscode耗电异常问题的解决方案",
       "title": "mac版vscode耗电异常问题的解决方案",
       "date": "2026-03-23",
@@ -175,6 +186,17 @@
             "type": "category",
             "children": [],
             "posts": [
+              {
+                "id": "UE_Lyra_Lyra相机方案拆解与拓展",
+                "title": "Lyra相机方案拆解与拓展",
+                "date": "2026-04-13",
+                "createdTs": 1776069234,
+                "path": "/Blog/archive/UE/Lyra/Lyra相机方案拆解与拓展/",
+                "categories": [
+                  "UE",
+                  "Lyra"
+                ]
+              },
               {
                 "id": "UE_Lyra_Lyra UIExtension插件介绍",
                 "title": "Lyra UIExtension插件介绍",

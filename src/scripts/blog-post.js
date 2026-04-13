@@ -41,11 +41,19 @@ marked.setOptions({
 const state = {
   config: null,
   post: null,
+  rawMarkdown: '',
   activeTocId: '',
   tocIndex: new Map(),
   tocCleanup: null,
   layoutBoundsSync: null
 };
+
+const EXPORT_BUTTON_COPY = Object.freeze({
+  idle: '导出 MD',
+  loading: '准备导出…',
+  success: '已下载',
+  error: '导出失败'
+});
 
 function setupPostBackground() {
   const root = document.documentElement;
@@ -73,6 +81,272 @@ function getPostIdFromUrl() {
 
 function stripLeadingHeading(markdown = '') {
   return markdown.replace(/^#\s+.+\n+/, '');
+}
+
+function sanitizeDownloadFilename(filename = '') {
+  const normalized = filename
+    .replace(/[<>:"/\\|?*\u0000-\u001f]/g, '-')
+    .replace(/\s+/g, ' ')
+    .trim();
+
+  return normalized || 'article';
+}
+
+function splitMarkdownDestination(raw = '') {
+  const trimmed = raw.trim();
+  if (!trimmed) {
+    return null;
+  }
+
+  if (trimmed.startsWith('<')) {
+    const closingIndex = trimmed.indexOf('>');
+    if (closingIndex === -1) {
+      return null;
+    }
+
+    return {
+      destination: trimmed.slice(1, closingIndex),
+      trailing: trimmed.slice(closingIndex + 1),
+      wrapped: true
+    };
+  }
+
+  let destination = '';
+  let trailingIndex = trimmed.length;
+  let nestedParentheses = 0;
+  let escapeNext = false;
+
+  for (let index = 0; index < trimmed.length; index += 1) {
+    const char = trimmed[index];
+
+    if (escapeNext) {
+      destination += char;
+      escapeNext = false;
+      continue;
+    }
+
+    if (char === '\\') {
+      destination += char;
+      escapeNext = true;
+      continue;
+    }
+
+    if (char === '(') {
+      nestedParentheses += 1;
+      destination += char;
+      continue;
+    }
+
+    if (char === ')' && nestedParentheses > 0) {
+      nestedParentheses -= 1;
+      destination += char;
+      continue;
+    }
+
+    if (/\s/.test(char) && nestedParentheses === 0) {
+      trailingIndex = index;
+      break;
+    }
+
+    destination += char;
+  }
+
+  return {
+    destination,
+    trailing: trimmed.slice(trailingIndex),
+    wrapped: false
+  };
+}
+
+function transformMarkdownOutsideCodeFences(markdown = '', transformSegment = (segment) => segment) {
+  const lines = markdown.replace(/\r\n?/g, '\n').split('\n');
+  const output = [];
+  let plainTextBuffer = [];
+  let inFence = false;
+  let fenceToken = '';
+
+  const flushBuffer = () => {
+    if (!plainTextBuffer.length) {
+      return;
+    }
+
+    output.push(transformSegment(plainTextBuffer.join('\n')));
+    plainTextBuffer = [];
+  };
+
+  lines.forEach((line) => {
+    const trimmed = line.trim();
+    const fenceMatch = trimmed.match(/^(```+|~~~+)/);
+
+    if (fenceMatch) {
+      const token = fenceMatch[1][0];
+      if (!inFence) {
+        flushBuffer();
+        inFence = true;
+        fenceToken = token;
+        output.push(line);
+        return;
+      }
+
+      if (token === fenceToken) {
+        inFence = false;
+        fenceToken = '';
+      }
+
+      output.push(line);
+      return;
+    }
+
+    if (inFence) {
+      output.push(line);
+      return;
+    }
+
+    plainTextBuffer.push(line);
+  });
+
+  flushBuffer();
+  return output.join('\n');
+}
+
+function resolveExportAssetUrl(post, rawPath = '') {
+  if (
+    !rawPath
+    || rawPath.startsWith('#')
+    || rawPath.startsWith('data:')
+    || /^[a-z][a-z0-9+.-]*:/i.test(rawPath)
+    || /^(https?:)?\/\//.test(rawPath)
+  ) {
+    return rawPath;
+  }
+
+  return resolveSiteAssetUrl(post.path, rawPath, { preserveAmpersand: true }) || rawPath;
+}
+
+function rewriteMarkdownImageLinks(markdown = '', post) {
+  return markdown.replace(/!\[([^\]]*)\]\(([^)\n]+)\)/g, (match, altText, rawTarget) => {
+    const parsedTarget = splitMarkdownDestination(rawTarget);
+    if (!parsedTarget?.destination) {
+      return match;
+    }
+
+    const resolvedTarget = resolveExportAssetUrl(post, parsedTarget.destination);
+    if (!resolvedTarget || resolvedTarget === parsedTarget.destination) {
+      return match;
+    }
+
+    const destination = parsedTarget.wrapped ? `<${resolvedTarget}>` : resolvedTarget;
+    return `![${altText}](${destination}${parsedTarget.trailing})`;
+  });
+}
+
+function rewriteHtmlImageLinks(markdown = '', post) {
+  return markdown.replace(
+    /(<img\b[^>]*\bsrc=["'])([^"']+)(["'][^>]*>)/gi,
+    (match, prefix, srcValue, suffix) => `${prefix}${resolveExportAssetUrl(post, srcValue)}${suffix}`
+  );
+}
+
+function buildExportMarkdown(post, rawMarkdown = '') {
+  const source = rawMarkdown.trim()
+    ? rawMarkdown.replace(/\r\n?/g, '\n')
+    : `# ${post.title}\n`;
+
+  return transformMarkdownOutsideCodeFences(source, (segment) => {
+    const withMarkdownImages = rewriteMarkdownImageLinks(segment, post);
+    return rewriteHtmlImageLinks(withMarkdownImages, post);
+  });
+}
+
+function setExportButtonState(mode = 'idle', { enabled = true } = {}) {
+  const button = document.getElementById('postExportMdButton');
+  if (!button) {
+    return;
+  }
+
+  const label = EXPORT_BUTTON_COPY[mode] || EXPORT_BUTTON_COPY.idle;
+  button.textContent = label;
+  button.dataset.exportState = mode;
+  button.disabled = !enabled;
+}
+
+function mountExportButton() {
+  const hero = document.getElementById('postTopAnchor');
+  if (!hero) {
+    return null;
+  }
+
+  const existingButton = document.getElementById('postExportMdButton');
+  if (existingButton) {
+    return existingButton;
+  }
+
+  const button = document.createElement('button');
+  button.type = 'button';
+  button.id = 'postExportMdButton';
+  button.className = 'small-link post-export-button';
+  button.textContent = EXPORT_BUTTON_COPY.idle;
+  button.disabled = true;
+
+  hero.append(button);
+  window.requestAnimationFrame(() => {
+    button.classList.add('is-mounted');
+  });
+
+  return button;
+}
+
+function setupExportButton(post) {
+  const button = mountExportButton();
+  if (!button) {
+    return;
+  }
+
+  if (button.dataset.exportBound === 'true') {
+    return;
+  }
+
+  button.dataset.exportBound = 'true';
+  let resetTimer = null;
+  setExportButtonState('idle', { enabled: false });
+
+  button.addEventListener('click', () => {
+    if (!state.rawMarkdown.trim()) {
+      setExportButtonState('error', { enabled: false });
+      return;
+    }
+
+    if (resetTimer) {
+      window.clearTimeout(resetTimer);
+      resetTimer = null;
+    }
+
+    setExportButtonState('loading', { enabled: false });
+
+    try {
+      const exportedMarkdown = buildExportMarkdown(post, state.rawMarkdown);
+      const blob = new Blob([exportedMarkdown], { type: 'text/markdown;charset=utf-8' });
+      const blobUrl = URL.createObjectURL(blob);
+      const downloadLink = document.createElement('a');
+
+      downloadLink.href = blobUrl;
+      downloadLink.download = `${sanitizeDownloadFilename(post.title)}.md`;
+      document.body.append(downloadLink);
+      downloadLink.click();
+      downloadLink.remove();
+      window.setTimeout(() => URL.revokeObjectURL(blobUrl), 800);
+
+      setExportButtonState('success');
+    } catch (error) {
+      console.error('markdown-export-failed', error);
+      setExportButtonState('error');
+    }
+
+    resetTimer = window.setTimeout(() => {
+      setExportButtonState('idle', { enabled: Boolean(state.rawMarkdown.trim()) });
+      resetTimer = null;
+    }, 1600);
+  });
 }
 
 function protectDisplayMathBlocks(markdown = '') {
@@ -723,6 +997,8 @@ async function renderPostContent(post) {
   setArticleStatus('正在读取 Markdown...');
 
   const rawMarkdown = await fetchMarkdown(post);
+  state.rawMarkdown = rawMarkdown;
+  setExportButtonState('idle', { enabled: true });
   const strippedMarkdown = stripLeadingHeading(rawMarkdown);
   const { markdown, displayMathBlocks } = protectDisplayMathBlocks(strippedMarkdown);
   let html;
@@ -805,6 +1081,7 @@ async function init() {
   }
 
   renderMeta(state.post);
+  setupExportButton(state.post);
 
   try {
     await renderPostContent(state.post);
