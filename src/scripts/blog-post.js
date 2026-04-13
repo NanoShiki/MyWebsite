@@ -15,8 +15,10 @@ import { initThemeToggles } from './shared/theme.js';
 import {
   fetchBlogConfig,
   formatDate,
+  getCanonicalSiteOrigin,
   getCategoryUrl,
   getMarkdownPathCandidates,
+  getPostUrl,
   resolveSiteAssetUrl,
   slugifyHeading
 } from './shared/site-data.js';
@@ -220,7 +222,11 @@ function resolveExportAssetUrl(post, rawPath = '') {
     return rawPath;
   }
 
-  return resolveSiteAssetUrl(post.path, rawPath, { preserveAmpersand: true }) || rawPath;
+  return resolveSiteAssetUrl(post.path, rawPath, {
+    preserveAmpersand: true,
+    absolute: true,
+    origin: getCanonicalSiteOrigin()
+  }) || rawPath;
 }
 
 function rewriteMarkdownImageLinks(markdown = '', post) {
@@ -252,10 +258,16 @@ function buildExportMarkdown(post, rawMarkdown = '') {
     ? rawMarkdown.replace(/\r\n?/g, '\n')
     : `# ${post.title}\n`;
 
-  return transformMarkdownOutsideCodeFences(source, (segment) => {
+  const content = transformMarkdownOutsideCodeFences(source, (segment) => {
     const withMarkdownImages = rewriteMarkdownImageLinks(segment, post);
     return rewriteHtmlImageLinks(withMarkdownImages, post);
   });
+
+  const articleUrl = post?.id
+    ? new URL(getPostUrl(post.id), `${getCanonicalSiteOrigin()}/`).toString()
+    : new URL(window.location.pathname + window.location.search, `${getCanonicalSiteOrigin()}/`).toString();
+
+  return `${content.trimEnd()}\n\n文章地址: ${articleUrl}\n`;
 }
 
 function setExportButtonState(mode = 'idle', { enabled = true } = {}) {

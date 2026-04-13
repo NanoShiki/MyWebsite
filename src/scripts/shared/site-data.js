@@ -3,6 +3,12 @@ const rootBase = (() => {
   return base.endsWith('/') ? base.slice(0, -1) : base;
 })();
 
+const canonicalSiteOrigin = (() => {
+  const configured = String(import.meta.env.VITE_SITE_ORIGIN || '').trim();
+  const origin = configured || 'https://nanoshiki.top';
+  return origin.replace(/\/+$/, '');
+})();
+
 function safeDecode(segment) {
   try {
     return decodeURIComponent(segment);
@@ -50,6 +56,10 @@ export function withBase(path = '') {
   return `${rootBase}${normalized}` || normalized;
 }
 
+export function getCanonicalSiteOrigin() {
+  return canonicalSiteOrigin;
+}
+
 export async function fetchBlogConfig() {
   const response = await fetch(withBase('/Blog/config.json'), { cache: 'no-cache' });
   if (!response.ok) {
@@ -89,11 +99,18 @@ export function resolveSiteAssetUrl(basePath = '', rawPath = '', options = {}) {
   }
 
   if (rawPath.startsWith('/')) {
-    return withBase(encodeSitePath(rawPath, options));
+    const resolvedPath = withBase(encodeSitePath(rawPath, options));
+    if (options.absolute) {
+      return new URL(resolvedPath, options.origin || window.location.origin).toString();
+    }
+    return resolvedPath;
   }
 
   const normalizedBase = basePath.endsWith('/') ? basePath : `${basePath}/`;
-  const baseUrl = new URL(withBase(encodeSitePath(normalizedBase, options)), window.location.origin);
+  const baseUrl = new URL(
+    withBase(encodeSitePath(normalizedBase, options)),
+    options.origin || window.location.origin
+  );
   return new URL(rawPath, baseUrl).toString();
 }
 
