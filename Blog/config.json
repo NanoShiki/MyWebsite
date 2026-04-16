@@ -6,6 +6,17 @@
   },
   "posts": [
     {
+      "id": "UE_Lyra_Lyra角色系统入门",
+      "title": "Lyra角色系统入门",
+      "date": "2026-04-16",
+      "createdTs": 1776307059,
+      "path": "/Blog/archive/UE/Lyra/Lyra角色系统入门/",
+      "categories": [
+        "UE",
+        "Lyra"
+      ]
+    },
+    {
       "id": "UE_Lyra_Lyra相机方案拆解与拓展",
       "title": "Lyra相机方案拆解与拓展",
       "date": "2026-04-13",
@@ -186,6 +197,17 @@
             "type": "category",
             "children": [],
             "posts": [
+              {
+                "id": "UE_Lyra_Lyra角色系统入门",
+                "title": "Lyra角色系统入门",
+                "date": "2026-04-16",
+                "createdTs": 1776307059,
+                "path": "/Blog/archive/UE/Lyra/Lyra角色系统入门/",
+                "categories": [
+                  "UE",
+                  "Lyra"
+                ]
+              },
               {
                 "id": "UE_Lyra_Lyra相机方案拆解与拓展",
                 "title": "Lyra相机方案拆解与拓展",
